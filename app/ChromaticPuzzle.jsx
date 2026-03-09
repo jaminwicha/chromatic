@@ -183,31 +183,44 @@ const CHAPTERS = [
 function TilePiece({ tileStr, size=80, onClick, isDragging, isPlaced }) {
   const tile = parseTile(tileStr);
   const isIn = tile.type==="INPUT_ONLY", isOut = tile.type==="OUTPUT_ONLY";
-  const bgColor = isIn ? "rgba(96,165,250,0.15)" : isOut ? "rgba(251,191,36,0.15)" : COLORS[tile.outer]?.bg||"#444";
-  const glowC = isIn ? "#60a5fa" : isOut ? "#fbbf24" : COLORS[tile.outer]?.glow||"#666";
+
+  // INPUT_ONLY: simple colored slab, no circle, no arrows
+  if (isIn) {
+    const cols = tile.acceptColors.map(c=>COLORS[c]?.bg||"#888");
+    const bg = cols.length===1 ? cols[0] : `linear-gradient(135deg,${cols.join(",")})`;
+    return (
+      <div onClick={onClick} style={{width:size,height:size,borderRadius:12,background:bg,opacity:0.85,
+        boxShadow:isDragging?`0 0 24px ${cols[0]}, 0 8px 32px rgba(0,0,0,0.4)`:`0 ${isPlaced?2:4}px ${isPlaced?8:16}px rgba(0,0,0,0.3)`,
+        cursor:"pointer",transition:"all 0.2s cubic-bezier(0.4,0,0.2,1)",transform:isDragging?"scale(1.1)":"scale(1)",
+        position:"relative",display:"flex",alignItems:"center",justifyContent:"center",userSelect:"none",
+        border:"2px dashed rgba(255,255,255,0.35)"}}>
+        <span style={{fontSize:Math.max(size*0.13,9),fontWeight:800,color:"rgba(255,255,255,0.9)",
+          fontFamily:"'JetBrains Mono',monospace",textShadow:"0 1px 4px rgba(0,0,0,0.5)",letterSpacing:"0.05em"}}>SINK</span>
+      </div>
+    );
+  }
+
+  const bgColor = isOut ? "rgba(251,191,36,0.15)" : COLORS[tile.outer]?.bg||"#444";
+  const glowC = isOut ? "#fbbf24" : COLORS[tile.outer]?.glow||"#666";
   const innerCols = tile.connections.map(c => COLORS[c.color]);
-  const centerGrad = isIn
-    ? (tile.acceptColors.length===1 ? COLORS[tile.acceptColors[0]]?.bg||"#888"
-      : `conic-gradient(${tile.acceptColors.map((c,i)=>`${COLORS[c]?.bg||"#888"} ${(i/tile.acceptColors.length)*360}deg ${((i+1)/tile.acceptColors.length)*360}deg`).join(",")})`)
-    : innerCols.length===0 ? "#555"
+  const centerGrad = innerCols.length===0 ? "#555"
     : innerCols.length===1 ? innerCols[0].bg
     : `conic-gradient(${innerCols.map((c,i)=>`${c.bg} ${(i/innerCols.length)*360}deg ${((i+1)/innerCols.length)*360}deg`).join(",")})`;
-  const label = isIn?"SINK":isOut?"SRC":tile.outer;
-  const labelC = isIn?"rgba(96,165,250,0.9)":isOut?"rgba(251,191,36,0.9)":"rgba(255,255,255,0.7)";
+  const label = isOut?"SRC":tile.outer;
+  const labelC = isOut?"rgba(251,191,36,0.9)":"rgba(255,255,255,0.7)";
   return (
     <div onClick={onClick} style={{width:size,height:size,borderRadius:12,background:bgColor,
       boxShadow:isDragging?`0 0 24px ${glowC}, 0 8px 32px rgba(0,0,0,0.4)`:`0 ${isPlaced?2:4}px ${isPlaced?8:16}px rgba(0,0,0,0.3)`,
       cursor:"pointer",transition:"all 0.2s cubic-bezier(0.4,0,0.2,1)",transform:isDragging?"scale(1.1)":"scale(1)",
       position:"relative",overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center",userSelect:"none",
-      border:isIn?"2px solid rgba(96,165,250,0.5)":isOut?"2px solid rgba(251,191,36,0.5)":"2px solid rgba(255,255,255,0.18)"}}>
+      border:isOut?"2px solid rgba(251,191,36,0.5)":"2px solid rgba(255,255,255,0.18)"}}>
       <span style={{position:"absolute",top:size>60?4:2,left:"50%",transform:"translateX(-50%)",
         fontSize:Math.max(size*0.1,7),fontWeight:700,color:labelC,fontFamily:"'JetBrains Mono',monospace",
         textShadow:"0 1px 3px rgba(0,0,0,0.6)",zIndex:3,whiteSpace:"nowrap"}}>{label}</span>
       <div style={{width:size*0.36,height:size*0.36,borderRadius:"50%",background:centerGrad,
-        border:isIn?"2px solid rgba(96,165,250,0.5)":"2px solid rgba(255,255,255,0.3)",
-        display:"flex",alignItems:"center",justifyContent:"center",boxShadow:isIn?"0 0 12px rgba(96,165,250,0.3)":"0 0 10px rgba(255,255,255,0.15)",zIndex:2}}>
-        {isIn ? <span style={{fontSize:Math.max(size*0.14,9),fontWeight:900,color:"rgba(255,255,255,0.95)"}}>◎</span>
-         : tile.connections.length<=1
+        border:"2px solid rgba(255,255,255,0.3)",
+        display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 0 10px rgba(255,255,255,0.15)",zIndex:2}}>
+        {tile.connections.length<=1
          ? <span style={{fontSize:Math.max(size*0.08,6),fontWeight:700,color:"rgba(255,255,255,0.95)",fontFamily:"'JetBrains Mono',monospace"}}>{tile.connections[0]?.color.slice(0,3)||""}</span>
          : <span style={{fontSize:Math.max(size*0.09,7),fontWeight:900,color:"rgba(255,255,255,0.95)"}}>{tile.connections.length}</span>}
       </div>
