@@ -110,6 +110,46 @@ function shuffleArray(arr) {
   return a;
 }
 
+// Pipe rotation utilities
+const ROTATE_CW = {
+  UP: "RIGHT", RIGHT: "DOWN", DOWN: "LEFT", LEFT: "UP",
+  UP_RIGHT: "DOWN_RIGHT", DOWN_RIGHT: "DOWN_LEFT", 
+  DOWN_LEFT: "UP_LEFT", UP_LEFT: "UP_RIGHT"
+};
+
+function rotateDirection(dir) {
+  return ROTATE_CW[dir] || dir;
+}
+
+function rotatePipe(pipeStr) {
+  if (!pipeStr.startsWith("PIPE:")) return pipeStr;
+  
+  const rest = pipeStr.slice(5);
+  const channels = rest.split(",").map(ch => {
+    const [inPart, outPart] = ch.split(">");
+    const [inDir, inColor] = inPart.split(":");
+    const [outDir, outColor] = outPart.split(":");
+    
+    return `${rotateDirection(inDir)}:${inColor}>${rotateDirection(outDir)}:${outColor}`;
+  });
+  
+  return `PIPE:${channels.join(",")}`;
+}
+
+function randomizePipeOrientations(pieces) {
+  return pieces.map(piece => {
+    if (!piece.startsWith("PIPE:")) return piece;
+    
+    // Rotate 0-3 times randomly
+    let result = piece;
+    const rotations = Math.floor(Math.random() * 4);
+    for (let i = 0; i < rotations; i++) {
+      result = rotatePipe(result);
+    }
+    return result;
+  });
+}
+
 function checkSolution(level, board) {
   for (const cell of level.cells)
     if (!board[cell] || board[cell] !== level.solution[cell]) return false;
@@ -361,7 +401,8 @@ export default function ChromaticPuzzle() {
   const allComplete = completedLevels.size === LEVELS.length;
 
   const initLevel = useCallback((idx) => {
-    setCurrentLevel(idx); setBoard({}); setTray(shuffleArray(LEVELS[idx].pieces));
+    const pieces = randomizePipeOrientations(LEVELS[idx].pieces);
+    setCurrentLevel(idx); setBoard({}); setTray(shuffleArray(pieces));
     setSelectedTile(null); setSolved(false); setErrors(new Set()); setShowHint(false); setScreen("game");
   }, []);
 
@@ -394,13 +435,33 @@ export default function ChromaticPuzzle() {
     }
   };
 
-  const handleTrayClick = (tileStr) => {
+  const handleTrayClick = (tileStr, event) => {
     if (solved) return;
+    
+    // If it's a pipe and right-click or shift-click, rotate it
+    if (tileStr.startsWith("PIPE:") && (event?.shiftKey || event?.button === 2)) {
+      event?.preventDefault();
+      const rotated = rotatePipe(tileStr);
+      setTray(p => p.map(t => t === tileStr ? rotated : t));
+      if (selectedTile === tileStr) setSelectedTile(rotated);
+      return;
+    }
+    
+    // If it's a pipe and already selected, rotate it on click
+    if (tileStr.startsWith("PIPE:") && selectedTile === tileStr) {
+      const rotated = rotatePipe(tileStr);
+      setTray(p => p.map(t => t === tileStr ? rotated : t));
+      setSelectedTile(rotated);
+      return;
+    }
+    
+    // Normal selection behavior
     setSelectedTile(selectedTile === tileStr ? null : tileStr);
   };
 
   const handleClear = () => {
-    setBoard({}); setTray(shuffleArray(level.pieces)); setSelectedTile(null); setErrors(new Set());
+    const pieces = randomizePipeOrientations(level.pieces);
+    setBoard({}); setTray(shuffleArray(pieces)); setSelectedTile(null); setErrors(new Set());
   };
 
   const cellSize = (() => {
@@ -520,10 +581,15 @@ export default function ChromaticPuzzle() {
       <div style={{marginBottom:12}}>
         <span style={{display:"block",textAlign:"center",color:"rgba(255,255,255,0.2)",fontSize:10,letterSpacing:"0.2em",marginBottom:8}}>PIECES</span>
         <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",maxWidth:520}}>
-          {tray.map((tile,idx)=>(<div key={idx} style={{borderRadius:12,padding:2,transition:"all 0.2s",border:selectedTile===tile?"2px solid #fbbf24":"2px solid transparent",animation:selectedTile===tile?"pulseGlow 1.5s ease infinite":"none"}}>
-            <TilePiece tileStr={tile} size={60} onClick={()=>handleTrayClick(tile)} isDragging={selectedTile===tile}/>
-          </div>))}
+          {tray.map((tile,idx)=>{
+            const isPipe = tile.startsWith("PIPE:");
+            return (<div key={idx} style={{borderRadius:12,padding:2,transition:"all 0.2s",border:selectedTile===tile?"2px solid #fbbf24":"2px solid transparent",animation:selectedTile===tile?"pulseGlow 1.5s ease infinite":"none",position:"relative"}}>
+              <TilePiece tileStr={tile} size={60} onClick={(e)=>handleTrayClick(tile, e)} isDragging={selectedTile===tile}/>
+              {isPipe&&<div style={{position:"absolute",top:-4,right:-4,background:"rgba(139,92,246,0.9)",borderRadius:"50%",width:16,height:16,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"white",fontWeight:700,border:"1px solid rgba(255,255,255,0.3)",pointerEvents:"none"}}>↻</div>}
+            </div>);
+          })}
         </div>
+        {tray.some(t=>t.startsWith("PIPE:"))&&<p style={{color:"rgba(139,92,246,0.6)",fontSize:9,textAlign:"center",marginTop:8}}>Click pipes to rotate ↻</p>}
       </div>
       <div style={{color:"rgba(255,255,255,0.2)",fontSize:10}}>{Object.keys(board).length} / {level.cells.length} placed</div>
       {solved&&<FinishOverlay level={level} hasNext={currentLevel<LEVELS.length-1} onNext={()=>initLevel(currentLevel+1)} onReplay={()=>initLevel(currentLevel)}/>}
