@@ -678,7 +678,8 @@ export default function ChromaticPuzzle() {
 
   const sharedHead = (<>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
-    <style>{`
+    <style dangerouslySetInnerHTML={{
+      __html: `
       @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
       @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
       @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
@@ -691,7 +692,7 @@ export default function ChromaticPuzzle() {
       .tile-placed { box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1); }
       .tile-tray { box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.25) !important; animation: float 6s ease-in-out infinite alternate; }
       *::-webkit-scrollbar{width:6px}*::-webkit-scrollbar-track{background:transparent}*::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
-    `}</style>
+    `}} />
     <audio ref={audioRef} id="bgm" src={TRACKS[currentTrack].src} onEnded={handleTrackEnd} muted={isMuted} autoPlay />
     <div style={{ position: "fixed", top: 12, right: 12, zIndex: 1000, display: "flex", alignItems: "center", gap: 6, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 20, padding: "4px 8px", border: "1px solid rgba(255,255,255,0.08)" }}>
       <button onClick={() => changeTrack(-1)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.5)", fontSize: 11, cursor: "pointer", padding: "4px 6px" }} title="Previous Track">⏮</button>
