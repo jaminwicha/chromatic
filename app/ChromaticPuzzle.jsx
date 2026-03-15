@@ -432,7 +432,7 @@ function GridCell({ cellName, size, tile, hasError, onClick, isTarget, currentCh
     background: flashColor ? flashColor : (tile ? "transparent" : (currentChapter ? `rgba(255,255,255,0.02)` : "rgba(255,255,255,0.04)")),
     border: tile ? "none" : isTarget ? `2px dashed ${currentChapter ? currentChapter.color : "rgba(255,255,255,0.5)"}` : "2px dashed rgba(255,255,255,0.15)",
     cursor: "pointer", position: "relative", display: "flex", alignItems: "center", justifyContent: "center",
-    transition: "all 0.2s ease", animation: flashColor ? "energyPulse 0.5s ease-out" : (hasError ? "shake 0.4s ease" : "none"),
+    transition: "all 0.2s ease", animation: flashColor ? "energyPulse 1.2s cubic-bezier(0.1, 0.9, 0.2, 1)" : (hasError ? "shake 0.4s ease" : "none"),
     boxShadow: flashColor ? `inset 0 0 40px ${flashColor}, 0 0 60px ${flashColor}` : hasError ? "0 0 16px rgba(239,68,68,0.6)" : isTarget ? `0 0 16px ${currentChapter ? currentChapter.glow : "rgba(255,255,255,0.15)"}` : (tile ? "none" : "inset 0 4px 12px rgba(0,0,0,0.2)")
   }}>
     {tile ? <TilePiece tileStr={tile} size={size - 4} isPlaced /> :
@@ -504,18 +504,18 @@ export default function ChromaticPuzzle() {
   const allComplete = completedLevels.size === LEVELS.length;
 
   const TRACKS = [
-    { src: "/track1-fractal-groove.wav", name: "Fractal Groove" },
-    { src: "/track2-sierpinski-dreams.wav", name: "Sierpinski Dreams" },
-    { src: "/track3-chaos-theory.wav", name: "Chaos Theory" },
-    { src: "/track4-ultraviolet-haze.wav", name: "Ultraviolet Haze" },
-    { src: "/track5-crimson-pulse.wav", name: "Crimson Pulse" },
-    { src: "/track6-golden-hour.wav", name: "Golden Hour" },
-    { src: "/track7-neon-surge.wav", name: "Neon Surge" },
-    { src: "/track8-prismatic-shift.wav", name: "Prismatic Shift" },
-    { src: "/track9-exotica.wav", name: "Exotica Cypher" },
-    { src: "/track10-obsidian-groove.wav", name: "Obsidian Groove" },
-    { src: "/track11-scarlet-pulse.wav", name: "Scarlet Pulse" },
-    { src: "/track12-cobalt-surge.wav", name: "Cobalt Surge" }
+    { src: "/track1-fractal-groove.wav?v=2", name: "Fractal Groove" },
+    { src: "/track2-sierpinski-dreams.wav?v=2", name: "Sierpinski Dreams" },
+    { src: "/track3-chaos-theory.wav?v=2", name: "Chaos Theory" },
+    { src: "/track4-ultraviolet-haze.wav?v=2", name: "Ultraviolet Haze" },
+    { src: "/track5-crimson-pulse.wav?v=2", name: "Crimson Pulse" },
+    { src: "/track6-golden-hour.wav?v=2", name: "Golden Hour" },
+    { src: "/track7-neon-surge.wav?v=2", name: "Neon Surge" },
+    { src: "/track8-prismatic-shift.wav?v=2", name: "Prismatic Shift" },
+    { src: "/track9-exotica.wav?v=2", name: "Exotica Cypher" },
+    { src: "/track10-obsidian-groove.wav?v=2", name: "Obsidian Groove" },
+    { src: "/track11-scarlet-pulse.wav?v=2", name: "Scarlet Pulse" },
+    { src: "/track12-cobalt-surge.wav?v=2", name: "Cobalt Surge" }
   ];
 
   const trackCount = TRACKS.length;
@@ -580,7 +580,7 @@ export default function ChromaticPuzzle() {
     });
     if (Object.keys(newFlashes).length > 0) {
       setFlashes(newFlashes);
-      setTimeout(() => setFlashes({}), 500);
+      setTimeout(() => setFlashes({}), 1200);
     }
   };
 
