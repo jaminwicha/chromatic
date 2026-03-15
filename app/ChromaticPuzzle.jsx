@@ -306,19 +306,23 @@ const ARROW_POS = {
   UP_LEFT: { top: 2, left: 2 }, UP_RIGHT: { top: 2, right: 2 }, DOWN_LEFT: { bottom: 2, left: 2 }, DOWN_RIGHT: { bottom: 2, right: 2 },
 };
 const CHAPTERS = [
-  { name: "Fundamentals", range: [1, 9], color: "#3b82f6" }, { name: "Multi-Output", range: [10, 18], color: "#a855f7" },
-  { name: "Complex Layouts", range: [19, 30], color: "#22c55e" }, { name: "Sources & Sinks", range: [31, 38], color: "#f59e0b" },
-  { name: "Jumper Arrows", range: [39, 46], color: "#ef4444" }, { name: "Gaps", range: [47, 54], color: "#14b8a6" },
-  { name: "Advanced Combos", range: [55, 62], color: "#06b6d4" }, { name: "Expert", range: [63, 68], color: "#ec4899" },
-  { name: "Pipes", range: [69, 78], color: "#8b5cf6" },
-  { name: "Master", range: [79, 88], color: "#fbbf24" },
-  { name: "Master II", range: [89, 98], color: "#f43f5e" },
-  { name: "Master III", range: [99, 108], color: "#e11d48" },
+  { name: "Fundamentals", range: [1, 9], color: "#3b82f6", bg: "linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%)", glow: "rgba(59,130,246,0.15)" },
+  { name: "Multi-Output", range: [10, 18], color: "#a855f7", bg: "radial-gradient(circle at top right,#2e1065 0%,#0f0a1c 100%)", glow: "rgba(168,85,247,0.15)" },
+  { name: "Complex Layouts", range: [19, 30], color: "#22c55e", bg: "linear-gradient(180deg,#064e3b 0%,#022c22 100%)", glow: "rgba(34,197,94,0.15)" },
+  { name: "Sources & Sinks", range: [31, 38], color: "#f59e0b", bg: "radial-gradient(ellipse at center,#451a03 0%,#1c1917 100%)", glow: "rgba(245,158,11,0.15)" },
+  { name: "Jumper Arrows", range: [39, 46], color: "#ef4444", bg: "linear-gradient(to right bottom,#450a0a 0%,#1a0505 100%)", glow: "rgba(239,68,68,0.15)" },
+  { name: "Gaps", range: [47, 54], color: "#14b8a6", bg: "radial-gradient(circle at 50% 50%,#042f2e 0%,#020617 100%)", glow: "rgba(20,184,166,0.15)" },
+  { name: "Advanced Combos", range: [55, 62], color: "#06b6d4", bg: "linear-gradient(135deg,#164e63 0%,#082f49 100%)", glow: "rgba(6,182,212,0.15)" },
+  { name: "Expert", range: [63, 68], color: "#ec4899", bg: "radial-gradient(circle at top left,#500724 0%,#171717 100%)", glow: "rgba(236,72,153,0.15)" },
+  { name: "Pipes", range: [69, 78], color: "#8b5cf6", bg: "linear-gradient(160deg,#2e1065 0%,#09090b 100%)", glow: "rgba(139,92,246,0.15)" },
+  { name: "Master", range: [79, 88], color: "#fbbf24", bg: "radial-gradient(circle at top,#4f46e5 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
+  { name: "Master II", range: [89, 98], color: "#f43f5e", bg: "linear-gradient(45deg,#881337 0%,#0f172a 100%)", glow: "rgba(244,63,94,0.15)" },
+  { name: "Master III", range: [99, 108], color: "#e11d48", bg: "radial-gradient(ellipse at bottom,#7f1d1d 0%,#030712 100%)", glow: "rgba(225,29,72,0.15)" },
 ];
 
 // ─── TILE COMPONENT ─────────────────────────────────────────────────────────
 
-function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced }) {
+function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, className }) {
   const tile = parseTile(tileStr);
   const isIn = tile.type === "INPUT_ONLY", isOut = tile.type === "OUTPUT_ONLY";
 
@@ -327,13 +331,15 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced }) {
     const cols = tile.acceptColors.map(c => COLORS[c]?.bg || "#888");
     const bg = cols.length === 1 ? cols[0] : `linear-gradient(135deg,${cols.join(",")})`;
     return (
-      <div onClick={onClick} style={{
+      <div onClick={onClick} className={className || (isPlaced ? "tile-placed" : "")} style={{
         width: size, height: size, borderRadius: 12, background: bg, opacity: 0.85,
-        boxShadow: isDragging ? `0 0 24px ${cols[0]}, 0 8px 32px rgba(0,0,0,0.4)` : `0 ${isPlaced ? 2 : 4}px ${isPlaced ? 8 : 16}px rgba(0,0,0,0.3)`,
-        cursor: "pointer", transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)", transform: isDragging ? "scale(1.1)" : "scale(1)",
+        boxShadow: isDragging ? `0 0 24px ${cols[0]}, 0 8px 32px rgba(0,0,0,0.6)` : undefined,
+        cursor: "pointer", transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)", transform: isDragging ? "scale(1.15)" : "scale(1)",
         position: "relative", display: "flex", alignItems: "center", justifyContent: "center", userSelect: "none",
-        border: "2px dashed rgba(255,255,255,0.35)"
-      }} />
+        border: "2px dashed rgba(255,255,255,0.35)", zIndex: isDragging ? 50 : 1
+      }}>
+        {!isPlaced && <div className="tile-glint" />}
+      </div>
     );
   }
 
@@ -345,38 +351,39 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced }) {
   if (isPipe) {
     const channels = tile.channels || [];
     return (
-      <div onClick={onClick} style={{
+      <div onClick={onClick} className={className || (isPlaced ? "tile-placed" : "")} style={{
         width: size, height: size, borderRadius: 14,
         background: "rgba(139,92,246,0.12)",
-        boxShadow: isDragging ? `0 0 24px #8b5cf6, 0 8px 32px rgba(0,0,0,0.4)` : `0 ${isPlaced ? 2 : 4}px ${isPlaced ? 8 : 16}px rgba(0,0,0,0.3)`,
-        cursor: "pointer", transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)", transform: isDragging ? "scale(1.1)" : "scale(1)",
+        boxShadow: isDragging ? `0 0 24px #8b5cf6, 0 8px 32px rgba(0,0,0,0.6)` : undefined,
+        cursor: "pointer", transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)", transform: isDragging ? "scale(1.15)" : "scale(1)",
         position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", userSelect: "none",
-        border: "2px solid rgba(139,92,246,0.4)"
+        border: "2px solid rgba(139,92,246,0.4)", zIndex: isDragging ? 50 : 1
       }}>
+        {!isPlaced && <div className="tile-glint" />}
         <div style={{
-          width: size * 0.32, height: size * 0.32, borderRadius: 6, background: "rgba(139,92,246,0.25)",
-          border: "2px solid rgba(139,92,246,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2
+          width: size * 0.32, height: size * 0.32, borderRadius: 6, background: "rgba(139,92,246,0.35)",
+          border: "2px solid rgba(139,92,246,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2
         }}>
-          <span style={{ fontSize: Math.max(size * 0.1, 7), fontWeight: 900, color: "rgba(255,255,255,0.9)" }}>{channels.length > 1 ? "×" : "⇢"}</span>
+          <span style={{ fontSize: Math.max(size * 0.1, 7), fontWeight: 900, color: "rgba(255,255,255,0.95)" }}>{channels.length > 1 ? "×" : "⇢"}</span>
         </div>
         {channels.map((ch, i) => {
           const inC = COLORS[ch.inColor], outC = COLORS[ch.outColor];
           const inPos = ARROW_POS[ch.inDir], outPos = ARROW_POS[ch.outDir];
-          const sz = size > 60 ? 18 : 14;
+          const sz = size > 70 ? 20 : size > 50 ? 16 : 12;
           return [
             <div key={`in${i}`} style={{
               position: "absolute", ...inPos, zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center",
               background: inC?.bg || "#888", borderRadius: "50%", width: sz, height: sz,
-              border: "2px solid rgba(255,255,255,0.5)", boxShadow: `0 0 6px ${inC?.glow || "#888"}60`
+              border: "2px solid rgba(255,255,255,0.6)", boxShadow: `0 0 8px ${inC?.glow || "#888"}80`
             }}>
-              <span style={{ fontSize: sz > 14 ? 9 : 7, color: "rgba(255,255,255,0.95)", lineHeight: 1, fontWeight: 700 }}>⊙</span>
+              <span style={{ fontSize: sz > 14 ? 10 : 8, color: "rgba(255,255,255,0.95)", lineHeight: 1, fontWeight: 900 }}>⊙</span>
             </div>,
             <div key={`out${i}`} style={{
               position: "absolute", ...outPos, zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center",
               background: outC?.bg || "#888", borderRadius: "50%", width: sz, height: sz,
-              border: "1.5px solid rgba(255,255,255,0.4)", boxShadow: `0 0 6px ${outC?.glow || "#888"}60`
+              border: "1.5px solid rgba(255,255,255,0.5)", boxShadow: `0 0 8px ${outC?.glow || "#888"}80`
             }}>
-              <span style={{ fontSize: sz > 14 ? 11 : 9, color: "rgba(255,255,255,0.95)", lineHeight: 1, fontWeight: 700 }}>{ARROW_SYM[ch.outDir]}</span>
+              <span style={{ fontSize: sz > 14 ? 12 : 9, color: "rgba(255,255,255,0.95)", lineHeight: 1, fontWeight: 900 }}>{ARROW_SYM[ch.outDir]}</span>
             </div>
           ];
         })}
@@ -388,45 +395,47 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced }) {
     : innerCols.length === 1 ? innerCols[0].bg
       : `conic-gradient(${innerCols.map((c, i) => `${c.bg} ${(i / innerCols.length) * 360}deg ${((i + 1) / innerCols.length) * 360}deg`).join(",")})`;
   return (
-    <div onClick={onClick} style={{
+    <div onClick={onClick} className={className || (isPlaced ? "tile-placed" : "")} style={{
       width: size, height: size, borderRadius: 12, background: bgColor,
-      boxShadow: isDragging ? `0 0 24px ${glowC}, 0 8px 32px rgba(0,0,0,0.4)` : `0 ${isPlaced ? 2 : 4}px ${isPlaced ? 8 : 16}px rgba(0,0,0,0.3)`,
-      cursor: "pointer", transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)", transform: isDragging ? "scale(1.1)" : "scale(1)",
+      boxShadow: isDragging ? `0 0 24px ${glowC}, 0 8px 32px rgba(0,0,0,0.6)` : undefined,
+      cursor: "pointer", transition: "all 0.2s cubic-bezier(0.4,0,0.2,1)", transform: isDragging ? "scale(1.15)" : "scale(1)",
       position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", userSelect: "none",
-      border: isOut ? "2px solid rgba(251,191,36,0.5)" : "2px solid rgba(255,255,255,0.18)"
+      border: isOut ? "2px solid rgba(251,191,36,0.6)" : "2px solid rgba(255,255,255,0.25)",
+      zIndex: isDragging ? 50 : 1
     }}>
+      {!isPlaced && <div className="tile-glint" />}
       <div style={{
         width: size * 0.36, height: size * 0.36, borderRadius: "50%", background: centerGrad,
-        border: "2px solid rgba(255,255,255,0.3)",
-        display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 10px rgba(255,255,255,0.15)", zIndex: 2
+        border: "2px solid rgba(255,255,255,0.4)",
+        display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 12px rgba(255,255,255,0.25)", zIndex: 2
       }} />
       {tile.connections.map((conn, i) => {
-        const c = COLORS[conn.color], pos = ARROW_POS[conn.dir], sz = size > 60 ? 18 : 14, dist = conn.distance || 1;
+        const c = COLORS[conn.color], pos = ARROW_POS[conn.dir], sz = size > 70 ? 20 : size > 50 ? 16 : 12, dist = conn.distance || 1;
         return (<div key={i} style={{
           position: "absolute", ...pos, zIndex: 3, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column",
           background: c?.bg || "#888", borderRadius: "50%", width: sz, height: sz,
-          border: dist > 1 ? "2px solid rgba(255,255,0,0.6)" : "1.5px solid rgba(255,255,255,0.4)",
-          boxShadow: dist > 1 ? "0 0 8px rgba(255,255,0,0.4)" : `0 0 6px ${c?.glow || "#888"}60`
+          border: dist > 1 ? "2px solid rgba(255,255,0,0.8)" : "2px solid rgba(255,255,255,0.5)",
+          boxShadow: dist > 1 ? "0 0 10px rgba(255,255,0,0.6)" : `0 0 8px ${c?.glow || "#888"}80`
         }}>
-          <span style={{ fontSize: sz > 14 ? 11 : 9, color: "rgba(255,255,255,0.95)", lineHeight: 1, fontWeight: 700 }}>{ARROW_SYM[conn.dir]}</span>
-          {dist > 1 && <span style={{ fontSize: 6, color: "rgba(255,255,0,0.9)", lineHeight: 1, fontWeight: 900, marginTop: -1 }}>{dist}</span>}
+          <span style={{ fontSize: sz > 14 ? 12 : 9, color: "rgba(255,255,255,1)", lineHeight: 1, fontWeight: 900 }}>{ARROW_SYM[conn.dir]}</span>
+          {dist > 1 && <span style={{ fontSize: 7, color: "rgba(255,255,0,1)", lineHeight: 1, fontWeight: 900, marginTop: -2 }}>{dist}</span>}
         </div>);
       })}
     </div>
   );
 }
 
-function GridCell({ cellName, size, tile, hasError, onClick, isTarget }) {
+function GridCell({ cellName, size, tile, hasError, onClick, isTarget, currentChapter }) {
   return (<div onClick={onClick} style={{
     width: size, height: size, borderRadius: 12,
-    background: tile ? "transparent" : "rgba(255,255,255,0.04)",
-    border: tile ? "none" : isTarget ? "2px dashed rgba(255,255,255,0.5)" : "2px dashed rgba(255,255,255,0.12)",
+    background: tile ? "transparent" : (currentChapter ? `rgba(255,255,255,0.02)` : "rgba(255,255,255,0.04)"),
+    border: tile ? "none" : isTarget ? `2px dashed ${currentChapter ? currentChapter.color : "rgba(255,255,255,0.5)"}` : "2px dashed rgba(255,255,255,0.15)",
     cursor: "pointer", position: "relative", display: "flex", alignItems: "center", justifyContent: "center",
     transition: "all 0.2s ease", animation: hasError ? "shake 0.4s ease" : "none",
-    boxShadow: hasError ? "0 0 16px rgba(239,68,68,0.4)" : isTarget ? "0 0 12px rgba(255,255,255,0.08)" : "none"
+    boxShadow: hasError ? "0 0 16px rgba(239,68,68,0.6)" : isTarget ? `0 0 16px ${currentChapter ? currentChapter.glow : "rgba(255,255,255,0.15)"}` : (tile ? "none" : "inset 0 4px 12px rgba(0,0,0,0.2)")
   }}>
     {tile ? <TilePiece tileStr={tile} size={size - 4} isPlaced /> :
-      <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.2)", fontFamily: "'JetBrains Mono',monospace" }}>{cellName}</span>}
+      <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.15)", fontFamily: "'JetBrains Mono',monospace" }}>{cellName}</span>}
   </div>);
 }
 
@@ -595,15 +604,15 @@ export default function ChromaticPuzzle() {
   };
 
   const cellSize = (() => {
-    if (!level) return 80;
+    if (!level) return 100;
     const cols = Math.max(...level.layout.map(r => r.length));
     const rows = level.layout.length;
-    if (cols >= 7) return 52;
-    if (cols >= 5) return 60;
-    if (cols >= 4) return 68;
-    if (rows >= 4) return 72;
-    if (rows >= 3 && cols >= 3) return 76;
-    return 86;
+    if (cols >= 7) return 60;
+    if (cols >= 5) return 72;
+    if (cols >= 4) return 84;
+    if (rows >= 4) return 88;
+    if (rows >= 3 && cols >= 3) return 92;
+    return 100;
   })();
 
   const sharedHead = (<>
@@ -614,6 +623,11 @@ export default function ChromaticPuzzle() {
       @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
       @keyframes pulseGlow{0%,100%{box-shadow:0 0 8px rgba(251,191,36,0.2)}50%{box-shadow:0 0 20px rgba(251,191,36,0.5)}}
       @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+      @keyframes glintSweep{0%{transform:translateX(-100%) skewX(-15deg)}100%{transform:translateX(200%) skewX(-15deg)}}
+      .tile-glint { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; pointer-events: none; }
+      .tile-glint::after { content: ""; display: block; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%); animation: glintSweep 3s infinite; }
+      .tile-placed { box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1); }
+      .tile-tray { box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.25) !important; animation: float 6s ease-in-out infinite alternate; }
       *::-webkit-scrollbar{width:6px}*::-webkit-scrollbar-track{background:transparent}*::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
     `}</style>
     <audio ref={audioRef} id="bgm" src={TRACKS[currentTrack].src} onEnded={handleTrackEnd} muted={isMuted} autoPlay />
@@ -652,8 +666,9 @@ export default function ChromaticPuzzle() {
   // ─── MENU ─────────────────────────────────────────────────────────────────
   if (screen === "menu") {
     const progress = completedLevels.size;
+    const currentChapter = CHAPTERS[currentChapterIndex];
     return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#0f0f1a 0%,#1a1a2e 40%,#16213e 100%)", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", padding: "24px 16px" }}>
+      <div style={{ minHeight: "100vh", background: currentChapter.bg || "linear-gradient(160deg,#0f0f1a 0%,#1a1a2e 40%,#16213e 100%)", transition: "background 0.5s ease", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", padding: "24px 16px" }}>
         {sharedHead}
         <div style={{ animation: "float 4s ease-in-out infinite", marginBottom: 16, marginTop: 16 }}>
           <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
@@ -735,7 +750,7 @@ export default function ChromaticPuzzle() {
 
   // ─── GAME ─────────────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(160deg,#0f0f1a 0%,#1a1a2e 40%,#16213e 100%)", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", padding: "16px 12px" }}>
+    <div style={{ minHeight: "100vh", background: currentChapter.bg || "linear-gradient(160deg,#0f0f1a 0%,#1a1a2e 40%,#16213e 100%)", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", padding: "16px 12px" }}>
       {sharedHead}
       <div style={{ width: "100%", maxWidth: 520, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <button onClick={() => setScreen("menu")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "7px 12px", color: "rgba(255,255,255,0.6)", fontSize: 12, fontWeight: 600, fontFamily: "'JetBrains Mono',monospace", cursor: "pointer" }}>← Levels</button>
@@ -755,10 +770,9 @@ export default function ChromaticPuzzle() {
       </div>
       <div style={{ marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
         {level.layout.map((row, r) => (<div key={r} style={{ display: "flex", gap: 6, marginBottom: r < level.layout.length - 1 ? 6 : 0 }}>
-          {row.map((cell, c) => {
-            if (!cell) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
-            const hasErr = [...errors].some(e => e.startsWith(cell + ":"));
-            return <GridCell key={c} cellName={cell} size={cellSize} tile={board[cell] || null} hasError={hasErr} isTarget={!!selectedTile && !board[cell]} onClick={() => handleCellClick(cell)} />;
+          {row.map((cellName, c) => {
+            if (!cellName) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
+            return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={errors.has(`${cellName}:UP`) || errors.has(`${cellName}:DOWN`) || errors.has(`${cellName}:LEFT`) || errors.has(`${cellName}:RIGHT`) || errors.has(`${cellName}:UP_LEFT`) || errors.has(`${cellName}:UP_RIGHT`) || errors.has(`${cellName}:DOWN_LEFT`) || errors.has(`${cellName}:DOWN_RIGHT`)} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} />;
           })}
         </div>))}
       </div>
@@ -769,19 +783,18 @@ export default function ChromaticPuzzle() {
       </div>)}
       <div style={{ marginBottom: 12 }}>
         <span style={{ display: "block", textAlign: "center", color: "rgba(255,255,255,0.2)", fontSize: 10, letterSpacing: "0.2em", marginBottom: 8 }}>PIECES</span>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", maxWidth: 520 }}>
-          {tray.map((tile, idx) => {
-            const isPipe = tile.startsWith("PIPE:");
-            return (<div key={idx} style={{ borderRadius: 12, padding: 2, transition: "all 0.2s", border: selectedTile === tile ? "2px solid #fbbf24" : "2px solid transparent", animation: selectedTile === tile ? "pulseGlow 1.5s ease infinite" : "none", position: "relative" }}>
-              <TilePiece tileStr={tile} size={60} onClick={(e) => handleTrayClick(tile, e)} isDragging={selectedTile === tile} />
-              {isPipe && <div style={{ position: "absolute", top: -4, right: -4, background: "rgba(139,92,246,0.9)", borderRadius: "50%", width: 16, height: 16, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "white", fontWeight: 700, border: "1px solid rgba(255,255,255,0.3)", pointerEvents: "none" }}>↻</div>}
-            </div>);
-          })}
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 8, padding: "24px 16px", borderRadius: 16, background: "rgba(0,0,0,0.2)", minHeight: 120, border: `1px solid ${currentChapter.glow}`, boxShadow: `0 4px 60px ${currentChapter.glow}` }}>
+          {tray.map((t, i) => (
+            <TilePiece key={i} tileStr={t} size={cellSize} onClick={(e) => handleTrayClick(t, e)}
+              isDragging={selectedTile === t} className="tile-tray" />
+          ))}
+          {tray.length === 0 && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 13, alignSelf: "center", fontFamily: "'JetBrains Mono',monospace" }}>Tray empty</span>}
         </div>
         {tray.some(t => t.startsWith("PIPE:")) && <p style={{ color: "rgba(139,92,246,0.6)", fontSize: 9, textAlign: "center", marginTop: 8 }}>Click pipes to rotate ↻</p>}
       </div>
       <div style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>{Object.keys(board).length} / {level.cells.length} placed</div>
       {solved && <FinishOverlay level={level} hasNext={currentLevel < LEVELS.length - 1} onNext={() => initLevel(currentLevel + 1)} onReplay={() => initLevel(currentLevel)} />}
+      {showVictory && <VictoryScreen onBack={() => { setShowVictory(false); setScreen("menu"); }} />}
     </div>
   );
 }
