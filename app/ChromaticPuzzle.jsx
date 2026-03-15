@@ -315,8 +315,8 @@ const CHAPTERS = [
   { name: "Advanced Combos", range: [55, 62], color: "#06b6d4", bg: "linear-gradient(135deg,#164e63 0%,#082f49 100%)", glow: "rgba(6,182,212,0.15)" },
   { name: "Expert", range: [63, 68], color: "#ec4899", bg: "radial-gradient(circle at top left,#500724 0%,#171717 100%)", glow: "rgba(236,72,153,0.15)" },
   { name: "Pipes", range: [69, 78], color: "#8b5cf6", bg: "linear-gradient(160deg,#2e1065 0%,#09090b 100%)", glow: "rgba(139,92,246,0.15)" },
-  { name: "Master", range: [79, 88], color: "#fbbf24", bg: "radial-gradient(circle at top,#4f46e5 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
-  { name: "Master II", range: [89, 98], color: "#fbbf24", bg: "radial-gradient(circle at top,#78350f 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
+  { name: "Master", range: [79, 88], color: "#fbbf24", bg: "radial-gradient(circle at top,#78350f 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
+  { name: "Master II", range: [89, 98], color: "#f43f5e", bg: "linear-gradient(45deg,#881337 0%,#0f172a 100%)", glow: "rgba(244,63,94,0.15)" },
   { name: "Master III", range: [99, 108], color: "#e11d48", bg: "radial-gradient(ellipse at bottom,#7f1d1d 0%,#030712 100%)", glow: "rgba(225,29,72,0.15)" },
 ];
 
