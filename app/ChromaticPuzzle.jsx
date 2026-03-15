@@ -316,7 +316,7 @@ const CHAPTERS = [
   { name: "Expert", range: [63, 68], color: "#ec4899", bg: "radial-gradient(circle at top left,#500724 0%,#171717 100%)", glow: "rgba(236,72,153,0.15)" },
   { name: "Pipes", range: [69, 78], color: "#8b5cf6", bg: "linear-gradient(160deg,#2e1065 0%,#09090b 100%)", glow: "rgba(139,92,246,0.15)" },
   { name: "Master", range: [79, 88], color: "#fbbf24", bg: "radial-gradient(circle at top,#4f46e5 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
-  { name: "Master II", range: [89, 98], color: "#f43f5e", bg: "linear-gradient(45deg,#881337 0%,#0f172a 100%)", glow: "rgba(244,63,94,0.15)" },
+  { name: "Master II", range: [89, 98], color: "#fbbf24", bg: "radial-gradient(circle at top,#78350f 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
   { name: "Master III", range: [99, 108], color: "#e11d48", bg: "radial-gradient(ellipse at bottom,#7f1d1d 0%,#030712 100%)", glow: "rgba(225,29,72,0.15)" },
 ];
 
@@ -425,14 +425,15 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, classNam
   );
 }
 
-function GridCell({ cellName, size, tile, hasError, onClick, isTarget, currentChapter }) {
+function GridCell({ cellName, size, tile, hasError, onClick, isTarget, currentChapter, flashColor }) {
   return (<div onClick={onClick} style={{
+    "--flash-color": flashColor || "transparent",
     width: size, height: size, borderRadius: 12,
-    background: tile ? "transparent" : (currentChapter ? `rgba(255,255,255,0.02)` : "rgba(255,255,255,0.04)"),
+    background: flashColor ? flashColor : (tile ? "transparent" : (currentChapter ? `rgba(255,255,255,0.02)` : "rgba(255,255,255,0.04)")),
     border: tile ? "none" : isTarget ? `2px dashed ${currentChapter ? currentChapter.color : "rgba(255,255,255,0.5)"}` : "2px dashed rgba(255,255,255,0.15)",
     cursor: "pointer", position: "relative", display: "flex", alignItems: "center", justifyContent: "center",
-    transition: "all 0.2s ease", animation: hasError ? "shake 0.4s ease" : "none",
-    boxShadow: hasError ? "0 0 16px rgba(239,68,68,0.6)" : isTarget ? `0 0 16px ${currentChapter ? currentChapter.glow : "rgba(255,255,255,0.15)"}` : (tile ? "none" : "inset 0 4px 12px rgba(0,0,0,0.2)")
+    transition: "all 0.2s ease", animation: flashColor ? "energyPulse 0.5s ease-out" : (hasError ? "shake 0.4s ease" : "none"),
+    boxShadow: flashColor ? `inset 0 0 40px ${flashColor}, 0 0 60px ${flashColor}` : hasError ? "0 0 16px rgba(239,68,68,0.6)" : isTarget ? `0 0 16px ${currentChapter ? currentChapter.glow : "rgba(255,255,255,0.15)"}` : (tile ? "none" : "inset 0 4px 12px rgba(0,0,0,0.2)")
   }}>
     {tile ? <TilePiece tileStr={tile} size={size - 4} isPlaced /> :
       <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.15)", fontFamily: "'JetBrains Mono',monospace" }}>{cellName}</span>}
@@ -471,9 +472,15 @@ export default function ChromaticPuzzle() {
   const [currentLevel, setCurrentLevel] = useState(0);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [skippedLevels, setSkippedLevels] = useState(new Set());
+  useEffect(() => {
+    const saved = localStorage.getItem("chromatic_skipped");
+    if (saved) setSkippedLevels(new Set(JSON.parse(saved)));
+  }, []);
+
   const [isMuted, setIsMuted] = useState(true);
   const [currentTrack, setCurrentTrack] = useState(0);
   const audioRef = useRef(null);
+
   const [board, setBoard] = useState({});
   const [tray, setTray] = useState([]);
   const [selectedTile, setSelectedTile] = useState(null);
@@ -482,20 +489,33 @@ export default function ChromaticPuzzle() {
   const [showHint, setShowHint] = useState(false);
   const [screen, setScreen] = useState("menu");
   const [completedLevels, setCompletedLevels] = useState(new Set());
+  useEffect(() => {
+    const saved = localStorage.getItem("chromatic_completed");
+    if (saved) setCompletedLevels(new Set(JSON.parse(saved)));
+  }, []);
+  useEffect(() => {
+    if (completedLevels.size > 0) {
+      localStorage.setItem("chromatic_completed", JSON.stringify([...completedLevels]));
+    }
+  }, [completedLevels]);
   const [showVictory, setShowVictory] = useState(false);
+  const [flashes, setFlashes] = useState({});
   const level = LEVELS[currentLevel];
   const allComplete = completedLevels.size === LEVELS.length;
 
   const TRACKS = [
-    { src: "/track1-fractal-groove.wav", name: "Prismatic" },
-    { src: "/track2-sierpinski-dreams.wav", name: "Iridescent" },
-    { src: "/track3-chaos-theory.wav", name: "Spectrum" },
+    { src: "/track1-fractal-groove.wav", name: "Fractal Groove" },
+    { src: "/track2-sierpinski-dreams.wav", name: "Sierpinski Dreams" },
+    { src: "/track3-chaos-theory.wav", name: "Chaos Theory" },
     { src: "/track4-ultraviolet-haze.wav", name: "Ultraviolet Haze" },
     { src: "/track5-crimson-pulse.wav", name: "Crimson Pulse" },
     { src: "/track6-golden-hour.wav", name: "Golden Hour" },
     { src: "/track7-neon-surge.wav", name: "Neon Surge" },
     { src: "/track8-prismatic-shift.wav", name: "Prismatic Shift" },
-    { src: "/track9-exotica.wav", name: "Exotica Cypher" }
+    { src: "/track9-exotica.wav", name: "Exotica Cypher" },
+    { src: "/track10-obsidian-groove.wav", name: "Obsidian Groove" },
+    { src: "/track11-scarlet-pulse.wav", name: "Scarlet Pulse" },
+    { src: "/track12-cobalt-surge.wav", name: "Cobalt Surge" }
   ];
 
   const trackCount = TRACKS.length;
@@ -516,14 +536,23 @@ export default function ChromaticPuzzle() {
     changeTrack(1);
   }, [changeTrack]);
 
+  const playSfx = useCallback((name) => {
+    if (isMuted) return;
+    const a = new Audio(`/sfx-${name}.wav`);
+    a.volume = name === 'complete' ? 0.6 : 0.4;
+    a.play().catch(() => { });
+  }, [isMuted]);
+
   const initLevel = useCallback((idx) => {
+    playSfx('select');
     const pieces = randomizePipeOrientations(LEVELS[idx].pieces);
     setCurrentLevel(idx); setBoard({}); setTray(shuffleArray(pieces));
     setSelectedTile(null); setSolved(false); setErrors(new Set()); setShowHint(false); setScreen("game");
-  }, []);
+  }, [playSfx]);
 
   const markSolved = (newBoard) => {
     setSolved(true);
+    playSfx('complete');
     const next = new Set([...completedLevels, currentLevel]);
     setCompletedLevels(next);
     if (skippedLevels.has(currentLevel)) {
@@ -534,30 +563,61 @@ export default function ChromaticPuzzle() {
     if (next.size === LEVELS.length) setTimeout(() => setShowVictory(true), 1500);
   };
 
+  const triggerLinkAnimation = (cellName, droppedTileStr, nb, errs) => {
+    const tileObj = parseTile(droppedTileStr);
+    const newFlashes = {};
+    const [cr, cc] = cellName.split(',').map(Number);
+    tileObj.connections.forEach(conn => {
+      if (!errs.has(`${cellName}:${conn.dir}`)) {
+        const d = DIRS[conn.dir];
+        const dist = conn.distance || 1;
+        const targetCell = `${cr + d.top * dist},${cc + d.left * dist}`;
+        if (nb[targetCell]) {
+          newFlashes[cellName] = COLORS[conn.color]?.glow || "rgba(255,255,255,0.8)";
+          newFlashes[targetCell] = COLORS[conn.color]?.glow || "rgba(255,255,255,0.8)";
+        }
+      }
+    });
+    if (Object.keys(newFlashes).length > 0) {
+      setFlashes(newFlashes);
+      setTimeout(() => setFlashes({}), 500);
+    }
+  };
+
   const handleCellClick = (cellName) => {
     if (solved) return;
     if (board[cellName] && !selectedTile) {
+      playSfx('remove');
       const tile = board[cellName]; const nb = { ...board }; delete nb[cellName];
       setBoard(nb); setTray(p => [...p, tile]); setSelectedTile(tile);
       setErrors(getConnectionErrors(level, nb)); return;
     }
     if (board[cellName] && selectedTile) {
+      playSfx('place');
       const existing = board[cellName]; const nb = { ...board, [cellName]: selectedTile };
       setBoard(nb); setTray(p => p.filter(t => t !== selectedTile).concat(existing));
-      setSelectedTile(existing); setErrors(getConnectionErrors(level, nb));
+      setSelectedTile(existing);
+      const errs = getConnectionErrors(level, nb);
+      setErrors(errs);
+      triggerLinkAnimation(cellName, selectedTile, nb, errs);
       if (checkSolution(level, nb)) markSolved(nb);
       return;
     }
     if (selectedTile && !board[cellName]) {
+      playSfx('place');
       const nb = { ...board, [cellName]: selectedTile };
       setBoard(nb); setTray(p => p.filter(t => t !== selectedTile));
-      setSelectedTile(null); setErrors(getConnectionErrors(level, nb));
+      setSelectedTile(null);
+      const errs = getConnectionErrors(level, nb);
+      setErrors(errs);
+      triggerLinkAnimation(cellName, selectedTile, nb, errs);
       if (checkSolution(level, nb)) markSolved(nb);
     }
   };
 
   const handleTrayClick = (tileStr, event) => {
     if (solved) return;
+    playSfx('select');
 
     // If it's a pipe and right-click or shift-click, rotate it
     if (tileStr.startsWith("PIPE:") && (event?.shiftKey || event?.button === 2)) {
@@ -623,6 +683,7 @@ export default function ChromaticPuzzle() {
       @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
       @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
       @keyframes pulseGlow{0%,100%{box-shadow:0 0 8px rgba(251,191,36,0.2)}50%{box-shadow:0 0 20px rgba(251,191,36,0.5)}}
+      @keyframes energyPulse{0%{box-shadow:0 0 80px 20px var(--flash-color); filter:brightness(1.5); z-index:20;}100%{box-shadow:0 0 0px 0px var(--flash-color); filter:brightness(1); z-index:1;}}
       @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
       @keyframes glintSweep{0%{transform:translateX(-100%) skewX(-15deg)}100%{transform:translateX(200%) skewX(-15deg)}}
       .tile-glint { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; pointer-events: none; }
@@ -719,7 +780,7 @@ export default function ChromaticPuzzle() {
               if (done) {
                 bg = "rgba(34,197,94,0.04)";
                 border = "rgba(34,197,94,0.15)";
-                statusText = "✓";
+                statusText = "✓ " + lvl.cells.length + "t";
                 statusColor = "rgba(34,197,94,0.6)";
               }
 
@@ -773,7 +834,7 @@ export default function ChromaticPuzzle() {
         {level.layout.map((row, r) => (<div key={r} style={{ display: "flex", gap: 6, marginBottom: r < level.layout.length - 1 ? 6 : 0 }}>
           {row.map((cellName, c) => {
             if (!cellName) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
-            return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={errors.has(`${cellName}:UP`) || errors.has(`${cellName}:DOWN`) || errors.has(`${cellName}:LEFT`) || errors.has(`${cellName}:RIGHT`) || errors.has(`${cellName}:UP_LEFT`) || errors.has(`${cellName}:UP_RIGHT`) || errors.has(`${cellName}:DOWN_LEFT`) || errors.has(`${cellName}:DOWN_RIGHT`)} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} />;
+            return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={errors.has(`${cellName}:UP`) || errors.has(`${cellName}:DOWN`) || errors.has(`${cellName}:LEFT`) || errors.has(`${cellName}:RIGHT`) || errors.has(`${cellName}:UP_LEFT`) || errors.has(`${cellName}:UP_RIGHT`) || errors.has(`${cellName}:DOWN_LEFT`) || errors.has(`${cellName}:DOWN_RIGHT`)} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} flashColor={flashes[cellName]} />;
           })}
         </div>))}
       </div>
