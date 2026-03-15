@@ -495,6 +495,7 @@ export default function ChromaticPuzzle() {
     { src: "/track6-golden-hour.wav", name: "Golden Hour" },
     { src: "/track7-neon-surge.wav", name: "Neon Surge" },
     { src: "/track8-prismatic-shift.wav", name: "Prismatic Shift" },
+    { src: "/track9-exotica.wav", name: "Exotica Cypher" }
   ];
 
   const trackCount = TRACKS.length;
@@ -666,9 +667,9 @@ export default function ChromaticPuzzle() {
   // ─── MENU ─────────────────────────────────────────────────────────────────
   if (screen === "menu") {
     const progress = completedLevels.size;
-    const currentChapter = CHAPTERS[currentChapterIndex];
+    const currentChapterMenu = CHAPTERS[currentChapterIndex];
     return (
-      <div style={{ minHeight: "100vh", background: currentChapter.bg || "linear-gradient(160deg,#0f0f1a 0%,#1a1a2e 40%,#16213e 100%)", transition: "background 0.5s ease", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", padding: "24px 16px" }}>
+      <div style={{ minHeight: "100vh", background: currentChapterMenu.bg || "linear-gradient(160deg,#0f0f1a 0%,#1a1a2e 40%,#16213e 100%)", transition: "background 0.5s ease", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", padding: "24px 16px" }}>
         {sharedHead}
         <div style={{ animation: "float 4s ease-in-out infinite", marginBottom: 16, marginTop: 16 }}>
           <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
