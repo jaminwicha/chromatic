@@ -504,18 +504,20 @@ export default function ChromaticPuzzle() {
   const allComplete = completedLevels.size === LEVELS.length;
 
   const TRACKS = [
-    { src: "/track1-fractal-groove.wav?v=2", name: "Fractal Groove" },
-    { src: "/track2-sierpinski-dreams.wav?v=2", name: "Sierpinski Dreams" },
-    { src: "/track3-chaos-theory.wav?v=2", name: "Chaos Theory" },
-    { src: "/track4-ultraviolet-haze.wav?v=2", name: "Ultraviolet Haze" },
-    { src: "/track5-crimson-pulse.wav?v=2", name: "Crimson Pulse" },
-    { src: "/track6-golden-hour.wav?v=2", name: "Golden Hour" },
-    { src: "/track7-neon-surge.wav?v=2", name: "Neon Surge" },
-    { src: "/track8-prismatic-shift.wav?v=2", name: "Prismatic Shift" },
-    { src: "/track9-exotica.wav?v=2", name: "Exotica Cypher" },
-    { src: "/track10-obsidian-groove.wav?v=2", name: "Obsidian Groove" },
-    { src: "/track11-scarlet-pulse.wav?v=2", name: "Scarlet Pulse" },
-    { src: "/track12-cobalt-surge.wav?v=2", name: "Cobalt Surge" }
+    { src: "/track1-fractal-groove.wav?v=4", name: "Fractal Groove" },
+    { src: "/track2-sierpinski-dreams.wav?v=4", name: "Sierpinski Dreams" },
+    { src: "/track3-chaos-theory.wav?v=4", name: "Chaos Theory" },
+    { src: "/track4-ultraviolet-haze.wav?v=4", name: "Ultraviolet Haze" },
+    { src: "/track5-crimson-pulse.wav?v=4", name: "Crimson Pulse" },
+    { src: "/track6-golden-hour.wav?v=4", name: "Golden Hour" },
+    { src: "/track7-neon-surge.wav?v=4", name: "Neon Surge" },
+    { src: "/track8-prismatic-shift.wav?v=4", name: "Prismatic Shift" },
+    { src: "/track9-exotica.wav?v=4", name: "Exotica Cypher" },
+    { src: "/track10-obsidian-groove.wav?v=4", name: "Obsidian Groove" },
+    { src: "/track11-scarlet-pulse.wav?v=4", name: "Scarlet Pulse" },
+    { src: "/track12-cobalt-surge.wav?v=4", name: "Cobalt Surge" },
+    { src: "/track13-emerald-bounce.wav?v=4", name: "Emerald Bounce" },
+    { src: "/track14-amethyst-drill.wav?v=4", name: "Amethyst Drill" }
   ];
 
   const trackCount = TRACKS.length;
