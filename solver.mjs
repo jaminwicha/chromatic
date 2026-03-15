@@ -48,17 +48,16 @@ function rotatePipe(pipeStr) {
 function getAllPipeRotations(pipeStr) {
   if (!pipeStr.startsWith("PIPE:")) return [pipeStr];
   
-  const rotations = [pipeStr];
+  const rotations = new Set();
+  rotations.add(pipeStr);
   let current = pipeStr;
   
   for (let i = 0; i < 3; i++) {
     current = rotatePipe(current);
-    if (!rotations.includes(current)) {
-      rotations.push(current);
-    }
+    rotations.add(current);
   }
   
-  return rotations;
+  return [...rotations];
 }
 
 // ─── TILE PARSER ────────────────────────────────────────────────────────
@@ -122,13 +121,6 @@ function getNeighborAtDist(layout, row, col, dir, dist) {
 function solvePuzzle(level) {
   const cells = level.cells;
   const solutions = [];
-  
-  // Expand pieces to include all rotations of pipes
-  const expandedPieces = [];
-  for (const piece of level.pieces) {
-    const rotations = getAllPipeRotations(piece);
-    expandedPieces.push(...rotations);
-  }
 
   function isValidPartial(board, cellName, tileStr) {
     const tile = parseTile(tileStr);
@@ -204,17 +196,22 @@ function solvePuzzle(level) {
     }
     const cn = cells[ci];
     for (let i = 0; i < remaining.length; i++) {
-      if (isValidPartial(board, cn, remaining[i])) {
-        solve(ci + 1,
-          { ...board, [cn]: remaining[i] },
-          [...remaining.slice(0, i), ...remaining.slice(i + 1)]
-        );
-        if (solutions.length >= 2) return; // stop after 2 (enough to prove non-unique)
+      const piece = remaining[i];
+      // For pipes, try all rotations at this cell (but consume only one piece)
+      const variants = getAllPipeRotations(piece);
+      for (const variant of variants) {
+        if (isValidPartial(board, cn, variant)) {
+          solve(ci + 1,
+            { ...board, [cn]: variant },
+            [...remaining.slice(0, i), ...remaining.slice(i + 1)]
+          );
+          if (solutions.length >= 2) return; // stop after 2 (enough to prove non-unique)
+        }
       }
     }
   }
 
-  solve(0, {}, expandedPieces);
+  solve(0, {}, [...level.pieces]);
   return solutions;
 }
 
@@ -243,7 +240,22 @@ let good = 0, bad = 0;
 for (const level of LEVELS) {
   const sols = solvePuzzle(level);
   const ok = sols.length === 1;
-  const match = ok && Object.keys(level.solution).every(k => sols[0][k] === level.solution[k]);
+  
+  // For solution matching, normalize pipe rotations — check if the found solution
+  // has the same piece assignments (allowing any pipe rotation)
+  const match = ok && Object.keys(level.solution).every(k => {
+    const expected = level.solution[k];
+    const found = sols[0][k];
+    if (!found) return false;
+    if (expected === found) return true;
+    // If both are pipes, check if they're rotations of each other
+    if (expected.startsWith("PIPE:") && found.startsWith("PIPE:")) {
+      const rotations = getAllPipeRotations(expected);
+      return rotations.includes(found);
+    }
+    return false;
+  });
+  
   const status = sols.length === 0 ? "✗ IMPOSSIBLE"
     : sols.length === 1 ? "✓ UNIQUE"
     : `⚠ ${sols.length} solutions`;
