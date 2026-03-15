@@ -566,15 +566,31 @@ export default function ChromaticPuzzle() {
   const triggerLinkAnimation = (cellName, droppedTileStr, nb, errs) => {
     const tileObj = parseTile(droppedTileStr);
     const newFlashes = {};
-    const [cr, cc] = cellName.split(',').map(Number);
+
+    let cr = -1, cc = -1;
+    for (let r = 0; r < level.layout.length; r++) {
+      for (let c = 0; c < level.layout[r].length; c++) {
+        if (level.layout[r][c] === cellName) {
+          cr = r; cc = c; break;
+        }
+      }
+      if (cr !== -1) break;
+    }
+
+    if (cr === -1) return;
+
     tileObj.connections.forEach(conn => {
       if (!errs.has(`${cellName}:${conn.dir}`)) {
         const d = DIRS[conn.dir];
         const dist = conn.distance || 1;
-        const targetCell = `${cr + d.top * dist},${cc + d.left * dist}`;
-        if (nb[targetCell]) {
-          newFlashes[cellName] = COLORS[conn.color]?.glow || "rgba(255,255,255,0.8)";
-          newFlashes[targetCell] = COLORS[conn.color]?.glow || "rgba(255,255,255,0.8)";
+        const targetR = cr + d.top * dist;
+        const targetC = cc + d.left * dist;
+        if (targetR >= 0 && targetR < level.layout.length && targetC >= 0 && targetC < (level.layout[targetR]?.length || 0)) {
+          const targetCell = level.layout[targetR][targetC];
+          if (targetCell && nb[targetCell]) {
+            newFlashes[cellName] = COLORS[conn.color]?.glow || "rgba(255,255,255,0.8)";
+            newFlashes[targetCell] = COLORS[conn.color]?.glow || "rgba(255,255,255,0.8)";
+          }
         }
       }
     });
