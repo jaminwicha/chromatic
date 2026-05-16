@@ -1084,21 +1084,23 @@ export default function ChromaticPuzzle() {
       setBeams(newBeams);
     }, [board, level.layout, containerRef]);
 
+    if (beams.length === 0) return null;
+
     return (
       <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 30, overflow: "visible" }}>
         <defs>
           {beams.map(b => (
-            <linearGradient key={`grad-${b.id}`} id={`grad-${b.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient key={`grad-${b.id}`} id={`grad-${b.id}`} gradientUnits="userSpaceOnUse" x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}>
               <stop offset="0%" stopColor={b.color1} />
               <stop offset="100%" stopColor={b.color2} />
             </linearGradient>
           ))}
-          <filter id="beam-glow"><feGaussianBlur stdDeviation="3" /></filter>
+          <filter id="beam-glow"><feGaussianBlur stdDeviation="4" /></filter>
         </defs>
         {beams.map(b => (
-          <g key={b.id} style={{ animation: "beamPulse 1.5s ease-out forwards" }}>
-            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={`url(#grad-${b.id})`} strokeWidth="8" filter="url(#beam-glow)" />
-            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={`url(#grad-${b.id})`} strokeWidth="2.5" strokeLinecap="round" />
+          <g key={b.id}>
+            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={b.color1} strokeWidth="10" opacity="0.35" filter="url(#beam-glow)" />
+            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={`url(#grad-${b.id})`} strokeWidth="3" opacity="0.9" strokeLinecap="round" />
           </g>
         ))}
       </svg>
@@ -1131,9 +1133,9 @@ export default function ChromaticPuzzle() {
         const numShelves = l3d.length;
         if (numShelves === 1) {
           return (
-            <div ref={containerRef} style={{ position: "relative", marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div ref={containerRef} style={{ position: "relative", marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", overflow: "visible" }}>
               <ConnectionBeams board={board} level={level} containerRef={containerRef} />
-              <div style={{ display: "grid", gridTemplateColumns: `repeat(${l3d[0][0].length}, ${cellSize}px)`, gap: 4 }}>
+              <div style={{ display: "grid", gridTemplateColumns: `repeat(${l3d[0][0].length}, ${cellSize}px)`, gap: 4, position: "relative", zIndex: 1 }}>
                 {l3d[0].flatMap((row, r) => row.map((cellName, c) => {
                   if (!cellName) return <div key={`${r}-${c}`} style={{ width: cellSize, height: cellSize }} />;
                   const isErr = Array.from(errors).some(e => e.startsWith(`${cellName}:`));
