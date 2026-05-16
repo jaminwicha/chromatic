@@ -360,12 +360,12 @@ const LEVELS = [
   { number: 112, name: "Packet Switch", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[null, null, null, "H", "G"], [null, null, null, null, "F"], [null, null, null, null, "E"], ["A", "B", "C", null, "D"]], pieces: ["OUT:RED|RED:RIGHT", "RED|PURPLE:RIGHT", "PURPLE|RED:RIGHT:2", "TRIGGER:RED:F|GREEN:UP", "GREEN|BLUE:UP", "BLUE|RED:UP", "RED|GREEN:LEFT", "IN:GREEN"], solution: { "A": "OUT:RED|RED:RIGHT", "B": "RED|PURPLE:RIGHT", "C": "PURPLE|RED:RIGHT:2", "D": "TRIGGER:RED:F|GREEN:UP", "E": "GREEN|BLUE:UP", "F": "BLUE|RED:UP", "G": "RED|GREEN:LEFT", "H": "IN:GREEN" }, hint: "The trigger at D locks F — the packet must switch through before climbing!" },
   { number: 113, name: "Traffic Controller", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[null, null, null, "H"], ["E", "F", null, "G"], ["D", "C", "B", "A"]], pieces: ["OUT:RED|CYAN:LEFT", "CYAN|BLUE:LEFT", "PIPE:RIGHT:BLUE>LEFT:GREEN", "GREEN|RED:UP", "RED|BLUE:RIGHT", "BLUE|RED:RIGHT:2", "TRIGGER:RED:B|BLUE:UP", "IN:BLUE"], solution: { "A": "OUT:RED|CYAN:LEFT", "B": "CYAN|BLUE:LEFT", "C": "PIPE:RIGHT:BLUE>LEFT:GREEN", "D": "GREEN|RED:UP", "E": "RED|BLUE:RIGHT", "F": "BLUE|RED:RIGHT:2", "G": "TRIGGER:RED:B|BLUE:UP", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
   { number: 114, name: "Flow State", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["F", null, "E"], ["G", "C", "D"], ["H", "B", null], [null, "A", null]], pieces: ["OUT:RED|RED:UP", "RED|GREEN:UP", "TRIGGER:GREEN:D|CYAN:RIGHT", "CYAN|BLUE:UP", "BLUE|YELLOW:LEFT:2", "PIPE:RIGHT:YELLOW>DOWN:BLUE", "PIPE:UP:BLUE>DOWN:RED", "IN:RED"], solution: { "A": "OUT:RED|RED:UP", "B": "RED|GREEN:UP", "C": "TRIGGER:GREEN:D|CYAN:RIGHT", "D": "CYAN|BLUE:UP", "E": "BLUE|YELLOW:LEFT:2", "F": "PIPE:RIGHT:YELLOW>DOWN:BLUE", "G": "PIPE:UP:BLUE>DOWN:RED", "H": "IN:RED" }, hint: "The trigger at C locks D — achieve flow state by unlocking the path!" },
-  { number: 115, name: "Layer Cake", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["B", "C", "D", null], ["A", null, "E", "F"], [null, null, null, "G"], [null, null, null, "H"]], pieces: ["OUT:RED|YELLOW:UP", "YELLOW|BLUE:RIGHT", "PIPE:LEFT:BLUE>RIGHT:RED", "PIPE:LEFT:RED>DOWN:PURPLE", "PURPLE|BLUE:RIGHT", "BLUE|GREEN:DOWN", "PIPE:UP:GREEN>DOWN:BLUE", "IN:BLUE"], solution: { "A": "OUT:RED|YELLOW:UP", "B": "YELLOW|BLUE:RIGHT", "C": "PIPE:LEFT:BLUE>RIGHT:RED", "D": "PIPE:LEFT:RED>DOWN:PURPLE", "E": "PURPLE|BLUE:RIGHT", "F": "BLUE|GREEN:DOWN", "G": "PIPE:UP:GREEN>DOWN:BLUE", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
-  { number: 116, name: "Stack Trace", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["H", "G", "F", "E"], [null, "B", "C", "D"], [null, "A", null, null]], pieces: ["OUT:RED|GREEN:UP", "GREEN|RED:RIGHT", "RED|PURPLE:RIGHT", "PURPLE|ORANGE:UP", "ORANGE|BLUE:LEFT", "BLUE|RED:LEFT", "RED|BLUE:LEFT", "IN:BLUE"], solution: { "A": "OUT:RED|GREEN:UP", "B": "GREEN|RED:RIGHT", "C": "RED|PURPLE:RIGHT", "D": "PURPLE|ORANGE:UP", "E": "ORANGE|BLUE:LEFT", "F": "BLUE|RED:LEFT", "G": "RED|BLUE:LEFT", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
-  { number: 117, name: "Storage Array", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["G", "F", null, null], ["H", "E", "B", "A"], [null, "D", "C", null]], pieces: ["OUT:RED|GREEN:LEFT", "GREEN|RED:DOWN", "RED|YELLOW:LEFT", "PIPE:RIGHT:YELLOW>UP:RED", "RED|BLUE:UP", "PIPE:DOWN:BLUE>LEFT:GREEN", "PIPE:RIGHT:GREEN>DOWN:BLUE", "IN:BLUE"], solution: { "A": "OUT:RED|GREEN:LEFT", "B": "GREEN|RED:DOWN", "C": "RED|YELLOW:LEFT", "D": "PIPE:RIGHT:YELLOW>UP:RED", "E": "RED|BLUE:UP", "F": "PIPE:DOWN:BLUE>LEFT:GREEN", "G": "PIPE:RIGHT:GREEN>DOWN:BLUE", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 115, name: "Layer Cake", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["A", "B", "C"], [null, null, null], [null, null, null]], [[null, null, "D"], [null, null, "E"], ["H", "G", "F"]]], pieces: ["OUT:RED|RED:RIGHT", "RED|GREEN:RIGHT", "STAIRS:UP:GREEN|BLUE:SHELF_UP", "PIPE:SHELF_DOWN:BLUE>DOWN:RED", "RED|YELLOW:DOWN", "YELLOW|BLUE:LEFT", "BLUE|RED:LEFT", "IN:RED"], solution: { "A": "OUT:RED|RED:RIGHT", "B": "RED|GREEN:RIGHT", "C": "STAIRS:UP:GREEN|BLUE:SHELF_UP", "D": "PIPE:SHELF_DOWN:BLUE>DOWN:RED", "E": "RED|YELLOW:DOWN", "F": "YELLOW|BLUE:LEFT", "G": "BLUE|RED:LEFT", "H": "IN:RED" }, hint: "The stairs at C connect the layers — climb up!" },
+  { number: 116, name: "Stack Trace", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["F", "E"], ["G", null], ["H", null]], [[null, "D"], [null, "C"], ["A", "B"]]], pieces: ["OUT:RED|RED:RIGHT", "RED|GREEN:UP", "GREEN|BLUE:UP", "STAIRS:DOWN:BLUE|PURPLE:SHELF_DOWN", "PURPLE|RED:LEFT", "RED|CYAN:DOWN", "CYAN|YELLOW:DOWN", "IN:YELLOW"], solution: { "A": "OUT:RED|RED:RIGHT", "B": "RED|GREEN:UP", "C": "GREEN|BLUE:UP", "D": "STAIRS:DOWN:BLUE|PURPLE:SHELF_DOWN", "E": "PURPLE|RED:LEFT", "F": "RED|CYAN:DOWN", "G": "CYAN|YELLOW:DOWN", "H": "IN:YELLOW" }, hint: "Trace the stack downward through the shelf!" },
+  { number: 117, name: "Storage Array", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["E", "D"], ["F", null], ["G", "H"]], [[null, "C"], [null, "B"], [null, "A"]]], pieces: ["OUT:RED|RED:UP", "RED|GREEN:UP", "STAIRS:DOWN:GREEN|BLUE:SHELF_DOWN", "BLUE|PURPLE:LEFT", "PURPLE|RED:DOWN", "RED|CYAN:DOWN", "CYAN|YELLOW:RIGHT", "IN:YELLOW"], solution: { "A": "OUT:RED|RED:UP", "B": "RED|GREEN:UP", "C": "STAIRS:DOWN:GREEN|BLUE:SHELF_DOWN", "D": "BLUE|PURPLE:LEFT", "E": "PURPLE|RED:DOWN", "F": "RED|CYAN:DOWN", "G": "CYAN|YELLOW:RIGHT", "H": "IN:YELLOW" }, hint: "Store data across shelf levels!" },
   { number: 118, name: "Vertical Limit", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["H", null, null, null], [null, null, "D", "C"], ["G", "F", "E", null]], [[null, null, null, null], [null, null, null, "B"], [null, null, null, "A"]]], pieces: ["OUT:RED|PINK:UP", "STAIRS:DOWN:PINK|GREEN:SHELF_DOWN", "PIPE:SHELF_UP:GREEN>LEFT:PURPLE", "PURPLE|BLUE:DOWN", "BLUE|YELLOW:LEFT", "YELLOW|BLUE:LEFT", "BLUE|RED:UP:2", "IN:RED"], solution: { "A": "OUT:RED|PINK:UP", "B": "STAIRS:DOWN:PINK|GREEN:SHELF_DOWN", "C": "PIPE:SHELF_UP:GREEN>LEFT:PURPLE", "D": "PURPLE|BLUE:DOWN", "E": "BLUE|YELLOW:LEFT", "F": "YELLOW|BLUE:LEFT", "G": "BLUE|RED:UP:2", "H": "IN:RED" }, hint: "Use all pieces correctly!" },
   { number: 119, name: "Tiered System", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["H", "G", null, null, null], [null, null, null, null, null], [null, null, null, null, null]], [[null, "F", "E", null, null], [null, null, null, "A", "B"], [null, null, "D", null, "C"]]], pieces: ["OUT:RED|PURPLE:RIGHT", "PURPLE|ORANGE:DOWN", "ORANGE|RED:LEFT:2", "RED|BLUE:UP:2", "BLUE|RED:LEFT", "STAIRS:DOWN:RED|BLUE:SHELF_DOWN", "BLUE|RED:LEFT", "IN:RED"], solution: { "A": "OUT:RED|PURPLE:RIGHT", "B": "PURPLE|ORANGE:DOWN", "C": "ORANGE|RED:LEFT:2", "D": "RED|BLUE:UP:2", "E": "BLUE|RED:LEFT", "F": "STAIRS:DOWN:RED|BLUE:SHELF_DOWN", "G": "BLUE|RED:LEFT", "H": "IN:RED" }, hint: "Use all pieces correctly!" },
-  { number: 120, name: "Depth Perception", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["A", null, null, null, null], ["B", "C", null, "D", "E"], [null, "H", "G", null, "F"]], pieces: ["OUT:RED|GREEN:DOWN", "PIPE:UP:GREEN>RIGHT:RED", "RED|BLUE:RIGHT:2", "BLUE|RED:RIGHT", "PIPE:LEFT:RED>DOWN:YELLOW", "YELLOW|BLUE:LEFT:2", "BLUE|GREEN:LEFT", "IN:GREEN"], solution: { "A": "OUT:RED|GREEN:DOWN", "B": "PIPE:UP:GREEN>RIGHT:RED", "C": "RED|BLUE:RIGHT:2", "D": "BLUE|RED:RIGHT", "E": "PIPE:LEFT:RED>DOWN:YELLOW", "F": "YELLOW|BLUE:LEFT:2", "G": "BLUE|GREEN:LEFT", "H": "IN:GREEN" }, hint: "Use all pieces correctly!" },
+  { number: 120, name: "Depth Perception", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["F", "E", null], ["G", null, null], ["H", null, null]], [[null, "D", null], [null, "C", null], [null, "B", "A"]]], pieces: ["OUT:RED|RED:LEFT", "RED|GREEN:UP", "GREEN|BLUE:UP", "STAIRS:DOWN:BLUE|RED:SHELF_DOWN", "RED|PURPLE:LEFT", "PURPLE|CYAN:DOWN", "CYAN|YELLOW:DOWN", "IN:YELLOW"], solution: { "A": "OUT:RED|RED:LEFT", "B": "RED|GREEN:UP", "C": "GREEN|BLUE:UP", "D": "STAIRS:DOWN:BLUE|RED:SHELF_DOWN", "E": "RED|PURPLE:LEFT", "F": "PURPLE|CYAN:DOWN", "G": "CYAN|YELLOW:DOWN", "H": "IN:YELLOW" }, hint: "Perceive the depth — stairs bridge the shelves!" },
   { number: 121, name: "Base Camp", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], layout: [[[null, null, "A", "B"], [null, null, null, "C"], [null, null, null, "D"], [null, "G", "F", "E"], [null, null, null, null]], [[null, null, null, null], [null, null, null, null], [null, null, null, null], [null, "H", null, null], ["J", "I", null, null]]], pieces: ["OUT:RED|RED:RIGHT", "RED|BLUE:DOWN", "PIPE:UP:BLUE>DOWN:RED", "PIPE:UP:RED>DOWN:BLUE", "BLUE|GREEN:LEFT", "GREEN|YELLOW:LEFT", "STAIRS:UP:YELLOW|BLUE:SHELF_UP", "PIPE:SHELF_DOWN:BLUE>DOWN:RED", "RED|BLUE:LEFT", "IN:BLUE"], solution: { "A": "OUT:RED|RED:RIGHT", "B": "RED|BLUE:DOWN", "C": "PIPE:UP:BLUE>DOWN:RED", "D": "PIPE:UP:RED>DOWN:BLUE", "E": "BLUE|GREEN:LEFT", "F": "GREEN|YELLOW:LEFT", "G": "STAIRS:UP:YELLOW|BLUE:SHELF_UP", "H": "PIPE:SHELF_DOWN:BLUE>DOWN:RED", "I": "RED|BLUE:LEFT", "J": "IN:BLUE" }, hint: "Use all pieces correctly!" },
   { number: 122, name: "High Altitude", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], layout: [[["D", "E", "F", "G"], ["C", null, null, null], [null, null, "I", "H"], [null, null, "J", null]], [["A", null, null, null], ["B", null, null, null], [null, null, null, null], [null, null, null, null]]], pieces: ["OUT:RED|RED:DOWN", "STAIRS:DOWN:RED|ORANGE:SHELF_DOWN", "PIPE:SHELF_UP:ORANGE>UP:GREEN", "GREEN|RED:RIGHT", "RED|CYAN:RIGHT", "PIPE:LEFT:CYAN>RIGHT:RED", "RED|YELLOW:DOWN:2", "YELLOW|BLUE:LEFT", "BLUE|GREEN:DOWN", "IN:GREEN"], solution: { "A": "OUT:RED|RED:DOWN", "B": "STAIRS:DOWN:RED|ORANGE:SHELF_DOWN", "C": "PIPE:SHELF_UP:ORANGE>UP:GREEN", "D": "GREEN|RED:RIGHT", "E": "RED|CYAN:RIGHT", "F": "PIPE:LEFT:CYAN>RIGHT:RED", "G": "RED|YELLOW:DOWN:2", "H": "YELLOW|BLUE:LEFT", "I": "BLUE|GREEN:DOWN", "J": "IN:GREEN" }, hint: "Use all pieces correctly!" },
   { number: 123, name: "Summit Push", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], layout: [[[null, null, null, null], [null, null, null, null], ["B", "C", null, null], ["A", null, null, null]], [[null, "G", "F", null], [null, "H", "I", "J"], [null, "D", "E", null], [null, null, null, null]]], pieces: ["OUT:RED|YELLOW:UP", "YELLOW|RED:RIGHT", "STAIRS:UP:RED|YELLOW:SHELF_UP", "PIPE:SHELF_DOWN:YELLOW>RIGHT:BLUE", "BLUE|RED:UP:2", "PIPE:DOWN:RED>LEFT:BLUE", "TRIGGER:BLUE:H|RED:DOWN", "PIPE:UP:RED>RIGHT:BLUE", "BLUE|GREEN:RIGHT", "IN:GREEN"], solution: { "A": "OUT:RED|YELLOW:UP", "B": "YELLOW|RED:RIGHT", "C": "STAIRS:UP:RED|YELLOW:SHELF_UP", "D": "PIPE:SHELF_DOWN:YELLOW>RIGHT:BLUE", "E": "BLUE|RED:UP:2", "F": "PIPE:DOWN:RED>LEFT:BLUE", "G": "TRIGGER:BLUE:H|RED:DOWN", "H": "PIPE:UP:RED>RIGHT:BLUE", "I": "BLUE|GREEN:RIGHT", "J": "IN:GREEN" }, hint: "The trigger at G locks H — push to the summit by unlocking the relay!" },
@@ -501,11 +501,23 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, classNam
       zIndex: isDragging ? 50 : 1
     }}>
       {!isPlaced && <div className="tile-glint" />}
-      <div style={{
-        width: size * 0.36, height: size * 0.36, borderRadius: "50%", background: centerGrad,
-        border: "2px solid rgba(255,255,255,0.4)",
-        display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 12px rgba(255,255,255,0.25)", zIndex: 2
-      }} />
+      {tile.type === "TRIGGER" ? (
+        <div style={{
+          width: size * 0.55, height: size * 0.36, borderRadius: 6, background: "rgba(0,0,0,0.45)",
+          border: "1.5px solid rgba(251,191,36,0.7)",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 2,
+          boxShadow: "0 0 10px rgba(251,191,36,0.25)", zIndex: 2, padding: "0 3px"
+        }}>
+          <span style={{ fontSize: Math.max(size * 0.16, 10), lineHeight: 1 }}>🔒</span>
+          <span style={{ fontSize: Math.max(size * 0.15, 9), fontWeight: 800, color: "#fbbf24", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.02em", lineHeight: 1 }}>{tile.targetCell}</span>
+        </div>
+      ) : (
+        <div style={{
+          width: size * 0.36, height: size * 0.36, borderRadius: "50%", background: centerGrad,
+          border: "2px solid rgba(255,255,255,0.4)",
+          display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 12px rgba(255,255,255,0.25)", zIndex: 2
+        }} />
+      )}
       {tile.connections.map((conn, i) => {
         const c = COLORS[conn.color], pos = ARROW_POS[conn.dir], sz = size > 70 ? 20 : size > 50 ? 16 : 12, dist = conn.distance || 1;
         return (<div key={i} style={{
@@ -801,8 +813,20 @@ export default function ChromaticPuzzle() {
 
   const cellSize = (() => {
     if (!level) return 100;
-    const cols = Math.max(...level.layout.map(r => r.length));
-    const rows = level.layout.length;
+    const is3D = Array.isArray(level.layout[0]?.[0]);
+    let cols, rows;
+    if (is3D) {
+      const l3d = level.layout;
+      cols = Math.max(...l3d.map(layer => Math.max(...layer.map(r => r.length))));
+      rows = Math.max(...l3d.map(layer => layer.length));
+      // Shrink further for multi-shelf to fit with shelf buttons + tray in viewport
+      if (rows >= 5) return 56;
+      if (rows >= 4) return 64;
+      return 72;
+    } else {
+      cols = Math.max(...level.layout.map(r => r.length));
+      rows = level.layout.length;
+    }
     if (cols >= 7) return 60;
     if (cols >= 5) return 72;
     if (cols >= 4) return 84;
@@ -1083,27 +1107,62 @@ export default function ChromaticPuzzle() {
         const maxRows = Math.max(...l3d.map(layer => layer.length));
         const maxCols = Math.max(...l3d.map(layer => layer[0].length));
         const shelfGap = 6;
-        const offsetAmount = cellSize * 0.7; // 70% diagonal spread
+        const offsetAmount = cellSize * 0.3; // reduced from 0.7 — tighter diagonal spread
 
         const baseWidth = maxCols * cellSize + (maxCols - 1) * shelfGap;
         const baseHeight = maxRows * cellSize + (maxRows - 1) * shelfGap;
 
         const maxDelta = Math.max(currentShelf, numShelves - 1 - currentShelf);
-        const totalWidth = baseWidth + maxDelta * offsetAmount * 2;
-        const totalHeight = baseHeight + maxDelta * offsetAmount * 2;
+        const totalWidth = baseWidth + maxDelta * offsetAmount * 2 + 20;
+        const totalHeight = baseHeight + maxDelta * offsetAmount * 2 + 20;
+
+        // Build dotted connection lines between cells at the same (row,col) across shelves
+        const shelfConnectors = [];
+        for (let z = 0; z < numShelves - 1; z++) {
+          const layerA = l3d[z];
+          const layerB = l3d[z + 1];
+          const deltaA = z - currentShelf;
+          const deltaB = (z + 1) - currentShelf;
+          const oxA = deltaA * offsetAmount;
+          const oyA = -deltaA * offsetAmount;
+          const oxB = deltaB * offsetAmount;
+          const oyB = -deltaB * offsetAmount;
+          for (let r = 0; r < Math.min(layerA.length, layerB.length); r++) {
+            for (let c = 0; c < Math.min(layerA[r].length, layerB[r].length); c++) {
+              if (layerA[r][c] && layerB[r][c]) {
+                const cx = c * (cellSize + shelfGap) + cellSize / 2;
+                const cy = r * (cellSize + shelfGap) + cellSize / 2;
+                const x1 = totalWidth / 2 + oxA + cx - baseWidth / 2;
+                const y1 = totalHeight / 2 + oyA + cy - baseHeight / 2;
+                const x2 = totalWidth / 2 + oxB + cx - baseWidth / 2;
+                const y2 = totalHeight / 2 + oyB + cy - baseHeight / 2;
+                shelfConnectors.push({ x1, y1, x2, y2, key: `sc-${z}-${r}-${c}` });
+              }
+            }
+          }
+        }
 
         return (
-          <div ref={containerRef} style={{ position: "relative", marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div ref={containerRef} style={{ position: "relative", marginBottom: 10, padding: 10, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <ConnectionBeams board={board} level={level} containerRef={containerRef} />
-            <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+            <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
               {l3d.map((_, z) => (
-                <button key={z} onClick={() => setCurrentShelf(z)} style={{ padding: "4px 12px", borderRadius: 8, border: z === currentShelf ? "1px solid #fbbf24" : "1px solid rgba(255,255,255,0.2)", background: z === currentShelf ? "rgba(251,191,36,0.15)" : "rgba(255,255,255,0.05)", color: z === currentShelf ? "#fbbf24" : "white", cursor: "pointer", transition: "all 0.2s" }}>
+                <button key={z} onClick={() => setCurrentShelf(z)} style={{ padding: "3px 10px", borderRadius: 8, border: z === currentShelf ? "1px solid #fbbf24" : "1px solid rgba(255,255,255,0.2)", background: z === currentShelf ? "rgba(251,191,36,0.15)" : "rgba(255,255,255,0.05)", color: z === currentShelf ? "#fbbf24" : "white", cursor: "pointer", transition: "all 0.2s", fontSize: 11 }}>
                   Shelf {z + 1}
                 </button>
               ))}
             </div>
 
             <div style={{ position: "relative", width: totalWidth, height: totalHeight }}>
+              {/* Dotted 3D connection lines between shelf levels */}
+              <svg style={{ position: "absolute", top: 0, left: 0, width: totalWidth, height: totalHeight, pointerEvents: "none", zIndex: 5 }}>
+                {shelfConnectors.map(({ x1, y1, x2, y2, key }) => (
+                  <line key={key} x1={x1} y1={y1} x2={x2} y2={y2}
+                    stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeDasharray="3,4"
+                    style={{ filter: "drop-shadow(0 0 2px rgba(255,255,255,0.05))" }} />
+                ))}
+              </svg>
+
               {l3d.map((layer, z) => {
                 const zDelta = z - currentShelf;
                 const offsetX = zDelta * offsetAmount;
@@ -1117,10 +1176,10 @@ export default function ChromaticPuzzle() {
                     left: "50%", top: "50%",
                     transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`,
                     zIndex: isFocused ? 20 : 10 + z,
-                    opacity: isFocused ? 1 : 0.25,
+                    opacity: isFocused ? 1 : 0.35,
                     pointerEvents: isFocused ? "auto" : "none",
                     transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
-                    filter: isFocused ? "none" : "blur(2px) grayscale(50%)"
+                    filter: isFocused ? "none" : "blur(1px) grayscale(30%)"
                   }}>
                     {layer.map((row, r) => (
                       <div key={r} style={{ display: "flex", gap: shelfGap, marginBottom: r < layer.length - 1 ? shelfGap : 0 }}>
