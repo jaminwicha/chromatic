@@ -170,11 +170,21 @@ function getSatisfiedTriggers(level, board) {
 }
 
 function isLocked(level, board, cellName) {
+  // Check triggers already placed on board
   const satisfied = getSatisfiedTriggers(level, board);
   for (const [cell, str] of Object.entries(board)) {
     const t = parseTile(str);
     if (t.type === "TRIGGER" && t.targetCell === cellName && !satisfied.has(cell)) {
       return true;
+    }
+  }
+  // Also lock cells targeted by triggers still in the tray (unplaced)
+  for (const pieceStr of level.pieces) {
+    const t = parseTile(pieceStr);
+    if (t.type === "TRIGGER" && t.targetCell === cellName) {
+      // Check if this trigger is placed and satisfied
+      const placedCell = Object.entries(board).find(([c, s]) => s === pieceStr)?.[0];
+      if (!placedCell || !satisfied.has(placedCell)) return true;
     }
   }
   return false;
@@ -419,7 +429,7 @@ const CHAPTERS = [
 
 // ─── TILE COMPONENT ─────────────────────────────────────────────────────────
 
-function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, className }) {
+function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, className, displayLabelMap }) {
   const tile = parseTile(tileStr);
   const isIn = tile.type === "INPUT_ONLY", isOut = tile.type === "OUTPUT_ONLY";
 
@@ -509,7 +519,7 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, classNam
           boxShadow: "0 0 10px rgba(251,191,36,0.25)", zIndex: 2, padding: "0 3px"
         }}>
           <span style={{ fontSize: Math.max(size * 0.16, 10), lineHeight: 1 }}>🔒</span>
-          <span style={{ fontSize: Math.max(size * 0.15, 9), fontWeight: 800, color: "#fbbf24", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.02em", lineHeight: 1 }}>{tile.targetCell}</span>
+          <span style={{ fontSize: Math.max(size * 0.15, 9), fontWeight: 800, color: "#fbbf24", fontFamily: "'JetBrains Mono',monospace", letterSpacing: "0.02em", lineHeight: 1 }}>{(displayLabelMap && displayLabelMap[tile.targetCell]) || tile.targetCell}</span>
         </div>
       ) : (
         <div style={{
@@ -534,13 +544,13 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, classNam
   );
 }
 
-function GridCell({ cellName, size, tile, hasError, onClick, isTarget, currentChapter, flashColor }) {
+function GridCell({ cellName, displayLabel, size, tile, hasError, onClick, isTarget, isLockedCell, currentChapter, flashColor, displayLabelMap }) {
   return (<div id={`cell-${cellName}`} onClick={onClick} style={{
     "--flash-color": flashColor || "transparent",
     width: size, height: size, borderRadius: 12,
-    background: flashColor ? flashColor : (tile ? "transparent" : (currentChapter ? `rgba(255,255,255,0.02)` : "rgba(255,255,255,0.04)")),
-    border: tile ? "none" : isTarget ? `2px dashed ${currentChapter ? currentChapter.color : "rgba(255,255,255,0.5)"}` : "2px dashed rgba(255,255,255,0.15)",
-    cursor: "pointer", position: "relative", display: "flex", alignItems: "center", justifyContent: "center",
+    background: flashColor ? flashColor : isLockedCell ? "rgba(251,191,36,0.04)" : (tile ? "transparent" : (currentChapter ? `rgba(255,255,255,0.02)` : "rgba(255,255,255,0.04)")),
+    border: tile ? "none" : isLockedCell ? "2px solid rgba(251,191,36,0.3)" : isTarget ? `2px dashed ${currentChapter ? currentChapter.color : "rgba(255,255,255,0.5)"}` : "2px dashed rgba(255,255,255,0.15)",
+    cursor: isLockedCell ? "not-allowed" : "pointer", position: "relative", display: "flex", alignItems: "center", justifyContent: "center",
     transition: "all 0.2s ease", animation: hasError ? "shake 0.4s ease" : "none",
     boxShadow: hasError ? "0 0 16px rgba(239,68,68,0.6)" : isTarget ? `0 0 16px ${currentChapter ? currentChapter.glow : "rgba(255,255,255,0.15)"}` : (tile ? "none" : "inset 0 4px 12px rgba(0,0,0,0.2)")
   }}>
@@ -548,8 +558,9 @@ function GridCell({ cellName, size, tile, hasError, onClick, isTarget, currentCh
       position: "absolute", inset: 0, pointerEvents: "none", borderRadius: "inherit",
       color: flashColor, animation: "energyRing 1s cubic-bezier(0.1, 0.9, 0.2, 1) forwards", zIndex: 0
     }} />}
-    {tile ? <TilePiece tileStr={tile} size={size - 4} isPlaced /> :
-      <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.15)", fontFamily: "'JetBrains Mono',monospace" }}>{cellName}</span>}
+    {tile ? <TilePiece tileStr={tile} size={size - 4} isPlaced displayLabelMap={displayLabelMap} /> :
+      isLockedCell ? <span style={{ fontSize: Math.max(size * 0.22, 14), opacity: 0.5 }}>🔒</span> :
+      <span style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.15)", fontFamily: "'JetBrains Mono',monospace" }}>{displayLabel || cellName}</span>}
   </div>);
 }
 
@@ -731,8 +742,20 @@ export default function ChromaticPuzzle() {
     }
   };
 
+  // Remove only the first matching element from array (not all duplicates)
+  const removeFirstMatch = (arr, target) => {
+    const idx = arr.indexOf(target);
+    if (idx === -1) return arr;
+    return [...arr.slice(0, idx), ...arr.slice(idx + 1)];
+  };
+
   const handleCellClick = (cellName) => {
     if (solved) return;
+    // Enforce trigger locks: locked cells cannot accept or swap tiles
+    if (!board[cellName] && isLocked(level, board, cellName)) {
+      playSfx('error');
+      return;
+    }
     if (board[cellName] && !selectedTile) {
       playSfx('remove');
       const tile = board[cellName]; const nb = { ...board }; delete nb[cellName];
@@ -742,7 +765,7 @@ export default function ChromaticPuzzle() {
     if (board[cellName] && selectedTile) {
       playSfx('place');
       const existing = board[cellName]; const nb = { ...board, [cellName]: selectedTile };
-      setBoard(nb); setTray(p => p.filter(t => t !== selectedTile).concat(existing));
+      setBoard(nb); setTray(p => removeFirstMatch(p, selectedTile).concat(existing));
       setSelectedTile(existing);
       const errs = getConnectionErrors(level, nb);
       setErrors(errs);
@@ -753,7 +776,7 @@ export default function ChromaticPuzzle() {
     if (selectedTile && !board[cellName]) {
       playSfx('place');
       const nb = { ...board, [cellName]: selectedTile };
-      setBoard(nb); setTray(p => p.filter(t => t !== selectedTile));
+      setBoard(nb); setTray(p => removeFirstMatch(p, selectedTile));
       setSelectedTile(null);
       const errs = getConnectionErrors(level, nb);
       setErrors(errs);
@@ -799,6 +822,25 @@ export default function ChromaticPuzzle() {
   }).length;
   const canSkip = skipsInChapter < 2;
 
+  // Build display label map: sequential A-Z across all shelves, reading order
+  const displayLabelMap = useMemo(() => {
+    if (!level) return {};
+    const l3d = getLayout3D(level.layout);
+    const map = {};
+    let idx = 0;
+    for (let z = 0; z < l3d.length; z++) {
+      for (let r = 0; r < l3d[z].length; r++) {
+        for (let c = 0; c < l3d[z][r].length; c++) {
+          if (l3d[z][r][c]) {
+            map[l3d[z][r][c]] = idx < 26 ? String.fromCharCode(65 + idx) : String.fromCharCode(65 + Math.floor(idx / 26) - 1) + String.fromCharCode(65 + (idx % 26));
+            idx++;
+          }
+        }
+      }
+    }
+    return map;
+  }, [level]);
+
   const handleSkip = () => {
     if (!canSkip || solved) return;
     const nextSkipped = new Set([...skippedLevels, currentLevel]);
@@ -819,20 +861,25 @@ export default function ChromaticPuzzle() {
       const l3d = level.layout;
       cols = Math.max(...l3d.map(layer => Math.max(...layer.map(r => r.length))));
       rows = Math.max(...l3d.map(layer => layer.length));
-      // Shrink further for multi-shelf to fit with shelf buttons + tray in viewport
-      if (rows >= 5) return 56;
-      if (rows >= 4) return 64;
-      return 72;
+      if (rows >= 6) return 48;
+      if (rows >= 5) return 52;
+      if (rows >= 4) return 58;
+      return 64;
     } else {
       cols = Math.max(...level.layout.map(r => r.length));
       rows = level.layout.length;
     }
-    if (cols >= 7) return 60;
-    if (cols >= 5) return 72;
-    if (cols >= 4) return 84;
-    if (rows >= 4) return 88;
-    if (rows >= 3 && cols >= 3) return 92;
-    return 100;
+    const totalCells = rows * cols;
+    if (totalCells >= 30) return 52;
+    if (cols >= 7) return 56;
+    if (cols >= 6) return 62;
+    if (cols >= 5) return 68;
+    if (rows >= 6) return 62;
+    if (rows >= 5) return 72;
+    if (cols >= 4) return 78;
+    if (rows >= 4) return 82;
+    if (rows >= 3 && cols >= 3) return 88;
+    return 96;
   })();
 
   const sharedHead = (<>
@@ -844,6 +891,7 @@ export default function ChromaticPuzzle() {
       @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
       @keyframes pulseGlow{0%,100%{box-shadow:0 0 8px rgba(251,191,36,0.2)}50%{box-shadow:0 0 20px rgba(251,191,36,0.5)}}
       @keyframes energyRing{0%{transform:scale(0.8); opacity:1; box-shadow:0 0 20px 10px currentColor, inset 0 0 20px 10px currentColor;}100%{transform:scale(1.8); opacity:0; box-shadow:0 0 80px 30px currentColor, inset 0 0 40px 20px currentColor;}}
+      @keyframes beamPulse{0%{opacity:0.3}50%{opacity:1}100%{opacity:0.7}}
       @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
       @keyframes glintSweep{0%{transform:translateX(-100%) skewX(-15deg)}100%{transform:translateX(200%) skewX(-15deg)}}
       @keyframes dash{0%{stroke-dashoffset:150}100%{stroke-dashoffset:0}}
@@ -1045,23 +1093,14 @@ export default function ChromaticPuzzle() {
               <stop offset="100%" stopColor={b.color2} />
             </linearGradient>
           ))}
-          <filter id="crackle">
-            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
+          <filter id="beam-glow"><feGaussianBlur stdDeviation="3" /></filter>
         </defs>
-        {beams.map(b => {
-          const cx = (b.x1 + b.x2) / 2 + (Math.random() * 40 - 20);
-          const cy = (b.y1 + b.y2) / 2 + (Math.random() * 40 - 20);
-          const path = `M ${b.x1} ${b.y1} Q ${cx} ${cy} ${b.x2} ${b.y2}`;
-
-          return (
-            <g key={b.id}>
-              <path d={path} fill="none" stroke={`url(#grad-${b.id})`} strokeWidth="4" filter="url(#crackle)" opacity="0.6" style={{ animation: "dash 1.5s linear infinite" }} />
-              <path d={path} fill="none" stroke={`url(#grad-${b.id})`} strokeWidth="2" opacity="0.9" strokeDasharray="10 5" style={{ animation: "dash 0.8s linear infinite" }} />
-            </g>
-          );
-        })}
+        {beams.map(b => (
+          <g key={b.id} style={{ animation: "beamPulse 1.5s ease-out forwards" }}>
+            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={`url(#grad-${b.id})`} strokeWidth="8" filter="url(#beam-glow)" />
+            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={`url(#grad-${b.id})`} strokeWidth="2.5" strokeLinecap="round" />
+          </g>
+        ))}
       </svg>
     );
   }
@@ -1073,6 +1112,7 @@ export default function ChromaticPuzzle() {
       <div style={{ width: "100%", maxWidth: 520, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <button onClick={() => setScreen("menu")} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "7px 12px", color: "rgba(255,255,255,0.6)", fontSize: 12, fontWeight: 600, fontFamily: "'JetBrains Mono',monospace", cursor: "pointer" }}>← Levels</button>
         <div style={{ textAlign: "center" }}>
+          <span style={{ fontSize: 9, color: currentChapter.color || "rgba(255,255,255,0.4)", letterSpacing: "0.25em", display: "block", marginBottom: 2 }}>{currentChapter.name}</span>
           <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.2em", display: "block" }}>LEVEL {level.number}</span>
           <span style={{ fontSize: 16, fontWeight: 700, fontFamily: "'Orbitron',sans-serif", color: "rgba(255,255,255,0.9)" }}>{level.name}</span>
         </div>
@@ -1093,13 +1133,14 @@ export default function ChromaticPuzzle() {
           return (
             <div ref={containerRef} style={{ position: "relative", marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <ConnectionBeams board={board} level={level} containerRef={containerRef} />
-              {l3d[0].map((row, r) => (<div key={r} style={{ display: "flex", gap: 6, marginBottom: r < l3d[0].length - 1 ? 6 : 0 }}>
-                {row.map((cellName, c) => {
-                  if (!cellName) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
+              <div style={{ display: "grid", gridTemplateColumns: `repeat(${l3d[0][0].length}, ${cellSize}px)`, gap: 4 }}>
+                {l3d[0].flatMap((row, r) => row.map((cellName, c) => {
+                  if (!cellName) return <div key={`${r}-${c}`} style={{ width: cellSize, height: cellSize }} />;
                   const isErr = Array.from(errors).some(e => e.startsWith(`${cellName}:`));
-                  return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={isErr} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} flashColor={flashes[cellName]} />;
-                })}
-              </div>))}
+                  const locked = !board[cellName] && isLocked(level, board, cellName);
+                  return <GridCell key={`${r}-${c}`} cellName={cellName} displayLabel={displayLabelMap[cellName]} size={cellSize} tile={board[cellName]} hasError={isErr} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName] && !locked} isLockedCell={locked} currentChapter={currentChapter} flashColor={flashes[cellName]} displayLabelMap={displayLabelMap} />;
+                }))}
+              </div>
             </div>
           );
         }
@@ -1181,15 +1222,14 @@ export default function ChromaticPuzzle() {
                     transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
                     filter: isFocused ? "none" : "blur(1px) grayscale(30%)"
                   }}>
-                    {layer.map((row, r) => (
-                      <div key={r} style={{ display: "flex", gap: shelfGap, marginBottom: r < layer.length - 1 ? shelfGap : 0 }}>
-                        {row.map((cellName, c) => {
-                          if (!cellName) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
+                    <div style={{ display: "grid", gridTemplateColumns: `repeat(${layer[0].length}, ${cellSize}px)`, gap: shelfGap }}>
+                      {layer.flatMap((row, r) => row.map((cellName, c) => {
+                          if (!cellName) return <div key={`${r}-${c}`} style={{ width: cellSize, height: cellSize }} />;
                           const isErr = Array.from(errors).some(e => e.startsWith(`${cellName}:`));
-                          return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={isErr} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} flashColor={flashes[cellName]} />;
-                        })}
-                      </div>
-                    ))}
+                          const locked = !board[cellName] && isLocked(level, board, cellName);
+                          return <GridCell key={`${r}-${c}`} cellName={cellName} displayLabel={displayLabelMap[cellName]} size={cellSize} tile={board[cellName]} hasError={isErr} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName] && !locked} isLockedCell={locked} currentChapter={currentChapter} flashColor={flashes[cellName]} displayLabelMap={displayLabelMap} />;
+                        }))}
+                    </div>
                   </div>
                 );
               })}
@@ -1199,7 +1239,7 @@ export default function ChromaticPuzzle() {
       })()}
       {selectedTile && (<div style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 10, padding: "7px 14px", borderRadius: 10, background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.2)" }}>
         <span style={{ color: "#fbbf24", fontSize: 11 }}>Selected:</span>
-        <TilePiece tileStr={selectedTile} size={40} />
+        <TilePiece tileStr={selectedTile} size={40} displayLabelMap={displayLabelMap} />
         <button onClick={() => setSelectedTile(null)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.4)", fontSize: 15, cursor: "pointer", padding: "2px 5px" }}>✕</button>
       </div>)}
       <div style={{ marginBottom: 12 }}>
@@ -1207,7 +1247,7 @@ export default function ChromaticPuzzle() {
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginTop: 8, padding: "24px 16px", borderRadius: 16, background: "rgba(0,0,0,0.2)", minHeight: 120, border: `1px solid ${currentChapter.glow}`, boxShadow: `0 4px 60px ${currentChapter.glow}` }}>
           {tray.map((t, i) => (
             <TilePiece key={i} tileStr={t} size={cellSize} onClick={(e) => handleTrayClick(t, e)}
-              isDragging={selectedTile === t} className="tile-tray" />
+              isDragging={selectedTile === t} className="tile-tray" displayLabelMap={displayLabelMap} />
           ))}
           {tray.length === 0 && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 13, alignSelf: "center", fontFamily: "'JetBrains Mono',monospace" }}>Tray empty</span>}
         </div>
