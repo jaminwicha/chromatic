@@ -1133,18 +1133,37 @@ export default function ChromaticPuzzle() {
       <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 30, overflow: "visible" }}>
         <defs>
           {beams.map(b => (
-            <linearGradient key={`grad-${b.id}`} id={`grad-${b.id}`} gradientUnits="userSpaceOnUse" x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}>
-              <stop offset="0%" stopColor={b.color1} />
-              <stop offset="100%" stopColor={b.color2} />
-            </linearGradient>
+            <g key={`defs-${b.id}`}>
+              {/* Color gradient: source color → midpoint blend → target color */}
+              <linearGradient id={`grad-${b.id}`} gradientUnits="userSpaceOnUse" x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}>
+                <stop offset="0%" stopColor={b.color1} />
+                <stop offset="35%" stopColor={b.color1} />
+                <stop offset="50%" stopColor={b.color2} stopOpacity="0.8" />
+                <stop offset="65%" stopColor={b.color2} />
+                <stop offset="100%" stopColor={b.color2} />
+              </linearGradient>
+              {/* Opacity mask gradient: fade in from source, full at center, fade out at target */}
+              <linearGradient id={`mask-${b.id}`} gradientUnits="userSpaceOnUse" x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}>
+                <stop offset="0%" stopColor="white" stopOpacity="0" />
+                <stop offset="15%" stopColor="white" stopOpacity="0.9" />
+                <stop offset="50%" stopColor="white" stopOpacity="1" />
+                <stop offset="85%" stopColor="white" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="white" stopOpacity="0" />
+              </linearGradient>
+              <mask id={`bmask-${b.id}`}>
+                <rect x="0" y="0" width="100%" height="100%" fill={`url(#mask-${b.id})`} />
+              </mask>
+            </g>
           ))}
-          <filter id="beam-glow"><feGaussianBlur stdDeviation="4" /></filter>
+          <filter id="beam-glow"><feGaussianBlur stdDeviation="5" /></filter>
         </defs>
         {beams.map(b => (
-          <g key={b.id} className={b.fading ? "beam-group-fade" : ""}>
+          <g key={b.id} className={b.fading ? "beam-group-fade" : ""} mask={`url(#bmask-${b.id})`}>
+            {/* Soft outer glow */}
             <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}
-              stroke={b.color1} strokeWidth="12" filter="url(#beam-glow)"
+              stroke={`url(#grad-${b.id})`} strokeWidth="14" filter="url(#beam-glow)"
               className="beam-glow" />
+            {/* Core beam line */}
             <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}
               stroke={`url(#grad-${b.id})`} strokeWidth="3" strokeLinecap="round"
               className="beam-core" />
