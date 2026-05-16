@@ -891,7 +891,13 @@ export default function ChromaticPuzzle() {
       @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
       @keyframes pulseGlow{0%,100%{box-shadow:0 0 8px rgba(251,191,36,0.2)}50%{box-shadow:0 0 20px rgba(251,191,36,0.5)}}
       @keyframes energyRing{0%{transform:scale(0.8); opacity:1; box-shadow:0 0 20px 10px currentColor, inset 0 0 20px 10px currentColor;}100%{transform:scale(1.8); opacity:0; box-shadow:0 0 80px 30px currentColor, inset 0 0 40px 20px currentColor;}}
-      @keyframes beamPulse{0%{opacity:0.3}50%{opacity:1}100%{opacity:0.7}}
+      @keyframes beamFadeIn{0%{opacity:0;stroke-dashoffset:80}40%{opacity:1;stroke-dashoffset:0}100%{opacity:1;stroke-dashoffset:0}}
+      @keyframes beamGlowPulse{0%{opacity:0.2}50%{opacity:0.5}100%{opacity:0.2}}
+      @keyframes beamFadeOut{0%{opacity:1}100%{opacity:0}}
+      .beam-core{animation:beamFadeIn 0.6s ease-out forwards;stroke-dasharray:80;}
+      .beam-glow{animation:beamGlowPulse 0.8s ease-in-out infinite;}
+      .beam-group-fade{animation:beamFadeOut 0.5s ease-in forwards;}
+      @keyframes energyFlow{0%{stroke-dashoffset:20}100%{stroke-dashoffset:0}}
       @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
       @keyframes glintSweep{0%{transform:translateX(-100%) skewX(-15deg)}100%{transform:translateX(200%) skewX(-15deg)}}
       @keyframes dash{0%{stroke-dashoffset:150}100%{stroke-dashoffset:0}}
@@ -1026,12 +1032,15 @@ export default function ChromaticPuzzle() {
 
   function ConnectionBeams({ board, level, containerRef }) {
     const [beams, setBeams] = useState([]);
+    const beamTimestamps = useRef({});
+    const fadeTimers = useRef({});
 
     useEffect(() => {
       if (!containerRef.current) return;
       const containerRect = containerRef.current.getBoundingClientRect();
       const newBeams = [];
       const l3d = getLayout3D(level.layout);
+      const now = Date.now();
 
       for (let z = 0; z < l3d.length; z++) {
         for (let r = 0; r < l3d[z].length; r++) {
@@ -1071,17 +1080,51 @@ export default function ChromaticPuzzle() {
                 if (p) targetColor = p.color;
               }
 
+              const beamId = `${cellName}-${neighbor.cell}-${conn.dir}`;
+              // Track when this beam first appeared
+              if (!beamTimestamps.current[beamId]) {
+                beamTimestamps.current[beamId] = now;
+              }
+
+              const age = now - beamTimestamps.current[beamId];
+              const isFading = age > 1500; // Start fade after 1.5s
+
               newBeams.push({
-                id: `${cellName}-${neighbor.cell}-${conn.dir}`,
+                id: beamId,
                 x1: sX, y1: sY, x2: tX, y2: tY,
                 color1: COLORS[conn.color]?.glow || "#fff",
-                color2: COLORS[targetColor]?.glow || "#fff"
+                color2: COLORS[targetColor]?.glow || "#fff",
+                fading: isFading
               });
             }
           }
         }
       }
+
+      // Clean up timestamps for beams that no longer exist
+      const activeIds = new Set(newBeams.map(b => b.id));
+      for (const id of Object.keys(beamTimestamps.current)) {
+        if (!activeIds.has(id)) delete beamTimestamps.current[id];
+      }
+
       setBeams(newBeams);
+
+      // Schedule fade-out: re-render at 1.5s to start fade class, then remove at 2s
+      for (const b of newBeams) {
+        if (!fadeTimers.current[b.id]) {
+          fadeTimers.current[b.id] = true;
+          // Trigger fade class at 1.5s
+          setTimeout(() => {
+            setBeams(prev => prev.map(pb => pb.id === b.id ? { ...pb, fading: true } : pb));
+          }, 1500);
+          // Remove beam at 2s
+          setTimeout(() => {
+            setBeams(prev => prev.filter(pb => pb.id !== b.id));
+            delete fadeTimers.current[b.id];
+            delete beamTimestamps.current[b.id];
+          }, 2000);
+        }
+      }
     }, [board, level.layout, containerRef]);
 
     if (beams.length === 0) return null;
@@ -1098,9 +1141,13 @@ export default function ChromaticPuzzle() {
           <filter id="beam-glow"><feGaussianBlur stdDeviation="4" /></filter>
         </defs>
         {beams.map(b => (
-          <g key={b.id}>
-            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={b.color1} strokeWidth="10" opacity="0.35" filter="url(#beam-glow)" />
-            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke={`url(#grad-${b.id})`} strokeWidth="3" opacity="0.9" strokeLinecap="round" />
+          <g key={b.id} className={b.fading ? "beam-group-fade" : ""}>
+            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}
+              stroke={b.color1} strokeWidth="12" filter="url(#beam-glow)"
+              className="beam-glow" />
+            <line x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2}
+              stroke={`url(#grad-${b.id})`} strokeWidth="3" strokeLinecap="round"
+              className="beam-core" />
           </g>
         ))}
       </svg>
