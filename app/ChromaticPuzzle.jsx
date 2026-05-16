@@ -24,123 +24,32 @@ const OPPOSITE = {
   UP: "DOWN", DOWN: "UP", LEFT: "RIGHT", RIGHT: "LEFT",
   UP_LEFT: "DOWN_RIGHT", DOWN_RIGHT: "UP_LEFT",
   UP_RIGHT: "DOWN_LEFT", DOWN_LEFT: "UP_RIGHT",
+  SHELF_UP: "SHELF_DOWN", SHELF_DOWN: "SHELF_UP"
 };
 
-function parseTile(str) {
-  if (str.startsWith("IN:")) {
-    return { type: "INPUT_ONLY", acceptColors: str.slice(3).split(","), outer: null, connections: [], inPorts: [], id: str };
-  }
-  if (str.startsWith("OUT:")) {
-    const rest = str.slice(4);
-    const [center, innerPart] = rest.split("|");
-    const connections = innerPart.split(",").map(p => {
-      const parts = p.split(":");
-      return { color: parts[0], dir: parts[1], distance: parts[2] ? parseInt(parts[2]) : 1 };
-    });
-    return { type: "OUTPUT_ONLY", center, outer: null, connections, inPorts: [], id: str };
-  }
-  if (str.startsWith("PIPE:")) {
-    const rest = str.slice(5);
-    const channels = rest.split(",").map(ch => {
-      const [inPart, outPart] = ch.split(">");
-      const [inDir, inColor] = inPart.split(":");
-      const [outDir, outColor] = outPart.split(":");
-      return { inDir, inColor, outDir, outColor };
-    });
-    const connections = channels.map(ch => ({ color: ch.outColor, dir: ch.outDir, distance: 1 }));
-    const inPorts = channels.map(ch => ({ dir: ch.inDir, color: ch.inColor }));
-    return { type: "PIPE", outer: null, connections, channels, inPorts, id: str };
-  }
-  const [outer, innerPart] = str.split("|");
-  const connections = innerPart.split(",").map(p => {
-    const parts = p.split(":");
-    return { color: parts[0], dir: parts[1], distance: parts[2] ? parseInt(parts[2]) : 1 };
-  });
-  return { type: "NORMAL", outer, connections, inPorts: [], id: str };
-}
-
-function findCellPos(layout, cellName) {
-  for (let r = 0; r < layout.length; r++)
-    for (let c = 0; c < layout[r].length; c++)
-      if (layout[r][c] === cellName) return { row: r, col: c };
-  return null;
-}
-
-function getNeighborAtDist(layout, row, col, dir, dist) {
-  const { dr, dc } = DIRS[dir];
-  const nr = row + dr * dist, nc = col + dc * dist;
-  if (nr >= 0 && nr < layout.length && nc >= 0 && nc < (layout[nr]?.length || 0) && layout[nr][nc])
-    return { cell: layout[nr][nc], row: nr, col: nc };
-  return null;
-}
-
-function getConnectionErrors(level, board) {
-  const errors = new Set();
-  for (let r = 0; r < level.layout.length; r++) {
-    for (let c = 0; c < level.layout[r].length; c++) {
-      const cellName = level.layout[r][c];
-      if (!cellName || !board[cellName]) continue;
-      const tile = parseTile(board[cellName]);
-      for (const conn of tile.connections) {
-        const dist = conn.distance || 1;
-        const neighbor = getNeighborAtDist(level.layout, r, c, conn.dir, dist);
-        if (!neighbor || !board[neighbor.cell]) continue;
-        const nTile = parseTile(board[neighbor.cell]);
-        let isErr = false;
-        if (nTile.type === "NORMAL" && conn.color !== nTile.outer) isErr = true;
-        if (nTile.type === "INPUT_ONLY" && !nTile.acceptColors.includes(conn.color)) isErr = true;
-        if (nTile.type === "OUTPUT_ONLY") isErr = true;
-        if (nTile.type === "PIPE") {
-          const oppDir = OPPOSITE[conn.dir];
-          if (!nTile.inPorts?.find(p => p.dir === oppDir && p.color === conn.color)) isErr = true;
-        }
-        if (isErr) errors.add(`${cellName}:${conn.dir}`);
-      }
-    }
-  }
-  return errors;
-}
-
-function shuffleArray(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// Pipe rotation utilities
 const ROTATE_CW = {
   UP: "RIGHT", RIGHT: "DOWN", DOWN: "LEFT", LEFT: "UP",
   UP_RIGHT: "DOWN_RIGHT", DOWN_RIGHT: "DOWN_LEFT",
   DOWN_LEFT: "UP_LEFT", UP_LEFT: "UP_RIGHT"
 };
 
-function rotateDirection(dir) {
-  return ROTATE_CW[dir] || dir;
-}
+function rotateDirection(dir) { return ROTATE_CW[dir] || dir; }
 
 function rotatePipe(pipeStr) {
   if (!pipeStr.startsWith("PIPE:")) return pipeStr;
-
   const rest = pipeStr.slice(5);
   const channels = rest.split(",").map(ch => {
     const [inPart, outPart] = ch.split(">");
     const [inDir, inColor] = inPart.split(":");
     const [outDir, outColor] = outPart.split(":");
-
     return `${rotateDirection(inDir)}:${inColor}>${rotateDirection(outDir)}:${outColor}`;
   });
-
   return `PIPE:${channels.join(",")}`;
 }
 
 function randomizePipeOrientations(pieces) {
   return pieces.map(piece => {
     if (!piece.startsWith("PIPE:")) return piece;
-
-    // Rotate 0-3 times randomly
     let result = piece;
     const rotations = Math.floor(Math.random() * 4);
     for (let i = 0; i < rotations; i++) {
@@ -150,27 +59,177 @@ function randomizePipeOrientations(pieces) {
   });
 }
 
-function checkSolution(level, board) {
-  // All cells must be filled
-  for (const cell of level.cells)
-    if (!board[cell]) return false;
-  // Zero connection errors = valid solution
-  const errs = getConnectionErrors(level, board);
-  if (errs.size > 0) return false;
-  // Full validation: every outgoing arrow must reach a valid neighbor
-  for (let r = 0; r < level.layout.length; r++) {
-    for (let c = 0; c < level.layout[r].length; c++) {
-      const cellName = level.layout[r][c];
-      if (!cellName || !board[cellName]) continue;
-      const tile = parseTile(board[cellName]);
-      for (const conn of tile.connections) {
-        const dist = conn.distance || 1;
-        const neighbor = getNeighborAtDist(level.layout, r, c, conn.dir, dist);
-        if (!neighbor || !board[neighbor.cell]) return false;
+function parseTile(str) {
+  if (!str || typeof str !== 'string') return { type: "EMPTY", connections: [], inPorts: [] };
+  if (str.startsWith("IN:")) return { type: "INPUT_ONLY", acceptColors: str.slice(3).split(","), outer: null, connections: [], inPorts: [], id: str };
+  if (str.startsWith("OUT:")) {
+    const rest = str.slice(4); const [center, innerPart] = rest.split("|");
+    const connections = innerPart.split(",").map(p => { const parts = p.split(":"); return { color: parts[0], dir: parts[1], distance: parts[2] ? Number.parseInt(parts[2]) : 1 }; });
+    return { type: "OUTPUT_ONLY", center, outer: null, connections, inPorts: [], id: str };
+  }
+  if (str.startsWith("TRIGGER:")) {
+    const [header, innerPart] = str.split("|"); const parts = header.split(":");
+    const reqColor = parts[1]; const targetCell = parts[2];
+    let connections = [];
+    if (innerPart) { connections = innerPart.split(",").map(p => { const bits = p.split(":"); return { color: bits[0], dir: bits[1], distance: bits[2] ? parseInt(bits[2]) : 1 }; }); }
+    return { type: "TRIGGER", reqColor, targetCell, center: reqColor, outer: reqColor, connections, inPorts: [], id: str };
+  }
+  if (str.startsWith("STAIRS:")) {
+    const [header, innerPart] = str.split("|"); const parts = header.split(":");
+    const stairsDir = parts[1]; const stairsColor = parts[2];
+    let connections = [];
+    if (innerPart) {
+      connections = innerPart.split(",").map(p => {
+        const bits = p.split(":");
+        if (bits.length === 1) return { color: bits[0], dir: stairsDir === "UP" ? "SHELF_UP" : "SHELF_DOWN", distance: 1 };
+        const targetDir = (bits[1] === "UP" || bits[1] === "SHELF_UP") ? "SHELF_UP" : (bits[1] === "DOWN" || bits[1] === "SHELF_DOWN") ? "SHELF_DOWN" : bits[1];
+        return { color: bits[0], dir: targetDir, distance: bits[2] ? parseInt(bits[2]) : 1 };
+      });
+    } else { connections.push({ color: stairsColor, dir: stairsDir === "UP" ? "SHELF_UP" : "SHELF_DOWN", distance: 1 }); }
+    return { type: "STAIRS", stairsDir, stairsColor, outer: stairsColor, connections, id: str };
+  }
+  if (str.startsWith("PIPE:")) {
+    const rest = str.slice(5);
+    const channels = rest.split(",").map(ch => {
+      const [inPart, outPart] = ch.split(">"); const [inDir, inColor] = inPart.split(":"); const [outDir, outColor] = outPart.split(":");
+      return { inDir, inColor, outDir, outColor };
+    });
+    const connections = channels.map(ch => ({ color: ch.outColor, dir: ch.outDir, distance: 1 }));
+    const inPorts = channels.map(ch => ({ dir: ch.inDir, color: ch.inColor }));
+    return { type: "PIPE", outer: null, connections, channels, inPorts, id: str };
+  }
+  const pts = str.split("|"); const outer = pts[0]; const innerStr = pts[1] || "";
+  const connections = innerStr.split(",").filter(Boolean).map(p => { const parts = p.split(":"); return { color: parts[0], dir: parts[1], distance: parts[2] ? Number.parseInt(parts[2]) : 1 }; });
+  return { type: "NORMAL", outer, connections, inPorts: [], id: str };
+}
+
+function getLayout3D(layout) {
+  if (!layout || layout.length === 0) return [];
+  if (Array.isArray(layout[0]) && Array.isArray(layout[0][0])) return layout;
+  return [layout];
+}
+
+function findCellPos(layout, cellName) {
+  const l3d = getLayout3D(layout);
+  for (let z = 0; z < l3d.length; z++)
+    for (let r = 0; r < l3d[z].length; r++)
+      for (let c = 0; c < l3d[z][r].length; c++)
+        if (l3d[z][r][c] === cellName) return { z, row: r, col: c };
+  return null;
+}
+
+function getNeighborAtDist(layout, z, row, col, dir, dist) {
+  const l3d = getLayout3D(layout);
+  if (dir === "SHELF_UP") {
+    if (l3d[z + dist] && l3d[z + dist][row] && l3d[z + dist][row][col]) return { cell: l3d[z + dist][row][col], z: z + dist, row, col };
+    return null;
+  }
+  if (dir === "SHELF_DOWN") {
+    if (l3d[z - dist] && l3d[z - dist][row] && l3d[z - dist][row][col]) return { cell: l3d[z - dist][row][col], z: z - dist, row, col };
+    return null;
+  }
+  const d = DIRS[dir];
+  if (!d) return null;
+  const nr = row + d.dr * dist, nc = col + d.dc * dist;
+  if (l3d[z] && nr >= 0 && nr < l3d[z].length && nc >= 0 && nc < (l3d[z][nr]?.length || 0) && l3d[z][nr][nc])
+    return { cell: l3d[z][nr][nc], z, row: nr, col: nc };
+  return null;
+}
+
+function checkMatch(sourceTile, conn, targetTile) {
+  if (!targetTile || targetTile.type === "EMPTY") return false;
+  const oppDir = OPPOSITE[conn.dir];
+  if (targetTile.type === "NORMAL" && conn.color === targetTile.outer) return true;
+  if (targetTile.type === "INPUT_ONLY" && targetTile.acceptColors.includes(conn.color)) return true;
+  if (targetTile.type === "STAIRS" && conn.color === targetTile.outer) return true;
+  if (targetTile.type === "OUTPUT_ONLY" && conn.color === targetTile.center) return true;
+  if (targetTile.type === "PIPE") {
+    return !!targetTile.inPorts?.find(p => p.dir === oppDir && p.color === conn.color);
+  }
+  if (targetTile.type === "TRIGGER" && conn.color === targetTile.reqColor) return true;
+  return false;
+}
+
+function getSatisfiedTriggers(level, board) {
+  const satisfied = new Set();
+  Object.entries(board).forEach(([sourceCell, sourceStr]) => {
+    const sTile = parseTile(sourceStr);
+    const sPos = findCellPos(level.layout, sourceCell);
+    if (!sPos) return;
+    sTile.connections.forEach(conn => {
+      const neighbor = getNeighborAtDist(level.layout, sPos.z, sPos.row, sPos.col, conn.dir, conn.distance || 1);
+      if (neighbor && board[neighbor.cell]) {
+        const nTile = parseTile(board[neighbor.cell]);
+        if (nTile.type === "TRIGGER" && nTile.reqColor === conn.color) {
+          satisfied.add(neighbor.cell);
+        }
+      }
+    });
+  });
+  return satisfied;
+}
+
+function isLocked(level, board, cellName) {
+  const satisfied = getSatisfiedTriggers(level, board);
+  for (const [cell, str] of Object.entries(board)) {
+    const t = parseTile(str);
+    if (t.type === "TRIGGER" && t.targetCell === cellName && !satisfied.has(cell)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function getConnectionErrors(level, board) {
+  const errors = new Set();
+  const l3d = getLayout3D(level.layout);
+  for (let z = 0; z < l3d.length; z++) {
+    for (let r = 0; r < l3d[z].length; r++) {
+      for (let c = 0; c < l3d[z][r].length; c++) {
+        const cellName = l3d[z][r][c];
+        if (!cellName || !board[cellName]) continue;
+        const tile = parseTile(board[cellName]);
+        for (const conn of tile.connections) {
+          const dist = conn.distance || 1;
+          const neighbor = getNeighborAtDist(level.layout, z, r, c, conn.dir, dist);
+          if (!neighbor || !board[neighbor.cell]) {
+            errors.add(`${cellName}:${conn.dir}`);
+            continue;
+          }
+          const nTile = parseTile(board[neighbor.cell]);
+          if (!checkMatch(tile, conn, nTile)) {
+            errors.add(`${cellName}:${conn.dir}`);
+          }
+        }
       }
     }
   }
+  return errors;
+}
+
+function checkSolution(level, board) {
+  for (const cell of level.cells)
+    if (!board[cell]) return false;
+
+  const errs = getConnectionErrors(level, board);
+  if (errs.size > 0) return false;
+
+  const finalSatisfied = getSatisfiedTriggers(level, board);
+  for (const [cell, str] of Object.entries(board)) {
+    const t = parseTile(str);
+    if (t.type === "TRIGGER" && !finalSatisfied.has(cell)) return false;
+  }
+
   return true;
+}
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 // ─── ALL 60 LEVELS ──────────────────────────────────────────────────────────
@@ -295,6 +354,38 @@ const LEVELS = [
   { number: 106, name: "Mega Gap Grid", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["A", null, "B", "C"], ["D", "E", null, "F"], [null, "G", null, "H"]], pieces: ["OUT:RED|RED:RIGHT:2,BLUE:DOWN", "PIPE:LEFT:RED>RIGHT:GREEN", "IN:GREEN", "BLUE|ORANGE:RIGHT,PURPLE:DOWN_RIGHT", "ORANGE|PINK:RIGHT:2", "IN:PINK", "PURPLE|CYAN:RIGHT:2", "IN:CYAN"], solution: { A: "OUT:RED|RED:RIGHT:2,BLUE:DOWN", B: "PIPE:LEFT:RED>RIGHT:GREEN", C: "IN:GREEN", D: "BLUE|ORANGE:RIGHT,PURPLE:DOWN_RIGHT", E: "ORANGE|PINK:RIGHT:2", F: "IN:PINK", G: "PURPLE|CYAN:RIGHT:2", H: "IN:CYAN" }, hint: "Three lanes with pipes, diagonals, and distance-2 gap jumps!" },
   { number: 107, name: "Chromatic Master", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R"], layout: [["A", "B", "C", "D", "E", "F"], ["G", "H", "I", "J", "K", "L"], ["M", "N", "O", "P", "Q", "R"]], pieces: ["OUT:RED|RED:RIGHT,BLUE:DOWN", "RED|GREEN:RIGHT,CYAN:DOWN", "GREEN|ORANGE:RIGHT", "ORANGE|PURPLE:RIGHT", "PURPLE|PINK:RIGHT", "IN:PINK", "BLUE|YELLOW:RIGHT", "PIPE:UP:CYAN>RIGHT:RED,LEFT:YELLOW>DOWN:ORANGE", "RED|BLUE:RIGHT", "BLUE|GREEN:RIGHT", "GREEN|CYAN:RIGHT", "IN:CYAN", "IN:PURPLE", "ORANGE|PURPLE:LEFT,PINK:RIGHT", "PINK|RED:RIGHT", "RED|YELLOW:RIGHT", "YELLOW|BLUE:RIGHT", "IN:BLUE"], solution: { A: "OUT:RED|RED:RIGHT,BLUE:DOWN", B: "RED|GREEN:RIGHT,CYAN:DOWN", C: "GREEN|ORANGE:RIGHT", D: "ORANGE|PURPLE:RIGHT", E: "PURPLE|PINK:RIGHT", F: "IN:PINK", G: "BLUE|YELLOW:RIGHT", H: "PIPE:UP:CYAN>RIGHT:RED,LEFT:YELLOW>DOWN:ORANGE", I: "RED|BLUE:RIGHT", J: "BLUE|GREEN:RIGHT", K: "GREEN|CYAN:RIGHT", L: "IN:CYAN", M: "IN:PURPLE", N: "ORANGE|PURPLE:LEFT,PINK:RIGHT", O: "PINK|RED:RIGHT", P: "RED|YELLOW:RIGHT", Q: "YELLOW|BLUE:RIGHT", R: "IN:BLUE" }, hint: "18 tiles, ultimate pipe challenge!" },
   { number: 108, name: "Chromatic Infinity", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R"], layout: [["A", "B", "C", "D", "E", "F"], ["G", "H", "I", "J", "K", "L"], ["M", "N", "O", "P", "Q", "R"]], pieces: ["OUT:RED|RED:RIGHT,BLUE:DOWN", "RED|GREEN:RIGHT,ORANGE:DOWN", "GREEN|CYAN:RIGHT", "CYAN|PURPLE:RIGHT", "PURPLE|PINK:RIGHT", "IN:PINK", "BLUE|YELLOW:RIGHT", "PIPE:UP:ORANGE>RIGHT:RED,LEFT:YELLOW>DOWN:CYAN", "RED|BLUE:RIGHT", "BLUE|GREEN:RIGHT", "GREEN|ORANGE:RIGHT", "IN:ORANGE", "IN:PURPLE", "CYAN|PURPLE:LEFT,PINK:RIGHT", "PINK|RED:RIGHT", "RED|YELLOW:RIGHT", "YELLOW|BLUE:RIGHT", "IN:BLUE"], solution: { A: "OUT:RED|RED:RIGHT,BLUE:DOWN", B: "RED|GREEN:RIGHT,ORANGE:DOWN", C: "GREEN|CYAN:RIGHT", D: "CYAN|PURPLE:RIGHT", E: "PURPLE|PINK:RIGHT", F: "IN:PINK", G: "BLUE|YELLOW:RIGHT", H: "PIPE:UP:ORANGE>RIGHT:RED,LEFT:YELLOW>DOWN:CYAN", I: "RED|BLUE:RIGHT", J: "BLUE|GREEN:RIGHT", K: "GREEN|ORANGE:RIGHT", L: "IN:ORANGE", M: "IN:PURPLE", N: "CYAN|PURPLE:LEFT,PINK:RIGHT", O: "PINK|RED:RIGHT", P: "RED|YELLOW:RIGHT", Q: "YELLOW|BLUE:RIGHT", R: "IN:BLUE" }, hint: "18 tiles! Cross-pipe + multi-output finale!" },
+  { number: 109, name: "Logic Gate", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[null, "H", null, null], [null, "G", null, "A"], ["D", null, "C", "B"], ["E", "F", null, null]], pieces: ["OUT:RED|PURPLE:DOWN", "PURPLE|RED:LEFT", "RED|BLUE:LEFT:2", "TRIGGER:BLUE:D|YELLOW:DOWN", "YELLOW|PURPLE:RIGHT", "PURPLE|BLUE:UP:2", "BLUE|RED:UP", "IN:RED"], solution: { "A": "OUT:RED|PURPLE:DOWN", "B": "PURPLE|RED:LEFT", "C": "RED|BLUE:LEFT:2", "D": "TRIGGER:BLUE:D|YELLOW:DOWN", "E": "YELLOW|PURPLE:RIGHT", "F": "PURPLE|BLUE:UP:2", "G": "BLUE|RED:UP", "H": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 110, name: "Signal Relay", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["F", "E", null, "D"], ["G", null, null, "C"], [null, null, null, null], ["H", null, "A", "B"]], pieces: ["OUT:RED|PINK:RIGHT", "PINK|RED:UP:2", "RED|GREEN:UP", "GREEN|CYAN:LEFT:2", "TRIGGER:CYAN:E|ORANGE:LEFT", "PIPE:RIGHT:ORANGE>DOWN:BLUE", "BLUE|GREEN:DOWN:2", "IN:GREEN"], solution: { "A": "OUT:RED|PINK:RIGHT", "B": "PINK|RED:UP:2", "C": "RED|GREEN:UP", "D": "GREEN|CYAN:LEFT:2", "E": "TRIGGER:CYAN:E|ORANGE:LEFT", "F": "PIPE:RIGHT:ORANGE>DOWN:BLUE", "G": "BLUE|GREEN:DOWN:2", "H": "IN:GREEN" }, hint: "Use all pieces correctly!" },
+  { number: 111, name: "Decision Tree", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[null, "D", null, "E", "F"], [null, "C", null, "H", "G"], [null, null, null, null, null], ["A", "B", null, null, null]], pieces: ["OUT:RED|BLUE:RIGHT", "BLUE|RED:UP:2", "RED|GREEN:UP", "GREEN|CYAN:RIGHT:2", "PIPE:LEFT:CYAN>RIGHT:YELLOW", "TRIGGER:YELLOW:F|BLUE:DOWN", "TRIGGER:BLUE:C|PINK:LEFT", "IN:PINK"], solution: { "A": "OUT:RED|BLUE:RIGHT", "B": "BLUE|RED:UP:2", "C": "RED|GREEN:UP", "D": "GREEN|CYAN:RIGHT:2", "E": "PIPE:LEFT:CYAN>RIGHT:YELLOW", "F": "TRIGGER:YELLOW:F|BLUE:DOWN", "G": "TRIGGER:BLUE:C|PINK:LEFT", "H": "IN:PINK" }, hint: "Use all pieces correctly!" },
+  { number: 112, name: "Packet Switch", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[null, null, null, "H", "G"], [null, null, null, null, "F"], [null, null, null, null, "E"], ["A", "B", "C", null, "D"]], pieces: ["OUT:RED|RED:RIGHT", "RED|PURPLE:RIGHT", "PURPLE|RED:RIGHT:2", "RED|GREEN:UP", "GREEN|BLUE:UP", "BLUE|RED:UP", "RED|GREEN:LEFT", "IN:GREEN"], solution: { "A": "OUT:RED|RED:RIGHT", "B": "RED|PURPLE:RIGHT", "C": "PURPLE|RED:RIGHT:2", "D": "RED|GREEN:UP", "E": "GREEN|BLUE:UP", "F": "BLUE|RED:UP", "G": "RED|GREEN:LEFT", "H": "IN:GREEN" }, hint: "Use all pieces correctly!" },
+  { number: 113, name: "Traffic Controller", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[null, null, null, "H"], ["E", "F", null, "G"], ["D", "C", "B", "A"]], pieces: ["OUT:RED|CYAN:LEFT", "CYAN|BLUE:LEFT", "PIPE:RIGHT:BLUE>LEFT:GREEN", "GREEN|RED:UP", "RED|BLUE:RIGHT", "BLUE|RED:RIGHT:2", "TRIGGER:RED:B|BLUE:UP", "IN:BLUE"], solution: { "A": "OUT:RED|CYAN:LEFT", "B": "CYAN|BLUE:LEFT", "C": "PIPE:RIGHT:BLUE>LEFT:GREEN", "D": "GREEN|RED:UP", "E": "RED|BLUE:RIGHT", "F": "BLUE|RED:RIGHT:2", "G": "TRIGGER:RED:B|BLUE:UP", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 114, name: "Flow State", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["F", null, "E"], ["G", "C", "D"], ["H", "B", null], [null, "A", null]], pieces: ["OUT:RED|RED:UP", "RED|GREEN:UP", "GREEN|CYAN:RIGHT", "CYAN|BLUE:UP", "BLUE|YELLOW:LEFT:2", "PIPE:RIGHT:YELLOW>DOWN:BLUE", "PIPE:UP:BLUE>DOWN:RED", "IN:RED"], solution: { "A": "OUT:RED|RED:UP", "B": "RED|GREEN:UP", "C": "GREEN|CYAN:RIGHT", "D": "CYAN|BLUE:UP", "E": "BLUE|YELLOW:LEFT:2", "F": "PIPE:RIGHT:YELLOW>DOWN:BLUE", "G": "PIPE:UP:BLUE>DOWN:RED", "H": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 115, name: "Layer Cake", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["B", "C", "D", null], ["A", null, "E", "F"], [null, null, null, "G"], [null, null, null, "H"]], pieces: ["OUT:RED|YELLOW:UP", "YELLOW|BLUE:RIGHT", "PIPE:LEFT:BLUE>RIGHT:RED", "PIPE:LEFT:RED>DOWN:PURPLE", "PURPLE|BLUE:RIGHT", "BLUE|GREEN:DOWN", "PIPE:UP:GREEN>DOWN:BLUE", "IN:BLUE"], solution: { "A": "OUT:RED|YELLOW:UP", "B": "YELLOW|BLUE:RIGHT", "C": "PIPE:LEFT:BLUE>RIGHT:RED", "D": "PIPE:LEFT:RED>DOWN:PURPLE", "E": "PURPLE|BLUE:RIGHT", "F": "BLUE|GREEN:DOWN", "G": "PIPE:UP:GREEN>DOWN:BLUE", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 116, name: "Stack Trace", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["H", "G", "F", "E"], [null, "B", "C", "D"], [null, "A", null, null]], pieces: ["OUT:RED|GREEN:UP", "GREEN|RED:RIGHT", "RED|PURPLE:RIGHT", "PURPLE|ORANGE:UP", "ORANGE|BLUE:LEFT", "BLUE|RED:LEFT", "RED|BLUE:LEFT", "IN:BLUE"], solution: { "A": "OUT:RED|GREEN:UP", "B": "GREEN|RED:RIGHT", "C": "RED|PURPLE:RIGHT", "D": "PURPLE|ORANGE:UP", "E": "ORANGE|BLUE:LEFT", "F": "BLUE|RED:LEFT", "G": "RED|BLUE:LEFT", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 117, name: "Storage Array", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["G", "F", null, null], ["H", "E", "B", "A"], [null, "D", "C", null]], pieces: ["OUT:RED|GREEN:LEFT", "GREEN|RED:DOWN", "RED|YELLOW:LEFT", "PIPE:RIGHT:YELLOW>UP:RED", "RED|BLUE:UP", "PIPE:DOWN:BLUE>LEFT:GREEN", "PIPE:RIGHT:GREEN>DOWN:BLUE", "IN:BLUE"], solution: { "A": "OUT:RED|GREEN:LEFT", "B": "GREEN|RED:DOWN", "C": "RED|YELLOW:LEFT", "D": "PIPE:RIGHT:YELLOW>UP:RED", "E": "RED|BLUE:UP", "F": "PIPE:DOWN:BLUE>LEFT:GREEN", "G": "PIPE:RIGHT:GREEN>DOWN:BLUE", "H": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 118, name: "Vertical Limit", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["H", null, null, null], [null, null, "D", "C"], ["G", "F", "E", null]], [[null, null, null, null], [null, null, null, "B"], [null, null, null, "A"]]], pieces: ["OUT:RED|PINK:UP", "STAIRS:DOWN:PINK|GREEN:SHELF_DOWN", "PIPE:SHELF_UP:GREEN>LEFT:PURPLE", "PURPLE|BLUE:DOWN", "BLUE|YELLOW:LEFT", "YELLOW|BLUE:LEFT", "BLUE|RED:UP:2", "IN:RED"], solution: { "A": "OUT:RED|PINK:UP", "B": "STAIRS:DOWN:PINK|GREEN:SHELF_DOWN", "C": "PIPE:SHELF_UP:GREEN>LEFT:PURPLE", "D": "PURPLE|BLUE:DOWN", "E": "BLUE|YELLOW:LEFT", "F": "YELLOW|BLUE:LEFT", "G": "BLUE|RED:UP:2", "H": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 119, name: "Tiered System", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [[["H", "G", null, null, null], [null, null, null, null, null], [null, null, null, null, null]], [[null, "F", "E", null, null], [null, null, null, "A", "B"], [null, null, "D", null, "C"]]], pieces: ["OUT:RED|PURPLE:RIGHT", "PURPLE|ORANGE:DOWN", "ORANGE|RED:LEFT:2", "RED|BLUE:UP:2", "BLUE|RED:LEFT", "STAIRS:DOWN:RED|BLUE:SHELF_DOWN", "BLUE|RED:LEFT", "IN:RED"], solution: { "A": "OUT:RED|PURPLE:RIGHT", "B": "PURPLE|ORANGE:DOWN", "C": "ORANGE|RED:LEFT:2", "D": "RED|BLUE:UP:2", "E": "BLUE|RED:LEFT", "F": "STAIRS:DOWN:RED|BLUE:SHELF_DOWN", "G": "BLUE|RED:LEFT", "H": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 120, name: "Depth Perception", cells: ["A", "B", "C", "D", "E", "F", "G", "H"], layout: [["A", null, null, null, null], ["B", "C", null, "D", "E"], [null, "H", "G", null, "F"]], pieces: ["OUT:RED|GREEN:DOWN", "PIPE:UP:GREEN>RIGHT:RED", "RED|BLUE:RIGHT:2", "BLUE|RED:RIGHT", "PIPE:LEFT:RED>DOWN:YELLOW", "YELLOW|BLUE:LEFT:2", "BLUE|GREEN:LEFT", "IN:GREEN"], solution: { "A": "OUT:RED|GREEN:DOWN", "B": "PIPE:UP:GREEN>RIGHT:RED", "C": "RED|BLUE:RIGHT:2", "D": "BLUE|RED:RIGHT", "E": "PIPE:LEFT:RED>DOWN:YELLOW", "F": "YELLOW|BLUE:LEFT:2", "G": "BLUE|GREEN:LEFT", "H": "IN:GREEN" }, hint: "Use all pieces correctly!" },
+  { number: 121, name: "Base Camp", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], layout: [[[null, null, "A", "B"], [null, null, null, "C"], [null, null, null, "D"], [null, "G", "F", "E"], [null, null, null, null]], [[null, null, null, null], [null, null, null, null], [null, null, null, null], [null, "H", null, null], ["J", "I", null, null]]], pieces: ["OUT:RED|RED:RIGHT", "RED|BLUE:DOWN", "PIPE:UP:BLUE>DOWN:RED", "PIPE:UP:RED>DOWN:BLUE", "BLUE|GREEN:LEFT", "GREEN|YELLOW:LEFT", "STAIRS:UP:YELLOW|BLUE:SHELF_UP", "PIPE:SHELF_DOWN:BLUE>DOWN:RED", "RED|BLUE:LEFT", "IN:BLUE"], solution: { "A": "OUT:RED|RED:RIGHT", "B": "RED|BLUE:DOWN", "C": "PIPE:UP:BLUE>DOWN:RED", "D": "PIPE:UP:RED>DOWN:BLUE", "E": "BLUE|GREEN:LEFT", "F": "GREEN|YELLOW:LEFT", "G": "STAIRS:UP:YELLOW|BLUE:SHELF_UP", "H": "PIPE:SHELF_DOWN:BLUE>DOWN:RED", "I": "RED|BLUE:LEFT", "J": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 122, name: "High Altitude", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], layout: [[["D", "E", "F", "G"], ["C", null, null, null], [null, null, "I", "H"], [null, null, "J", null]], [["A", null, null, null], ["B", null, null, null], [null, null, null, null], [null, null, null, null]]], pieces: ["OUT:RED|RED:DOWN", "STAIRS:DOWN:RED|ORANGE:SHELF_DOWN", "PIPE:SHELF_UP:ORANGE>UP:GREEN", "GREEN|RED:RIGHT", "RED|CYAN:RIGHT", "PIPE:LEFT:CYAN>RIGHT:RED", "RED|YELLOW:DOWN:2", "YELLOW|BLUE:LEFT", "BLUE|GREEN:DOWN", "IN:GREEN"], solution: { "A": "OUT:RED|RED:DOWN", "B": "STAIRS:DOWN:RED|ORANGE:SHELF_DOWN", "C": "PIPE:SHELF_UP:ORANGE>UP:GREEN", "D": "GREEN|RED:RIGHT", "E": "RED|CYAN:RIGHT", "F": "PIPE:LEFT:CYAN>RIGHT:RED", "G": "RED|YELLOW:DOWN:2", "H": "YELLOW|BLUE:LEFT", "I": "BLUE|GREEN:DOWN", "J": "IN:GREEN" }, hint: "Use all pieces correctly!" },
+  { number: 123, name: "Summit Push", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], layout: [[[null, null, null, null], [null, null, null, null], ["B", "C", null, null], ["A", null, null, null]], [[null, "G", "F", null], [null, "H", "I", "J"], [null, "D", "E", null], [null, null, null, null]]], pieces: ["OUT:RED|YELLOW:UP", "YELLOW|RED:RIGHT", "STAIRS:UP:RED|YELLOW:SHELF_UP", "PIPE:SHELF_DOWN:YELLOW>RIGHT:BLUE", "BLUE|RED:UP:2", "PIPE:DOWN:RED>LEFT:BLUE", "TRIGGER:BLUE:G|RED:DOWN", "PIPE:UP:RED>RIGHT:BLUE", "BLUE|GREEN:RIGHT", "IN:GREEN"], solution: { "A": "OUT:RED|YELLOW:UP", "B": "YELLOW|RED:RIGHT", "C": "STAIRS:UP:RED|YELLOW:SHELF_UP", "D": "PIPE:SHELF_DOWN:YELLOW>RIGHT:BLUE", "E": "BLUE|RED:UP:2", "F": "PIPE:DOWN:RED>LEFT:BLUE", "G": "TRIGGER:BLUE:G|RED:DOWN", "H": "PIPE:UP:RED>RIGHT:BLUE", "I": "BLUE|GREEN:RIGHT", "J": "IN:GREEN" }, hint: "Use all pieces correctly!" },
+  { number: 124, name: "Thin Air", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"], layout: [[[null, null, null, "H", "G"], [null, null, null, null, "F"], ["B", null, "C", "D", "E"], ["A", null, null, null, null]], [[null, "J", null, "I", null], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null]]], pieces: ["OUT:RED|GREEN:UP", "GREEN|RED:RIGHT:2", "PIPE:LEFT:RED>RIGHT:BLUE", "TRIGGER:BLUE:B|RED:RIGHT", "RED|RED:UP", "RED|YELLOW:UP", "TRIGGER:YELLOW:G|BLUE:LEFT", "STAIRS:UP:BLUE|PURPLE:SHELF_UP", "PURPLE|BLUE:LEFT:2", "IN:BLUE"], solution: { "A": "OUT:RED|GREEN:UP", "B": "GREEN|RED:RIGHT:2", "C": "PIPE:LEFT:RED>RIGHT:BLUE", "D": "TRIGGER:BLUE:B|RED:RIGHT", "E": "RED|RED:UP", "F": "RED|YELLOW:UP", "G": "TRIGGER:YELLOW:G|BLUE:LEFT", "H": "STAIRS:UP:BLUE|PURPLE:SHELF_UP", "I": "PURPLE|BLUE:LEFT:2", "J": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 125, name: "The Zenith", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"], layout: [[["I", "H", null, null], [null, null, null, null], [null, "G", null, null], [null, "F", null, null], [null, "E", "D", null]], [["J", "K", null, null], [null, null, null, null], [null, null, null, null], [null, null, "B", "A"], [null, null, "C", null]]], pieces: ["OUT:RED|PINK:LEFT", "PINK|RED:DOWN", "STAIRS:DOWN:RED|GREEN:SHELF_DOWN", "PIPE:SHELF_UP:GREEN>LEFT:PURPLE", "PIPE:RIGHT:PURPLE>UP:BLUE", "TRIGGER:BLUE:B|RED:UP", "RED|GREEN:UP:2", "GREEN|BLUE:LEFT", "STAIRS:UP:BLUE|GREEN:SHELF_UP", "TRIGGER:GREEN:D|YELLOW:RIGHT", "IN:YELLOW"], solution: { "A": "OUT:RED|PINK:LEFT", "B": "PINK|RED:DOWN", "C": "STAIRS:DOWN:RED|GREEN:SHELF_DOWN", "D": "PIPE:SHELF_UP:GREEN>LEFT:PURPLE", "E": "PIPE:RIGHT:PURPLE>UP:BLUE", "F": "TRIGGER:BLUE:B|RED:UP", "G": "RED|GREEN:UP:2", "H": "GREEN|BLUE:LEFT", "I": "STAIRS:UP:BLUE|GREEN:SHELF_UP", "J": "TRIGGER:GREEN:D|YELLOW:RIGHT", "K": "IN:YELLOW" }, hint: "Use all pieces correctly!" },
+  { number: 126, name: "Chain Reaction", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [["F", "E", "D", null], ["G", null, null, null], ["H", null, "C", null], ["I", null, "B", "A"], ["J", "K", null, null], [null, "L", null, null], [null, null, null, null], ["N", "M", null, null]], pieces: ["OUT:RED|GREEN:LEFT", "PIPE:RIGHT:GREEN>UP:RED", "RED|BLUE:UP:2", "PIPE:DOWN:BLUE>LEFT:RED", "RED|YELLOW:LEFT", "YELLOW|RED:DOWN", "TRIGGER:RED:C|YELLOW:DOWN", "YELLOW|RED:DOWN", "PIPE:UP:RED>DOWN:CYAN", "CYAN|BLUE:RIGHT", "TRIGGER:BLUE:D|RED:DOWN", "RED|GREEN:DOWN:2", "GREEN|PURPLE:LEFT", "IN:PURPLE"], solution: { "A": "OUT:RED|GREEN:LEFT", "B": "PIPE:RIGHT:GREEN>UP:RED", "C": "RED|BLUE:UP:2", "D": "PIPE:DOWN:BLUE>LEFT:RED", "E": "RED|YELLOW:LEFT", "F": "YELLOW|RED:DOWN", "G": "TRIGGER:RED:C|YELLOW:DOWN", "H": "YELLOW|RED:DOWN", "I": "PIPE:UP:RED>DOWN:CYAN", "J": "CYAN|BLUE:RIGHT", "K": "TRIGGER:BLUE:D|RED:DOWN", "L": "RED|GREEN:DOWN:2", "M": "GREEN|PURPLE:LEFT", "N": "IN:PURPLE" }, hint: "Use all pieces correctly!" },
+  { number: 127, name: "Quick Trigger", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [["D", "E", null, null, null], [null, "F", null, "G", null], ["C", "B", "I", "H", null], [null, "A", "J", null, null], [null, null, "K", null, "N"], [null, null, "L", null, "M"]], pieces: ["OUT:RED|CYAN:UP", "CYAN|RED:LEFT", "RED|BLUE:UP:2", "PIPE:DOWN:BLUE>RIGHT:RED", "RED|BLUE:DOWN", "BLUE|GREEN:RIGHT:2", "GREEN|RED:DOWN", "RED|BLUE:LEFT", "PIPE:RIGHT:BLUE>DOWN:RED", "RED|YELLOW:DOWN", "TRIGGER:YELLOW:A|GREEN:DOWN", "GREEN|RED:RIGHT:2", "RED|BLUE:UP", "IN:BLUE"], solution: { "A": "OUT:RED|CYAN:UP", "B": "CYAN|RED:LEFT", "C": "RED|BLUE:UP:2", "D": "PIPE:DOWN:BLUE>RIGHT:RED", "E": "RED|BLUE:DOWN", "F": "BLUE|GREEN:RIGHT:2", "G": "GREEN|RED:DOWN", "H": "RED|BLUE:LEFT", "I": "PIPE:RIGHT:BLUE>DOWN:RED", "J": "RED|YELLOW:DOWN", "K": "TRIGGER:YELLOW:A|GREEN:DOWN", "L": "GREEN|RED:RIGHT:2", "M": "RED|BLUE:UP", "N": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 128, name: "Cause and Effect", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [[null, null, "B", "A", null, null, null, null], ["D", null, "C", null, null, null, null, null], [null, null, null, null, null, null, null, "N"], ["E", null, null, null, null, null, "L", "M"], ["F", "G", null, "H", "I", "J", "K", null]], pieces: ["OUT:RED|GREEN:LEFT", "PIPE:RIGHT:GREEN>DOWN:YELLOW", "YELLOW|RED:LEFT:2", "RED|BLUE:DOWN:2", "BLUE|GREEN:DOWN", "TRIGGER:GREEN:D|YELLOW:RIGHT", "YELLOW|GREEN:RIGHT:2", "GREEN|RED:RIGHT", "RED|GREEN:RIGHT", "GREEN|BLUE:RIGHT", "BLUE|GREEN:UP", "PIPE:DOWN:GREEN>RIGHT:BLUE", "TRIGGER:BLUE:F|RED:UP", "IN:RED"], solution: { "A": "OUT:RED|GREEN:LEFT", "B": "PIPE:RIGHT:GREEN>DOWN:YELLOW", "C": "YELLOW|RED:LEFT:2", "D": "RED|BLUE:DOWN:2", "E": "BLUE|GREEN:DOWN", "F": "TRIGGER:GREEN:D|YELLOW:RIGHT", "G": "YELLOW|GREEN:RIGHT:2", "H": "GREEN|RED:RIGHT", "I": "RED|GREEN:RIGHT", "J": "GREEN|BLUE:RIGHT", "K": "BLUE|GREEN:UP", "L": "PIPE:DOWN:GREEN>RIGHT:BLUE", "M": "TRIGGER:BLUE:F|RED:UP", "N": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 129, name: "Tripwire", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [["D", null, "E", "F", "G"], ["C", "B", "A", "I", "H"], [null, null, null, "J", null], [null, null, null, null, null], [null, null, null, "K", null], [null, "N", "M", "L", null]], pieces: ["OUT:RED|PURPLE:LEFT", "PIPE:RIGHT:PURPLE>LEFT:RED", "RED|YELLOW:UP", "YELLOW|GREEN:RIGHT:2", "GREEN|RED:RIGHT", "PIPE:LEFT:RED>RIGHT:GREEN", "GREEN|RED:DOWN", "RED|BLUE:LEFT", "TRIGGER:BLUE:E|YELLOW:DOWN", "YELLOW|RED:DOWN:2", "RED|BLUE:DOWN", "PIPE:UP:BLUE>LEFT:RED", "RED|BLUE:LEFT", "IN:BLUE"], solution: { "A": "OUT:RED|PURPLE:LEFT", "B": "PIPE:RIGHT:PURPLE>LEFT:RED", "C": "RED|YELLOW:UP", "D": "YELLOW|GREEN:RIGHT:2", "E": "GREEN|RED:RIGHT", "F": "PIPE:LEFT:RED>RIGHT:GREEN", "G": "GREEN|RED:DOWN", "H": "RED|BLUE:LEFT", "I": "TRIGGER:BLUE:E|YELLOW:DOWN", "J": "YELLOW|RED:DOWN:2", "K": "RED|BLUE:DOWN", "L": "PIPE:UP:BLUE>LEFT:RED", "M": "RED|BLUE:LEFT", "N": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 130, name: "Event Horizon", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [[null, null, null, null, "N"], ["C", "D", null, "L", "M"], ["B", "E", null, "K", null], ["A", "F", null, "J", null], [null, "G", "H", "I", null]], pieces: ["OUT:RED|CYAN:UP", "PIPE:DOWN:CYAN>UP:YELLOW", "PIPE:DOWN:YELLOW>RIGHT:GREEN", "GREEN|RED:DOWN", "RED|GREEN:DOWN", "GREEN|RED:DOWN", "TRIGGER:RED:C|BLUE:RIGHT", "BLUE|RED:RIGHT", "PIPE:LEFT:RED>UP:GREEN", "GREEN|BLUE:UP", "BLUE|YELLOW:UP", "TRIGGER:YELLOW:L|RED:RIGHT", "PIPE:LEFT:RED>UP:BLUE", "IN:BLUE"], solution: { "A": "OUT:RED|CYAN:UP", "B": "PIPE:DOWN:CYAN>UP:YELLOW", "C": "PIPE:DOWN:YELLOW>RIGHT:GREEN", "D": "GREEN|RED:DOWN", "E": "RED|GREEN:DOWN", "F": "GREEN|RED:DOWN", "G": "TRIGGER:RED:C|BLUE:RIGHT", "H": "BLUE|RED:RIGHT", "I": "PIPE:LEFT:RED>UP:GREEN", "J": "GREEN|BLUE:UP", "K": "BLUE|YELLOW:UP", "L": "TRIGGER:YELLOW:L|RED:RIGHT", "M": "PIPE:LEFT:RED>UP:BLUE", "N": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 131, name: "Library of Babel", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [[[null, null, null, null, null], ["J", "K", "L", "M", "N"], [null, null, null, null, null], [null, null, null, null, null]], [[null, "G", "F", null, null], ["I", "H", "E", null, null], [null, "C", "D", null, null], ["A", "B", null, null, null]]], pieces: ["OUT:RED|CYAN:RIGHT", "PIPE:LEFT:CYAN>UP:RED", "RED|GREEN:RIGHT", "PIPE:LEFT:GREEN>UP:BLUE", "PIPE:DOWN:BLUE>UP:GREEN", "PIPE:DOWN:GREEN>LEFT:RED", "PIPE:RIGHT:RED>DOWN:BLUE", "PIPE:UP:BLUE>LEFT:GREEN", "STAIRS:DOWN:GREEN|YELLOW:SHELF_DOWN", "YELLOW|RED:RIGHT", "PIPE:LEFT:RED>RIGHT:BLUE", "BLUE|RED:RIGHT", "PIPE:LEFT:RED>RIGHT:PINK", "IN:PINK"], solution: { "A": "OUT:RED|CYAN:RIGHT", "B": "PIPE:LEFT:CYAN>UP:RED", "C": "RED|GREEN:RIGHT", "D": "PIPE:LEFT:GREEN>UP:BLUE", "E": "PIPE:DOWN:BLUE>UP:GREEN", "F": "PIPE:DOWN:GREEN>LEFT:RED", "G": "PIPE:RIGHT:RED>DOWN:BLUE", "H": "PIPE:UP:BLUE>LEFT:GREEN", "I": "STAIRS:DOWN:GREEN|YELLOW:SHELF_DOWN", "J": "YELLOW|RED:RIGHT", "K": "PIPE:LEFT:RED>RIGHT:BLUE", "L": "BLUE|RED:RIGHT", "M": "PIPE:LEFT:RED>RIGHT:PINK", "N": "IN:PINK" }, hint: "Use all pieces correctly!" },
+  { number: 132, name: "File System", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [[[null, null, "M", null, "N"], [null, null, "L", null, null], [null, null, "K", "J", null], [null, "H", null, "I", null]], [[null, "A", "B", null, null], [null, null, "C", null, null], ["E", null, "D", null, null], ["F", "G", null, null, null]]], pieces: ["OUT:RED|PINK:RIGHT", "PIPE:LEFT:PINK>DOWN:BLUE", "PIPE:UP:BLUE>DOWN:RED", "RED|BLUE:LEFT:2", "BLUE|GREEN:DOWN", "PIPE:UP:GREEN>RIGHT:BLUE", "STAIRS:DOWN:BLUE|GREEN:SHELF_DOWN", "GREEN|YELLOW:RIGHT:2", "YELLOW|ORANGE:UP", "ORANGE|RED:LEFT", "RED|BLUE:UP", "BLUE|RED:UP", "RED|BLUE:RIGHT:2", "IN:BLUE"], solution: { "A": "OUT:RED|PINK:RIGHT", "B": "PIPE:LEFT:PINK>DOWN:BLUE", "C": "PIPE:UP:BLUE>DOWN:RED", "D": "RED|BLUE:LEFT:2", "E": "BLUE|GREEN:DOWN", "F": "PIPE:UP:GREEN>RIGHT:BLUE", "G": "STAIRS:DOWN:BLUE|GREEN:SHELF_DOWN", "H": "GREEN|YELLOW:RIGHT:2", "I": "YELLOW|ORANGE:UP", "J": "ORANGE|RED:LEFT", "K": "RED|BLUE:UP", "L": "BLUE|RED:UP", "M": "RED|BLUE:RIGHT:2", "N": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 133, name: "Data Warehouse", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [[[null, null, null, "A", "B"], [null, "E", "D", null, "C"], [null, null, null, null, null], [null, null, null, null, null]], [["N", null, null, null, null], ["M", "F", null, null, null], ["L", "G", "H", null, null], ["K", "J", "I", null, null]]], pieces: ["OUT:RED|CYAN:RIGHT", "PIPE:LEFT:CYAN>DOWN:RED", "RED|ORANGE:LEFT:2", "PIPE:RIGHT:ORANGE>LEFT:BLUE", "STAIRS:UP:BLUE|YELLOW:SHELF_UP", "YELLOW|BLUE:DOWN", "BLUE|RED:RIGHT", "PIPE:LEFT:RED>DOWN:CYAN", "PIPE:UP:CYAN>LEFT:RED", "RED|PURPLE:LEFT", "PURPLE|RED:UP", "RED|BLUE:UP", "BLUE|RED:UP", "IN:RED"], solution: { "A": "OUT:RED|CYAN:RIGHT", "B": "PIPE:LEFT:CYAN>DOWN:RED", "C": "RED|ORANGE:LEFT:2", "D": "PIPE:RIGHT:ORANGE>LEFT:BLUE", "E": "STAIRS:UP:BLUE|YELLOW:SHELF_UP", "F": "YELLOW|BLUE:DOWN", "G": "BLUE|RED:RIGHT", "H": "PIPE:LEFT:RED>DOWN:CYAN", "I": "PIPE:UP:CYAN>LEFT:RED", "J": "RED|PURPLE:LEFT", "K": "PURPLE|RED:UP", "L": "RED|BLUE:UP", "M": "BLUE|RED:UP", "N": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 134, name: "Sorting Office", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [[[null, "F", null, "G", null], [null, "E", null, "K", "J"], [null, null, null, "H", "I"], ["A", "D", null, null, null], ["B", "C", null, null, null]], [[null, "N", null, "M", null], [null, null, null, "L", null], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null]]], pieces: ["OUT:RED|GREEN:DOWN", "GREEN|RED:RIGHT", "PIPE:LEFT:RED>UP:GREEN", "GREEN|RED:UP:2", "RED|BLUE:UP", "BLUE|RED:RIGHT:2", "RED|BLUE:DOWN:2", "PIPE:UP:BLUE>RIGHT:RED", "RED|BLUE:UP", "BLUE|YELLOW:LEFT", "STAIRS:UP:YELLOW|BLUE:SHELF_UP", "BLUE|GREEN:UP", "GREEN|RED:LEFT:2", "IN:RED"], solution: { "A": "OUT:RED|GREEN:DOWN", "B": "GREEN|RED:RIGHT", "C": "PIPE:LEFT:RED>UP:GREEN", "D": "GREEN|RED:UP:2", "E": "RED|BLUE:UP", "F": "BLUE|RED:RIGHT:2", "G": "RED|BLUE:DOWN:2", "H": "PIPE:UP:BLUE>RIGHT:RED", "I": "RED|BLUE:UP", "J": "BLUE|YELLOW:LEFT", "K": "STAIRS:UP:YELLOW|BLUE:SHELF_UP", "L": "BLUE|GREEN:UP", "M": "GREEN|RED:LEFT:2", "N": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 135, name: "Archive Deep", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"], layout: [[[null, null, null, null], [null, null, null, null], ["K", null, "J", null], [null, null, null, null]], [[null, null, "A", "B"], ["M", "D", null, "C"], ["L", null, "I", null], [null, "E", "H", null]], [[null, null, null, null], ["N", null, null, null], [null, null, null, null], [null, "F", "G", null]]], pieces: ["OUT:RED|GREEN:RIGHT", "GREEN|RED:DOWN", "RED|BLUE:LEFT:2", "BLUE|PURPLE:DOWN:2", "STAIRS:UP:PURPLE|RED:SHELF_UP", "RED|YELLOW:RIGHT", "STAIRS:DOWN:YELLOW|RED:SHELF_DOWN", "RED|PURPLE:UP", "STAIRS:DOWN:PURPLE|CYAN:SHELF_DOWN", "CYAN|RED:LEFT:2", "STAIRS:UP:RED|YELLOW:SHELF_UP", "YELLOW|GREEN:UP", "STAIRS:UP:GREEN|RED:SHELF_UP", "IN:RED"], solution: { "A": "OUT:RED|GREEN:RIGHT", "B": "GREEN|RED:DOWN", "C": "RED|BLUE:LEFT:2", "D": "BLUE|PURPLE:DOWN:2", "E": "STAIRS:UP:PURPLE|RED:SHELF_UP", "F": "RED|YELLOW:RIGHT", "G": "STAIRS:DOWN:YELLOW|RED:SHELF_DOWN", "H": "RED|PURPLE:UP", "I": "STAIRS:DOWN:PURPLE|CYAN:SHELF_DOWN", "J": "CYAN|RED:LEFT:2", "K": "STAIRS:UP:RED|YELLOW:SHELF_UP", "L": "YELLOW|GREEN:UP", "M": "STAIRS:UP:GREEN|RED:SHELF_UP", "N": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 136, name: "Grand Design", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"], layout: [[[null, null, null, null, null], [null, null, "H", null, null], [null, null, "I", null, null], [null, null, "J", null, null], [null, null, "K", null, null], ["P", "M", "L", null, null], ["O", "N", null, null, null]], [[null, "E", null, "D", "C"], [null, "F", "G", null, null], [null, null, null, "A", "B"], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null]]], pieces: ["OUT:RED|CYAN:RIGHT", "CYAN|YELLOW:UP:2", "YELLOW|BLUE:LEFT", "BLUE|GREEN:LEFT:2", "GREEN|RED:DOWN", "PIPE:UP:RED>RIGHT:BLUE", "STAIRS:DOWN:BLUE|PURPLE:SHELF_DOWN", "PURPLE|GREEN:DOWN", "GREEN|BLUE:DOWN", "PIPE:UP:BLUE>DOWN:CYAN", "TRIGGER:CYAN:E|BLUE:DOWN", "BLUE|RED:LEFT", "RED|BLUE:DOWN", "BLUE|PINK:LEFT", "PIPE:RIGHT:PINK>UP:RED", "IN:RED"], solution: { "A": "OUT:RED|CYAN:RIGHT", "B": "CYAN|YELLOW:UP:2", "C": "YELLOW|BLUE:LEFT", "D": "BLUE|GREEN:LEFT:2", "E": "GREEN|RED:DOWN", "F": "PIPE:UP:RED>RIGHT:BLUE", "G": "STAIRS:DOWN:BLUE|PURPLE:SHELF_DOWN", "H": "PURPLE|GREEN:DOWN", "I": "GREEN|BLUE:DOWN", "J": "PIPE:UP:BLUE>DOWN:CYAN", "K": "TRIGGER:CYAN:E|BLUE:DOWN", "L": "BLUE|RED:LEFT", "M": "RED|BLUE:DOWN", "N": "BLUE|PINK:LEFT", "O": "PIPE:RIGHT:PINK>UP:RED", "P": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 137, name: "Master Plan", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"], layout: [[[null, null, null, null, null], ["C", "B", null, null, null], [null, "A", null, null, null], [null, null, null, null, null], [null, null, "P", "O", null]], [[null, "F", "G", null, null], ["D", "E", "H", "I", null], [null, null, null, "J", null], [null, null, null, "K", "L"], [null, null, null, "N", "M"]]], pieces: ["OUT:RED|PURPLE:UP", "PIPE:DOWN:PURPLE>LEFT:RED", "STAIRS:UP:RED|BLUE:SHELF_UP", "PIPE:SHELF_DOWN:BLUE>RIGHT:YELLOW", "YELLOW|BLUE:UP", "BLUE|RED:RIGHT", "PIPE:LEFT:RED>DOWN:BLUE", "BLUE|RED:RIGHT", "PIPE:LEFT:RED>DOWN:PURPLE", "PIPE:UP:PURPLE>DOWN:RED", "TRIGGER:RED:B|GREEN:RIGHT", "GREEN|BLUE:DOWN", "BLUE|RED:LEFT", "STAIRS:DOWN:RED|PINK:SHELF_DOWN", "PINK|RED:LEFT", "IN:RED"], solution: { "A": "OUT:RED|PURPLE:UP", "B": "PIPE:DOWN:PURPLE>LEFT:RED", "C": "STAIRS:UP:RED|BLUE:SHELF_UP", "D": "PIPE:SHELF_DOWN:BLUE>RIGHT:YELLOW", "E": "YELLOW|BLUE:UP", "F": "BLUE|RED:RIGHT", "G": "PIPE:LEFT:RED>DOWN:BLUE", "H": "BLUE|RED:RIGHT", "I": "PIPE:LEFT:RED>DOWN:PURPLE", "J": "PIPE:UP:PURPLE>DOWN:RED", "K": "TRIGGER:RED:B|GREEN:RIGHT", "L": "GREEN|BLUE:DOWN", "M": "BLUE|RED:LEFT", "N": "STAIRS:DOWN:RED|PINK:SHELF_DOWN", "O": "PINK|RED:LEFT", "P": "IN:RED" }, hint: "Use all pieces correctly!" },
+  { number: 138, name: "Final Synthesis", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"], layout: [[[null, null, null, "C", null, null], [null, null, null, "D", null, null], [null, null, null, "E", "F", null], [null, null, null, null, "G", null], [null, null, null, null, null, null], [null, null, null, null, null, null]], [[null, null, null, "B", null, null], [null, null, null, "A", null, null], [null, null, null, null, null, null], [null, null, null, null, "H", "I"], [null, null, null, null, null, "J"], [null, null, null, null, null, null]], [[null, null, null, null, null, null], [null, null, null, null, null, null], [null, null, null, null, null, null], [null, null, null, null, null, null], [null, null, null, "M", "L", "K"], ["P", "O", null, "N", null, null]]], pieces: ["OUT:RED|CYAN:UP", "STAIRS:DOWN:CYAN|RED:SHELF_DOWN", "RED|BLUE:DOWN", "BLUE|GREEN:DOWN", "PIPE:UP:GREEN>RIGHT:RED", "RED|PURPLE:DOWN", "STAIRS:UP:PURPLE|BLUE:SHELF_UP", "PIPE:SHELF_DOWN:BLUE>RIGHT:YELLOW", "TRIGGER:YELLOW:I|RED:DOWN", "STAIRS:UP:RED|BLUE:SHELF_UP", "BLUE|YELLOW:LEFT", "YELLOW|RED:LEFT", "PIPE:RIGHT:RED>DOWN:YELLOW", "YELLOW|RED:LEFT:2", "PIPE:RIGHT:RED>LEFT:GREEN", "IN:GREEN"], solution: { "A": "OUT:RED|CYAN:UP", "B": "STAIRS:DOWN:CYAN|RED:SHELF_DOWN", "C": "RED|BLUE:DOWN", "D": "BLUE|GREEN:DOWN", "E": "PIPE:UP:GREEN>RIGHT:RED", "F": "RED|PURPLE:DOWN", "G": "STAIRS:UP:PURPLE|BLUE:SHELF_UP", "H": "PIPE:SHELF_DOWN:BLUE>RIGHT:YELLOW", "I": "TRIGGER:YELLOW:I|RED:DOWN", "J": "STAIRS:UP:RED|BLUE:SHELF_UP", "K": "BLUE|YELLOW:LEFT", "L": "YELLOW|RED:LEFT", "M": "PIPE:RIGHT:RED>DOWN:YELLOW", "N": "YELLOW|RED:LEFT:2", "O": "PIPE:RIGHT:RED>LEFT:GREEN", "P": "IN:GREEN" }, hint: "Use all pieces correctly!" },
+  { number: 139, name: "Harmonic Convergence", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"], layout: [[[null, null, null, null, null], [null, "C", "D", null, null], ["F", null, "E", null, null], ["A", "B", null, null, null]], [["P", "M", "L", null, null], ["O", "N", "K", null, "J"], ["G", null, "H", null, "I"], [null, null, null, null, null]]], pieces: ["OUT:RED|CYAN:RIGHT", "CYAN|RED:UP:2", "PIPE:DOWN:RED>RIGHT:YELLOW", "PIPE:LEFT:YELLOW>DOWN:RED", "RED|ORANGE:LEFT:2", "STAIRS:UP:ORANGE|BLUE:SHELF_UP", "BLUE|GREEN:RIGHT:2", "GREEN|BLUE:RIGHT:2", "PIPE:LEFT:BLUE>UP:RED", "RED|BLUE:LEFT:2", "BLUE|GREEN:UP", "PIPE:DOWN:GREEN>LEFT:RED", "TRIGGER:RED:B|PURPLE:DOWN", "PIPE:UP:PURPLE>LEFT:RED", "RED|BLUE:UP", "IN:BLUE"], solution: { "A": "OUT:RED|CYAN:RIGHT", "B": "CYAN|RED:UP:2", "C": "PIPE:DOWN:RED>RIGHT:YELLOW", "D": "PIPE:LEFT:YELLOW>DOWN:RED", "E": "RED|ORANGE:LEFT:2", "F": "STAIRS:UP:ORANGE|BLUE:SHELF_UP", "G": "BLUE|GREEN:RIGHT:2", "H": "GREEN|BLUE:RIGHT:2", "I": "PIPE:LEFT:BLUE>UP:RED", "J": "RED|BLUE:LEFT:2", "K": "BLUE|GREEN:UP", "L": "PIPE:DOWN:GREEN>LEFT:RED", "M": "TRIGGER:RED:B|PURPLE:DOWN", "N": "PIPE:UP:PURPLE>LEFT:RED", "O": "RED|BLUE:UP", "P": "IN:BLUE" }, hint: "Use all pieces correctly!" },
+  { number: 140, name: "Chromatic Singularity", cells: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"], layout: [[[null, "E", "F", "G", "H"], [null, null, null, null, "I"], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null], [null, null, null, null, null]], [["C", "D", null, null, null], [null, null, null, null, "J"], ["B", null, null, null, "K"], ["A", null, null, null, "L"], [null, null, null, null, "M"], [null, null, null, null, null], [null, null, null, null, "N"], [null, null, null, "P", "O"]]], pieces: ["OUT:RED|YELLOW:UP", "YELLOW|RED:UP:2", "RED|GREEN:RIGHT", "STAIRS:DOWN:GREEN|BLUE:SHELF_DOWN", "TRIGGER:BLUE:B|GREEN:RIGHT", "GREEN|RED:RIGHT", "PIPE:LEFT:RED>RIGHT:BLUE", "TRIGGER:BLUE:C|YELLOW:DOWN", "STAIRS:UP:YELLOW|CYAN:SHELF_UP", "CYAN|RED:DOWN", "PIPE:UP:RED>DOWN:BLUE", "BLUE|RED:DOWN", "RED|GREEN:DOWN:2", "PIPE:UP:GREEN>DOWN:RED", "PIPE:UP:RED>LEFT:GREEN", "IN:GREEN"], solution: { "A": "OUT:RED|YELLOW:UP", "B": "YELLOW|RED:UP:2", "C": "RED|GREEN:RIGHT", "D": "STAIRS:DOWN:GREEN|BLUE:SHELF_DOWN", "E": "TRIGGER:BLUE:B|GREEN:RIGHT", "F": "GREEN|RED:RIGHT", "G": "PIPE:LEFT:RED>RIGHT:BLUE", "H": "TRIGGER:BLUE:C|YELLOW:DOWN", "I": "STAIRS:UP:YELLOW|CYAN:SHELF_UP", "J": "CYAN|RED:DOWN", "K": "PIPE:UP:RED>DOWN:BLUE", "L": "BLUE|RED:DOWN", "M": "RED|GREEN:DOWN:2", "N": "PIPE:UP:GREEN>DOWN:RED", "O": "PIPE:UP:RED>LEFT:GREEN", "P": "IN:GREEN" }, hint: "Use all pieces correctly!" },
 ];
 
 // ─── ARROW VISUALS ──────────────────────────────────────────────────────────
@@ -318,6 +409,12 @@ const CHAPTERS = [
   { name: "Master", range: [79, 88], color: "#fbbf24", bg: "radial-gradient(circle at top,#78350f 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
   { name: "Master II", range: [89, 98], color: "#f43f5e", bg: "linear-gradient(45deg,#881337 0%,#0f172a 100%)", glow: "rgba(244,63,94,0.15)" },
   { name: "Master III", range: [99, 108], color: "#e11d48", bg: "radial-gradient(ellipse at bottom,#7f1d1d 0%,#030712 100%)", glow: "rgba(225,29,72,0.15)" },
+  { name: "Control Flow", range: [109, 114], color: "#8b5cf6", bg: "linear-gradient(135deg,#4c1d95 0%,#171717 100%)", glow: "rgba(139,92,246,0.15)" },
+  { name: "Multi-Shelf", range: [115, 120], color: "#10b981", bg: "radial-gradient(circle at bottom,#064e3b 0%,#020617 100%)", glow: "rgba(16,185,129,0.15)" },
+  { name: "Ascension", range: [121, 125], color: "#fbbf24", bg: "radial-gradient(circle at top,#78350f 20%,#0f172a 100%)", glow: "rgba(251,191,36,0.15)" },
+  { name: "Master IV", range: [126, 130], color: "#a855f7", bg: "radial-gradient(circle at top right,#2e1065 0%,#0f0a1c 100%)", glow: "rgba(168,85,247,0.15)" },
+  { name: "Master V", range: [131, 135], color: "#14b8a6", bg: "radial-gradient(circle at 50% 50%,#042f2e 0%,#020617 100%)", glow: "rgba(20,184,166,0.15)" },
+  { name: "Master VI", range: [136, 140], color: "#ec4899", bg: "radial-gradient(circle at top left,#500724 0%,#171717 100%)", glow: "rgba(236,72,153,0.15)" }
 ];
 
 // ─── TILE COMPONENT ─────────────────────────────────────────────────────────
@@ -426,7 +523,7 @@ function TilePiece({ tileStr, size = 80, onClick, isDragging, isPlaced, classNam
 }
 
 function GridCell({ cellName, size, tile, hasError, onClick, isTarget, currentChapter, flashColor }) {
-  return (<div onClick={onClick} style={{
+  return (<div id={`cell-${cellName}`} onClick={onClick} style={{
     "--flash-color": flashColor || "transparent",
     width: size, height: size, borderRadius: 12,
     background: flashColor ? flashColor : (tile ? "transparent" : (currentChapter ? `rgba(255,255,255,0.02)` : "rgba(255,255,255,0.04)")),
@@ -452,7 +549,7 @@ function VictoryScreen({ onBack }) {
       <Confetti /><div style={{ textAlign: "center", zIndex: 201, transform: show ? "scale(1)" : "scale(0.7)", transition: "transform 0.8s cubic-bezier(0.34,1.56,0.64,1)" }}>
         <div style={{ fontSize: 60, fontWeight: 900, fontFamily: "'Orbitron',sans-serif", background: "linear-gradient(135deg,#fbbf24,#f59e0b,#ef4444,#a855f7,#3b82f6,#22c55e)", backgroundSize: "300% 300%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "shimmer 3s linear infinite", filter: "drop-shadow(0 4px 20px rgba(251,191,36,0.5))", marginBottom: 8 }}>CHROMATIC</div>
         <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Orbitron',sans-serif", color: "#fbbf24", marginBottom: 8, letterSpacing: "0.2em" }}>GRANDMASTER</div>
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, fontFamily: "'JetBrains Mono',monospace", marginBottom: 8 }}>All 108 levels complete</p>
+        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, fontFamily: "'JetBrains Mono',monospace", marginBottom: 8 }}>All 140 levels complete</p>
         <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, fontFamily: "'JetBrains Mono',monospace", marginBottom: 40, maxWidth: 300, margin: "0 auto 40px" }}>Sources, sinks, jumpers, chains, and master puzzles — you've conquered Chromatic.</p>
         <button onClick={onBack} style={{ padding: "14px 36px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#fbbf24,#f59e0b)", color: "#1a1a2e", fontSize: 15, fontWeight: 700, fontFamily: "'Orbitron',sans-serif", cursor: "pointer", boxShadow: "0 4px 20px rgba(251,191,36,0.4)", letterSpacing: "0.1em" }}>RETURN TO LEVELS</button>
       </div></div>);
@@ -494,6 +591,8 @@ export default function ChromaticPuzzle() {
   const [showHint, setShowHint] = useState(false);
   const [screen, setScreen] = useState("menu");
   const [completedLevels, setCompletedLevels] = useState(new Set());
+  const [currentShelf, setCurrentShelf] = useState(0);
+  const containerRef = useRef(null);
   useEffect(() => {
     const saved = localStorage.getItem("chromatic_completed");
     if (saved) setCompletedLevels(new Set(JSON.parse(saved)));
@@ -553,7 +652,9 @@ export default function ChromaticPuzzle() {
   const initLevel = useCallback((idx) => {
     playSfx('select');
     const pieces = randomizePipeOrientations(LEVELS[idx].pieces);
+    const l3d = getLayout3D(LEVELS[idx].layout);
     setCurrentLevel(idx); setBoard({}); setTray(shuffleArray(pieces));
+    setCurrentShelf(Math.floor(l3d.length / 2));
     setSelectedTile(null); setSolved(false); setErrors(new Set()); setShowHint(false); setScreen("game");
   }, [playSfx]);
 
@@ -721,6 +822,7 @@ export default function ChromaticPuzzle() {
       @keyframes energyRing{0%{transform:scale(0.8); opacity:1; box-shadow:0 0 20px 10px currentColor, inset 0 0 20px 10px currentColor;}100%{transform:scale(1.8); opacity:0; box-shadow:0 0 80px 30px currentColor, inset 0 0 40px 20px currentColor;}}
       @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
       @keyframes glintSweep{0%{transform:translateX(-100%) skewX(-15deg)}100%{transform:translateX(200%) skewX(-15deg)}}
+      @keyframes dash{0%{stroke-dashoffset:150}100%{stroke-dashoffset:0}}
       .tile-glint { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; pointer-events: none; }
       .tile-glint::after { content: ""; display: block; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%); animation: glintSweep 3s infinite; }
       .tile-placed { box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1); }
@@ -782,22 +884,22 @@ export default function ChromaticPuzzle() {
           <span style={{ color: allComplete ? "#fbbf24" : "rgba(255,255,255,0.4)", fontSize: 11 }}>{allComplete ? "★ ALL COMPLETE ★" : `${progress} / ${LEVELS.length}`}</span>
           {allComplete && <button onClick={() => setShowVictory(true)} style={{ marginLeft: 12, background: "none", border: "none", color: "#fbbf24", fontSize: 11, cursor: "pointer", textDecoration: "underline" }}>View Victory</button>}
         </div>)}
-        <div style={{ width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", gap: 4, maxHeight: "60vh", overflowY: "auto", padding: "0 4px" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, padding: "0 8px" }}>
-            <button
-              onClick={() => setCurrentChapterIndex(p => Math.max(0, p - 1))}
-              disabled={currentChapterIndex === 0}
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: currentChapterIndex === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.8)", fontSize: 18, width: 40, height: 40, cursor: currentChapterIndex === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-            >◄</button>
-            <div style={{ padding: "8px 16px", fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", color: CHAPTERS[currentChapterIndex].color, border: `1px solid ${CHAPTERS[currentChapterIndex].color}40`, borderRadius: 8, background: `${CHAPTERS[currentChapterIndex].color}10`, width: 220, textAlign: "center" }}>
-              {CHAPTERS[currentChapterIndex].name.toUpperCase()}
-            </div>
-            <button
-              onClick={() => setCurrentChapterIndex(p => Math.min(CHAPTERS.length - 1, p + 1))}
-              disabled={currentChapterIndex === CHAPTERS.length - 1}
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: currentChapterIndex === CHAPTERS.length - 1 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.8)", fontSize: 18, width: 40, height: 40, cursor: currentChapterIndex === CHAPTERS.length - 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-            >►</button>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, padding: "0 8px", width: "100%", maxWidth: 420 }}>
+          <button
+            onClick={() => setCurrentChapterIndex(p => Math.max(0, p - 1))}
+            disabled={currentChapterIndex === 0}
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: currentChapterIndex === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.8)", fontSize: 18, width: 40, height: 40, cursor: currentChapterIndex === 0 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+          >◄</button>
+          <div style={{ padding: "8px 16px", fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", color: CHAPTERS[currentChapterIndex].color, border: `1px solid ${CHAPTERS[currentChapterIndex].color}40`, borderRadius: 8, background: `${CHAPTERS[currentChapterIndex].color}10`, width: 220, textAlign: "center" }}>
+            {CHAPTERS[currentChapterIndex].name.toUpperCase()}
           </div>
+          <button
+            onClick={() => setCurrentChapterIndex(p => Math.min(CHAPTERS.length - 1, p + 1))}
+            disabled={currentChapterIndex === CHAPTERS.length - 1}
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: currentChapterIndex === CHAPTERS.length - 1 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.8)", fontSize: 18, width: 40, height: 40, cursor: currentChapterIndex === CHAPTERS.length - 1 ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+          >►</button>
+        </div>
+        <div style={{ width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", gap: 4, maxHeight: "60vh", overflowY: "auto", padding: "0 4px" }}>
           {(() => {
             const ch = CHAPTERS[currentChapterIndex];
             const chLevels = LEVELS.filter(l => l.number >= ch.range[0] && l.number <= ch.range[1]);
@@ -848,6 +950,98 @@ export default function ChromaticPuzzle() {
     );
   }
 
+  // ─── CONNECTION BEAMS ─────────────────────────────────────────────────────────
+
+  function ConnectionBeams({ board, level, containerRef }) {
+    const [beams, setBeams] = useState([]);
+
+    useEffect(() => {
+      if (!containerRef.current) return;
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const newBeams = [];
+      const l3d = getLayout3D(level.layout);
+
+      for (let z = 0; z < l3d.length; z++) {
+        for (let r = 0; r < l3d[z].length; r++) {
+          for (let c = 0; c < l3d[z][r].length; c++) {
+            const cellName = l3d[z][r][c];
+            if (!cellName || !board[cellName]) continue;
+
+            const sourceEl = document.getElementById(`cell-${cellName}`);
+            if (!sourceEl) continue;
+            const sRect = sourceEl.getBoundingClientRect();
+            const sX = sRect.left - containerRect.left + sRect.width / 2;
+            const sY = sRect.top - containerRect.top + sRect.height / 2;
+
+            const tile = parseTile(board[cellName]);
+
+            for (const conn of tile.connections) {
+              const dist = conn.distance || 1;
+              const neighbor = getNeighborAtDist(level.layout, z, r, c, conn.dir, dist);
+              if (!neighbor || !board[neighbor.cell]) continue;
+
+              const targetTile = parseTile(board[neighbor.cell]);
+              if (!checkMatch(tile, conn, targetTile)) continue;
+
+              const targetEl = document.getElementById(`cell-${neighbor.cell}`);
+              if (!targetEl) continue;
+
+              const tRect = targetEl.getBoundingClientRect();
+              const tX = tRect.left - containerRect.left + tRect.width / 2;
+              const tY = tRect.top - containerRect.top + tRect.height / 2;
+
+              let targetColor = conn.color;
+              if (targetTile.type === "OUTPUT_ONLY" && targetTile.center) targetColor = targetTile.center;
+              else if (targetTile.type === "NORMAL" && targetTile.outer) targetColor = targetTile.outer;
+              else if (targetTile.type === "PIPE") {
+                const oppDir = OPPOSITE[conn.dir];
+                const p = targetTile.inPorts.find(p => p.dir === oppDir && p.color === conn.color);
+                if (p) targetColor = p.color;
+              }
+
+              newBeams.push({
+                id: `${cellName}-${neighbor.cell}-${conn.dir}`,
+                x1: sX, y1: sY, x2: tX, y2: tY,
+                color1: COLORS[conn.color]?.glow || "#fff",
+                color2: COLORS[targetColor]?.glow || "#fff"
+              });
+            }
+          }
+        }
+      }
+      setBeams(newBeams);
+    }, [board, level.layout, containerRef]);
+
+    return (
+      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 30, overflow: "visible" }}>
+        <defs>
+          {beams.map(b => (
+            <linearGradient key={`grad-${b.id}`} id={`grad-${b.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={b.color1} />
+              <stop offset="100%" stopColor={b.color2} />
+            </linearGradient>
+          ))}
+          <filter id="crackle">
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+        {beams.map(b => {
+          const cx = (b.x1 + b.x2) / 2 + (Math.random() * 40 - 20);
+          const cy = (b.y1 + b.y2) / 2 + (Math.random() * 40 - 20);
+          const path = `M ${b.x1} ${b.y1} Q ${cx} ${cy} ${b.x2} ${b.y2}`;
+
+          return (
+            <g key={b.id}>
+              <path d={path} fill="none" stroke={`url(#grad-${b.id})`} strokeWidth="4" filter="url(#crackle)" opacity="0.6" style={{ animation: "dash 1.5s linear infinite" }} />
+              <path d={path} fill="none" stroke={`url(#grad-${b.id})`} strokeWidth="2" opacity="0.9" strokeDasharray="10 5" style={{ animation: "dash 0.8s linear infinite" }} />
+            </g>
+          );
+        })}
+      </svg>
+    );
+  }
+
   // ─── GAME ─────────────────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: "100vh", background: currentChapter.bg || "linear-gradient(160deg,#0f0f1a 0%,#1a1a2e 40%,#16213e 100%)", display: "flex", flexDirection: "column", alignItems: "center", fontFamily: "'JetBrains Mono',monospace", padding: "16px 12px" }}>
@@ -868,14 +1062,82 @@ export default function ChromaticPuzzle() {
       <div style={{ maxWidth: 520, width: "100%", marginBottom: 14, padding: "6px 12px", borderRadius: 8, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.3)", fontSize: 10, textAlign: "center" }}>
         Each arrow must point at a tile whose outer color matches{level.pieces.some(p => /:\d+/.test(p.replace(/^(OUT:\w+\||IN:\w+|\w+\|)/, ""))) ? " · numbered arrows jump over tiles!" : ""}{level.pieces.some(p => p.startsWith("OUT:")) ? " · SRC = source (sends only)" : ""}{level.pieces.some(p => p.startsWith("IN:")) ? " · SINK = destination" : ""}
       </div>
-      <div style={{ marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
-        {level.layout.map((row, r) => (<div key={r} style={{ display: "flex", gap: 6, marginBottom: r < level.layout.length - 1 ? 6 : 0 }}>
-          {row.map((cellName, c) => {
-            if (!cellName) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
-            return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={errors.has(`${cellName}:UP`) || errors.has(`${cellName}:DOWN`) || errors.has(`${cellName}:LEFT`) || errors.has(`${cellName}:RIGHT`) || errors.has(`${cellName}:UP_LEFT`) || errors.has(`${cellName}:UP_RIGHT`) || errors.has(`${cellName}:DOWN_LEFT`) || errors.has(`${cellName}:DOWN_RIGHT`)} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} flashColor={flashes[cellName]} />;
-          })}
-        </div>))}
-      </div>
+      {(() => {
+        const l3d = getLayout3D(level.layout);
+        const numShelves = l3d.length;
+        if (numShelves === 1) {
+          return (
+            <div ref={containerRef} style={{ position: "relative", marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <ConnectionBeams board={board} level={level} containerRef={containerRef} />
+              {l3d[0].map((row, r) => (<div key={r} style={{ display: "flex", gap: 6, marginBottom: r < l3d[0].length - 1 ? 6 : 0 }}>
+                {row.map((cellName, c) => {
+                  if (!cellName) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
+                  const isErr = Array.from(errors).some(e => e.startsWith(`${cellName}:`));
+                  return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={isErr} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} flashColor={flashes[cellName]} />;
+                })}
+              </div>))}
+            </div>
+          );
+        }
+
+        const maxRows = Math.max(...l3d.map(layer => layer.length));
+        const maxCols = Math.max(...l3d.map(layer => layer[0].length));
+        const shelfGap = 6;
+        const offsetAmount = cellSize * 0.7; // 70% diagonal spread
+
+        const baseWidth = maxCols * cellSize + (maxCols - 1) * shelfGap;
+        const baseHeight = maxRows * cellSize + (maxRows - 1) * shelfGap;
+
+        const maxDelta = Math.max(currentShelf, numShelves - 1 - currentShelf);
+        const totalWidth = baseWidth + maxDelta * offsetAmount * 2;
+        const totalHeight = baseHeight + maxDelta * offsetAmount * 2;
+
+        return (
+          <div ref={containerRef} style={{ position: "relative", marginBottom: 20, padding: 14, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <ConnectionBeams board={board} level={level} containerRef={containerRef} />
+            <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+              {l3d.map((_, z) => (
+                <button key={z} onClick={() => setCurrentShelf(z)} style={{ padding: "4px 12px", borderRadius: 8, border: z === currentShelf ? "1px solid #fbbf24" : "1px solid rgba(255,255,255,0.2)", background: z === currentShelf ? "rgba(251,191,36,0.15)" : "rgba(255,255,255,0.05)", color: z === currentShelf ? "#fbbf24" : "white", cursor: "pointer", transition: "all 0.2s" }}>
+                  Shelf {z + 1}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ position: "relative", width: totalWidth, height: totalHeight }}>
+              {l3d.map((layer, z) => {
+                const zDelta = z - currentShelf;
+                const offsetX = zDelta * offsetAmount;
+                const offsetY = -zDelta * offsetAmount;
+
+                const isFocused = z === currentShelf;
+
+                return (
+                  <div key={z} style={{
+                    position: "absolute",
+                    left: "50%", top: "50%",
+                    transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`,
+                    zIndex: isFocused ? 20 : 10 + z,
+                    opacity: isFocused ? 1 : 0.25,
+                    pointerEvents: isFocused ? "auto" : "none",
+                    transition: "all 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
+                    filter: isFocused ? "none" : "blur(2px) grayscale(50%)"
+                  }}>
+                    {layer.map((row, r) => (
+                      <div key={r} style={{ display: "flex", gap: shelfGap, marginBottom: r < layer.length - 1 ? shelfGap : 0 }}>
+                        {row.map((cellName, c) => {
+                          if (!cellName) return <div key={c} style={{ width: cellSize, height: cellSize }} />;
+                          const isErr = Array.from(errors).some(e => e.startsWith(`${cellName}:`));
+                          return <GridCell key={c} cellName={cellName} size={cellSize} tile={board[cellName]} hasError={isErr} onClick={() => handleCellClick(cellName)} isTarget={!solved && selectedTile && !board[cellName]} currentChapter={currentChapter} flashColor={flashes[cellName]} />;
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
       {selectedTile && (<div style={{ marginBottom: 10, display: "flex", alignItems: "center", gap: 10, padding: "7px 14px", borderRadius: 10, background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.2)" }}>
         <span style={{ color: "#fbbf24", fontSize: 11 }}>Selected:</span>
         <TilePiece tileStr={selectedTile} size={40} />
