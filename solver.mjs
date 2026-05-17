@@ -187,6 +187,30 @@ function getNeighborAtDist(layout, z, row, col, dir, dist) {
   return null;
 }
 
+function getConduitNeighbor(level, cellName, dir) {
+  if (!level.conduits) return null;
+  for (const conduit of level.conduits) {
+    if (conduit.from.cell === cellName && conduit.from.dir === dir) {
+      return { cell: conduit.to.cell, arrivalDir: conduit.to.dir };
+    }
+  }
+  return null;
+}
+
+function checkMatchConduit(conn, targetTile, arrivalDir) {
+  if (!targetTile || targetTile.type === "EMPTY") return false;
+  if (targetTile.type === "NORMAL" && conn.color === targetTile.outer) return true;
+  if (targetTile.type === "INPUT_ONLY" && targetTile.acceptColors.includes(conn.color)) return true;
+  if (targetTile.type === "STAIRS" && conn.color === targetTile.outer) return true;
+  if (targetTile.type === "OUTPUT_ONLY" && conn.color === targetTile.center) return true;
+  if (targetTile.type === "PIPE") {
+    const oppDir = OPPOSITE[arrivalDir];
+    return !!targetTile.inPorts?.find(p => p.dir === oppDir && p.color === conn.color);
+  }
+  if (targetTile.type === "TRIGGER" && conn.color === targetTile.reqColor) return true;
+  return false;
+}
+
 function checkMatch(sourceTile, conn, targetTile) {
   if (!targetTile || targetTile.type === "EMPTY") return false;
 
@@ -211,10 +235,15 @@ function getSatisfiedTriggers(level, board) {
     if (!sPos) return;
     sTile.connections.forEach(conn => {
       const neighbor = getNeighborAtDist(level.layout, sPos.z, sPos.row, sPos.col, conn.dir, conn.distance || 1);
-      if (neighbor && board[neighbor.cell]) {
-        const nTile = parseTile(board[neighbor.cell]);
+      let targetCell = neighbor?.cell;
+      if (!targetCell) {
+        const conduit = getConduitNeighbor(level, sourceCell, conn.dir);
+        if (conduit) targetCell = conduit.cell;
+      }
+      if (targetCell && board[targetCell]) {
+        const nTile = parseTile(board[targetCell]);
         if (nTile.type === "TRIGGER" && nTile.reqColor === conn.color) {
-          satisfied.add(neighbor.cell);
+          satisfied.add(targetCell);
         }
       }
     });
@@ -264,7 +293,15 @@ function solvePuzzle(level) {
     if (tile.type !== "INPUT_ONLY" && tile.type !== "TRIGGER") {
       for (const conn of tile.connections) {
         const n = getNeighborAtDist(level.layout, pos.z, pos.row, pos.col, conn.dir, conn.distance || 1);
-        if (!n) return false; // points off board
+        if (!n) {
+          // Check conduit fallback
+          const conduit = getConduitNeighbor(level, cellName, conn.dir);
+          if (!conduit) return false;
+          if (board[conduit.cell]) {
+            if (!checkMatchConduit(conn, parseTile(board[conduit.cell]), conduit.arrivalDir)) return false;
+          }
+          continue;
+        }
         if (board[n.cell]) {
           if (!checkMatch(tile, conn, parseTile(board[n.cell]))) {
             return false;
@@ -273,15 +310,20 @@ function solvePuzzle(level) {
       }
     }
 
-    // Check if any ALREADY PLACED neighbors point at this new piece
+    // Check if any ALREADY PLACED neighbors point at this new piece (including via conduits)
     for (const [otherCell, otherStr] of Object.entries(board)) {
       const ot = parseTile(otherStr);
       const op = findCellPos(level.layout, otherCell);
       for (const oc of ot.connections) {
         const on = getNeighborAtDist(level.layout, op.z, op.row, op.col, oc.dir, oc.distance || 1);
         if (on && on.cell === cellName) {
-          if (!checkMatch(ot, oc, tile)) {
-            return false;
+          if (!checkMatch(ot, oc, tile)) return false;
+        }
+        // Check conduit routing to this cell
+        if (!on) {
+          const conduit = getConduitNeighbor(level, otherCell, oc.dir);
+          if (conduit && conduit.cell === cellName) {
+            if (!checkMatchConduit(oc, tile, conduit.arrivalDir)) return false;
           }
         }
       }
@@ -304,8 +346,15 @@ function solvePuzzle(level) {
         const p = findCellPos(level.layout, cell);
         for (const c of t.connections) {
           const n = getNeighborAtDist(level.layout, p.z, p.row, p.col, c.dir, c.distance || 1);
-          if (!n || !board[n.cell]) return;
-          if (!checkMatch(t, c, parseTile(board[n.cell]))) return;
+          if (n) {
+            if (!board[n.cell]) return;
+            if (!checkMatch(t, c, parseTile(board[n.cell]))) return;
+          } else {
+            // Conduit fallback for final validation
+            const conduit = getConduitNeighbor(level, cell, c.dir);
+            if (!conduit || !board[conduit.cell]) return;
+            if (!checkMatchConduit(c, parseTile(board[conduit.cell]), conduit.arrivalDir)) return;
+          }
         }
       }
       const isDuplicate = solutions.some(sol => {
