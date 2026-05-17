@@ -222,13 +222,22 @@ function getSatisfiedTriggers(level, board) {
   return satisfied;
 }
 
-function isLocked(level, board, cellName) {
+function isLocked(level, board, cellName, remaining) {
   const satisfied = getSatisfiedTriggers(level, board);
   // Check ALL trigger tiles on the board
   for (const [cell, str] of Object.entries(board)) {
     const t = parseTile(str);
     if (t.type === "TRIGGER" && t.targetCell === cellName && !satisfied.has(cell)) {
       return true;
+    }
+  }
+  // Also check unplaced triggers in the remaining pieces (tray)
+  if (remaining) {
+    for (const pieceStr of remaining) {
+      const t = parseTile(pieceStr);
+      if (t.type === "TRIGGER" && t.targetCell === cellName) {
+        return true;
+      }
     }
   }
   return false;
@@ -240,10 +249,10 @@ function solvePuzzle(level) {
   const cells = level.cells;
   const solutions = [];
 
-  function isValidPartial(board, cellName, tileStr) {
+  function isValidPartial(board, cellName, tileStr, remaining) {
     const tile = parseTile(tileStr);
     // Don't place on a locked cell, EXCEPT if the piece we are placing is a TRIGGER targeting this cell
-    if (isLocked(level, board, cellName)) {
+    if (isLocked(level, board, cellName, remaining)) {
       if (tile.type !== "TRIGGER" || tile.targetCell !== cellName) {
         return false;
       }
@@ -314,7 +323,7 @@ function solvePuzzle(level) {
     // If no such cell exists, we might be stuck (all remaining cells locked)
     let targetCell = null;
     for (const c of cells) {
-      if (!board[c] && !isLocked(level, board, c)) {
+      if (!board[c] && !isLocked(level, board, c, remaining)) {
         targetCell = c;
         break;
       }
@@ -325,11 +334,12 @@ function solvePuzzle(level) {
     for (let i = 0; i < remaining.length; i++) {
       const piece = remaining[i];
       const variants = getAllPipeRotations(piece);
+      const newRemaining = [...remaining.slice(0, i), ...remaining.slice(i + 1)];
       for (const variant of variants) {
-        if (isValidPartial(board, targetCell, variant)) {
+        if (isValidPartial(board, targetCell, variant, newRemaining)) {
           solve(
             { ...board, [targetCell]: variant },
-            [...remaining.slice(0, i), ...remaining.slice(i + 1)]
+            newRemaining
           );
           if (solutions.length >= 2) return;
         }
