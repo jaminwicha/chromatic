@@ -1,0 +1,2720 @@
+[
+  {
+    "number": 109,
+    "name": "Control Flow 1",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        null,
+        "G",
+        "F"
+      ],
+      [
+        null,
+        "H",
+        "E"
+      ],
+      [
+        null,
+        "C",
+        "D"
+      ],
+      [
+        "A",
+        "B",
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|ORANGE:UP",
+      "TRIGGER:ORANGE:E|YELLOW:RIGHT",
+      "TRIGGER:YELLOW:G|GREEN:UP",
+      "TRIGGER:GREEN:H|PURPLE:UP",
+      "PURPLE|RED:LEFT",
+      "RED|CYAN:DOWN",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|ORANGE:UP",
+      "C": "TRIGGER:ORANGE:E|YELLOW:RIGHT",
+      "D": "TRIGGER:YELLOW:G|GREEN:UP",
+      "E": "TRIGGER:GREEN:H|PURPLE:UP",
+      "F": "PURPLE|RED:LEFT",
+      "G": "RED|CYAN:DOWN",
+      "H": "IN:CYAN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 110,
+    "name": "Control Flow 2",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        "D",
+        "C",
+        "B",
+        "A"
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:LEFT",
+      "RED|ORANGE:LEFT",
+      "TRIGGER:ORANGE:G|BLUE:LEFT",
+      "TRIGGER:BLUE:F|YELLOW:DOWN",
+      "TRIGGER:YELLOW:F|ORANGE:RIGHT",
+      "ORANGE|PURPLE:RIGHT",
+      "PURPLE|CYAN:RIGHT",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:LEFT",
+      "B": "RED|ORANGE:LEFT",
+      "C": "TRIGGER:ORANGE:G|BLUE:LEFT",
+      "D": "TRIGGER:BLUE:F|YELLOW:DOWN",
+      "E": "TRIGGER:YELLOW:F|ORANGE:RIGHT",
+      "F": "ORANGE|PURPLE:RIGHT",
+      "G": "PURPLE|CYAN:RIGHT",
+      "H": "IN:CYAN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 111,
+    "name": "Control Flow 3",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        "G",
+        "H",
+        "A"
+      ],
+      [
+        "F",
+        "C",
+        "B"
+      ],
+      [
+        "E",
+        "D",
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|YELLOW:LEFT",
+      "YELLOW|PINK:DOWN",
+      "PINK|BLUE:LEFT",
+      "BLUE|RED:UP",
+      "RED|ORANGE:UP",
+      "ORANGE|RED:RIGHT",
+      "IN:RED"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|YELLOW:LEFT",
+      "C": "YELLOW|PINK:DOWN",
+      "D": "PINK|BLUE:LEFT",
+      "E": "BLUE|RED:UP",
+      "F": "RED|ORANGE:UP",
+      "G": "ORANGE|RED:RIGHT",
+      "H": "IN:RED"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 112,
+    "name": "Control Flow 4",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        "B",
+        "C"
+      ],
+      [
+        "A",
+        "D"
+      ],
+      [
+        "H",
+        "E"
+      ],
+      [
+        "G",
+        "F"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:UP",
+      "RED|PINK:RIGHT",
+      "PINK|CYAN:DOWN",
+      "CYAN|YELLOW:DOWN",
+      "YELLOW|ORANGE:DOWN",
+      "ORANGE|RED:LEFT",
+      "RED|GREEN:UP",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:UP",
+      "B": "RED|PINK:RIGHT",
+      "C": "PINK|CYAN:DOWN",
+      "D": "CYAN|YELLOW:DOWN",
+      "E": "YELLOW|ORANGE:DOWN",
+      "F": "ORANGE|RED:LEFT",
+      "G": "RED|GREEN:UP",
+      "H": "IN:GREEN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 113,
+    "name": "Control Flow 5",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        "A",
+        "H",
+        "G"
+      ],
+      [
+        "B",
+        "C",
+        "F"
+      ],
+      [
+        null,
+        "D",
+        "E"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|YELLOW:RIGHT",
+      "YELLOW|CYAN:DOWN",
+      "TRIGGER:CYAN:F|GREEN:RIGHT",
+      "TRIGGER:GREEN:H|ORANGE:UP",
+      "ORANGE|PINK:UP",
+      "PINK|GREEN:LEFT",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|YELLOW:RIGHT",
+      "C": "YELLOW|CYAN:DOWN",
+      "D": "TRIGGER:CYAN:F|GREEN:RIGHT",
+      "E": "TRIGGER:GREEN:H|ORANGE:UP",
+      "F": "ORANGE|PINK:UP",
+      "G": "PINK|GREEN:LEFT",
+      "H": "IN:GREEN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 114,
+    "name": "Control Flow 6",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        "F",
+        "G",
+        "H"
+      ],
+      [
+        "E",
+        "D",
+        null
+      ],
+      [
+        "B",
+        "C",
+        null
+      ],
+      [
+        "A",
+        null,
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:UP",
+      "RED|ORANGE:RIGHT",
+      "ORANGE|PINK:UP",
+      "TRIGGER:PINK:G|BLUE:LEFT",
+      "TRIGGER:BLUE:H|RED:UP",
+      "TRIGGER:RED:H|BLUE:RIGHT",
+      "BLUE|GREEN:RIGHT",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:UP",
+      "B": "RED|ORANGE:RIGHT",
+      "C": "ORANGE|PINK:UP",
+      "D": "TRIGGER:PINK:G|BLUE:LEFT",
+      "E": "TRIGGER:BLUE:H|RED:UP",
+      "F": "TRIGGER:RED:H|BLUE:RIGHT",
+      "G": "BLUE|GREEN:RIGHT",
+      "H": "IN:GREEN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 115,
+    "name": "Multi-Shelf 1",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        [
+          "H",
+          null,
+          null,
+          null
+        ],
+        [
+          "G",
+          null,
+          null,
+          null
+        ],
+        [
+          "F",
+          "E",
+          null,
+          null
+        ],
+        [
+          null,
+          "D",
+          "C",
+          "B"
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          "A"
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|ORANGE:LEFT",
+      "ORANGE|CYAN:LEFT",
+      "CYAN|RED:UP",
+      "RED|ORANGE:LEFT",
+      "ORANGE|GREEN:UP",
+      "GREEN|BLUE:UP",
+      "IN:BLUE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_DOWN",
+      "B": "STAIRS:DOWN:RED|ORANGE:LEFT",
+      "C": "ORANGE|CYAN:LEFT",
+      "D": "CYAN|RED:UP",
+      "E": "RED|ORANGE:LEFT",
+      "F": "ORANGE|GREEN:UP",
+      "G": "GREEN|BLUE:UP",
+      "H": "IN:BLUE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 116,
+    "name": "Multi-Shelf 2",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        [
+          "B",
+          "C",
+          null
+        ],
+        [
+          null,
+          "H",
+          "G"
+        ]
+      ],
+      [
+        [
+          "A",
+          "D",
+          "E"
+        ],
+        [
+          null,
+          null,
+          "F"
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|YELLOW:RIGHT",
+      "YELLOW|CYAN:SHELF_UP",
+      "STAIRS:UP:CYAN|RED:RIGHT",
+      "RED|PINK:DOWN",
+      "PINK|CYAN:SHELF_DOWN",
+      "STAIRS:DOWN:CYAN|GREEN:LEFT",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_DOWN",
+      "B": "STAIRS:DOWN:RED|YELLOW:RIGHT",
+      "C": "YELLOW|CYAN:SHELF_UP",
+      "D": "STAIRS:UP:CYAN|RED:RIGHT",
+      "E": "RED|PINK:DOWN",
+      "F": "PINK|CYAN:SHELF_DOWN",
+      "G": "STAIRS:DOWN:CYAN|GREEN:LEFT",
+      "H": "IN:GREEN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 117,
+    "name": "Multi-Shelf 3",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "E",
+          null
+        ],
+        [
+          "C",
+          "D",
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          "H"
+        ],
+        [
+          "A",
+          "F",
+          "G"
+        ],
+        [
+          "B",
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|ORANGE:SHELF_DOWN",
+      "STAIRS:DOWN:ORANGE|RED:RIGHT",
+      "RED|CYAN:UP",
+      "CYAN|YELLOW:SHELF_UP",
+      "STAIRS:UP:YELLOW|PINK:RIGHT",
+      "PINK|CYAN:UP",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|ORANGE:SHELF_DOWN",
+      "C": "STAIRS:DOWN:ORANGE|RED:RIGHT",
+      "D": "RED|CYAN:UP",
+      "E": "CYAN|YELLOW:SHELF_UP",
+      "F": "STAIRS:UP:YELLOW|PINK:RIGHT",
+      "G": "PINK|CYAN:UP",
+      "H": "IN:CYAN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 118,
+    "name": "Multi-Shelf 4",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          "D",
+          "C"
+        ],
+        [
+          "F",
+          "E",
+          null
+        ],
+        [
+          "G",
+          "H",
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          "B"
+        ],
+        [
+          null,
+          null,
+          "A"
+        ],
+        [
+          null,
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:UP",
+      "RED|BLUE:SHELF_DOWN",
+      "STAIRS:DOWN:BLUE|RED:LEFT",
+      "RED|BLUE:DOWN",
+      "BLUE|YELLOW:LEFT",
+      "YELLOW|PINK:DOWN",
+      "PINK|PURPLE:RIGHT",
+      "IN:PURPLE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:UP",
+      "B": "RED|BLUE:SHELF_DOWN",
+      "C": "STAIRS:DOWN:BLUE|RED:LEFT",
+      "D": "RED|BLUE:DOWN",
+      "E": "BLUE|YELLOW:LEFT",
+      "F": "YELLOW|PINK:DOWN",
+      "G": "PINK|PURPLE:RIGHT",
+      "H": "IN:PURPLE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 119,
+    "name": "Multi-Shelf 5",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        [
+          "C",
+          "B"
+        ],
+        [
+          "D",
+          "E"
+        ]
+      ],
+      [
+        [
+          null,
+          "A"
+        ],
+        [
+          null,
+          "F"
+        ]
+      ],
+      [
+        [
+          null,
+          null
+        ],
+        [
+          "H",
+          "G"
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|BLUE:LEFT",
+      "BLUE|CYAN:DOWN",
+      "CYAN|BLUE:RIGHT",
+      "BLUE|PINK:SHELF_UP",
+      "STAIRS:UP:PINK|CYAN:SHELF_UP",
+      "STAIRS:UP:CYAN|ORANGE:LEFT",
+      "IN:ORANGE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_DOWN",
+      "B": "STAIRS:DOWN:RED|BLUE:LEFT",
+      "C": "BLUE|CYAN:DOWN",
+      "D": "CYAN|BLUE:RIGHT",
+      "E": "BLUE|PINK:SHELF_UP",
+      "F": "STAIRS:UP:PINK|CYAN:SHELF_UP",
+      "G": "STAIRS:UP:CYAN|ORANGE:LEFT",
+      "H": "IN:ORANGE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 120,
+    "name": "Multi-Shelf 6",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          "C",
+          "B"
+        ],
+        [
+          "E",
+          "D",
+          null
+        ],
+        [
+          "F",
+          "G",
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          "A"
+        ],
+        [
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "H",
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|BLUE:LEFT",
+      "BLUE|ORANGE:DOWN",
+      "ORANGE|GREEN:LEFT",
+      "GREEN|PINK:DOWN",
+      "PINK|CYAN:RIGHT",
+      "CYAN|GREEN:SHELF_UP",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_DOWN",
+      "B": "STAIRS:DOWN:RED|BLUE:LEFT",
+      "C": "BLUE|ORANGE:DOWN",
+      "D": "ORANGE|GREEN:LEFT",
+      "E": "GREEN|PINK:DOWN",
+      "F": "PINK|CYAN:RIGHT",
+      "G": "CYAN|GREEN:SHELF_UP",
+      "H": "IN:GREEN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 121,
+    "name": "Ascension 1",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          "J"
+        ],
+        [
+          null,
+          "E"
+        ],
+        [
+          "C",
+          "D"
+        ],
+        [
+          "B",
+          "A"
+        ]
+      ],
+      [
+        [
+          "H",
+          "I"
+        ],
+        [
+          "G",
+          "F"
+        ],
+        [
+          null,
+          null
+        ],
+        [
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:LEFT",
+      "RED|CYAN:UP",
+      "TRIGGER:CYAN:J|RED:RIGHT",
+      "RED|PURPLE:UP",
+      "PURPLE|RED:SHELF_UP",
+      "STAIRS:UP:RED|PINK:LEFT",
+      "PINK|PURPLE:UP",
+      "TRIGGER:PURPLE:J|YELLOW:RIGHT",
+      "YELLOW|ORANGE:SHELF_DOWN",
+      "IN:ORANGE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:LEFT",
+      "B": "RED|CYAN:UP",
+      "C": "TRIGGER:CYAN:J|RED:RIGHT",
+      "D": "RED|PURPLE:UP",
+      "E": "PURPLE|RED:SHELF_UP",
+      "F": "STAIRS:UP:RED|PINK:LEFT",
+      "G": "PINK|PURPLE:UP",
+      "H": "TRIGGER:PURPLE:J|YELLOW:RIGHT",
+      "I": "YELLOW|ORANGE:SHELF_DOWN",
+      "J": "IN:ORANGE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 122,
+    "name": "Ascension 2",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "I",
+          "H",
+          "G",
+          "F"
+        ]
+      ],
+      [
+        [
+          null,
+          "A",
+          "B",
+          null
+        ],
+        [
+          null,
+          null,
+          "C",
+          null
+        ],
+        [
+          "J",
+          null,
+          "D",
+          "E"
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|YELLOW:DOWN",
+      "YELLOW|RED:DOWN",
+      "RED|ORANGE:RIGHT",
+      "ORANGE|YELLOW:SHELF_DOWN",
+      "STAIRS:DOWN:YELLOW|PURPLE:LEFT",
+      "PURPLE|RED:LEFT",
+      "RED|PINK:LEFT",
+      "PINK|RED:SHELF_UP",
+      "IN:RED"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|YELLOW:DOWN",
+      "C": "YELLOW|RED:DOWN",
+      "D": "RED|ORANGE:RIGHT",
+      "E": "ORANGE|YELLOW:SHELF_DOWN",
+      "F": "STAIRS:DOWN:YELLOW|PURPLE:LEFT",
+      "G": "PURPLE|RED:LEFT",
+      "H": "RED|PINK:LEFT",
+      "I": "PINK|RED:SHELF_UP",
+      "J": "IN:RED"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 123,
+    "name": "Ascension 3",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          "F",
+          "G"
+        ],
+        [
+          null,
+          "A",
+          "H"
+        ],
+        [
+          null,
+          null,
+          "I"
+        ],
+        [
+          null,
+          null,
+          "J"
+        ]
+      ],
+      [
+        [
+          "D",
+          "E",
+          null
+        ],
+        [
+          "C",
+          "B",
+          null
+        ],
+        [
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_UP",
+      "STAIRS:UP:RED|GREEN:LEFT",
+      "GREEN|BLUE:UP",
+      "BLUE|GREEN:RIGHT",
+      "GREEN|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|PINK:RIGHT",
+      "PINK|RED:DOWN",
+      "RED|YELLOW:DOWN",
+      "YELLOW|PINK:DOWN",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_UP",
+      "B": "STAIRS:UP:RED|GREEN:LEFT",
+      "C": "GREEN|BLUE:UP",
+      "D": "BLUE|GREEN:RIGHT",
+      "E": "GREEN|RED:SHELF_DOWN",
+      "F": "STAIRS:DOWN:RED|PINK:RIGHT",
+      "G": "PINK|RED:DOWN",
+      "H": "RED|YELLOW:DOWN",
+      "I": "YELLOW|PINK:DOWN",
+      "J": "IN:PINK"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 124,
+    "name": "Ascension 4",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          "F",
+          "E",
+          "B"
+        ],
+        [
+          null,
+          null,
+          null,
+          "A"
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          "H",
+          "G",
+          "D",
+          "C"
+        ],
+        [
+          "I",
+          null,
+          null,
+          null
+        ],
+        [
+          "J",
+          null,
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:UP",
+      "RED|GREEN:SHELF_UP",
+      "STAIRS:UP:GREEN|CYAN:LEFT",
+      "CYAN|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|YELLOW:LEFT",
+      "TRIGGER:YELLOW:H|PURPLE:SHELF_UP",
+      "STAIRS:UP:PURPLE|PINK:LEFT",
+      "PINK|GREEN:DOWN",
+      "GREEN|PINK:DOWN",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:UP",
+      "B": "RED|GREEN:SHELF_UP",
+      "C": "STAIRS:UP:GREEN|CYAN:LEFT",
+      "D": "CYAN|RED:SHELF_DOWN",
+      "E": "STAIRS:DOWN:RED|YELLOW:LEFT",
+      "F": "TRIGGER:YELLOW:H|PURPLE:SHELF_UP",
+      "G": "STAIRS:UP:PURPLE|PINK:LEFT",
+      "H": "PINK|GREEN:DOWN",
+      "I": "GREEN|PINK:DOWN",
+      "J": "IN:PINK"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 125,
+    "name": "The Zenith",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          "F",
+          "E",
+          "D",
+          "C"
+        ],
+        [
+          null,
+          "G",
+          null,
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          "J",
+          "K",
+          null,
+          "A",
+          "B"
+        ],
+        [
+          "I",
+          "H",
+          null,
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|CYAN:SHELF_DOWN",
+      "STAIRS:DOWN:CYAN|RED:LEFT",
+      "TRIGGER:RED:F|PURPLE:LEFT",
+      "PURPLE|PINK:LEFT",
+      "TRIGGER:PINK:I|PURPLE:DOWN",
+      "PURPLE|GREEN:SHELF_UP",
+      "STAIRS:UP:GREEN|BLUE:LEFT",
+      "BLUE|ORANGE:UP",
+      "ORANGE|YELLOW:RIGHT",
+      "IN:YELLOW"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|CYAN:SHELF_DOWN",
+      "C": "STAIRS:DOWN:CYAN|RED:LEFT",
+      "D": "TRIGGER:RED:F|PURPLE:LEFT",
+      "E": "PURPLE|PINK:LEFT",
+      "F": "TRIGGER:PINK:I|PURPLE:DOWN",
+      "G": "PURPLE|GREEN:SHELF_UP",
+      "H": "STAIRS:UP:GREEN|BLUE:LEFT",
+      "I": "BLUE|ORANGE:UP",
+      "J": "ORANGE|YELLOW:RIGHT",
+      "K": "IN:YELLOW"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 126,
+    "name": "Master IV - 1",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        null,
+        null,
+        "H",
+        "G",
+        "F"
+      ],
+      [
+        null,
+        null,
+        "I",
+        "D",
+        "E"
+      ],
+      [
+        null,
+        "K",
+        "J",
+        "C",
+        null
+      ],
+      [
+        "M",
+        "L",
+        "A",
+        "B",
+        null
+      ],
+      [
+        "N",
+        null,
+        null,
+        null,
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|GREEN:UP",
+      "TRIGGER:GREEN:D|PURPLE:UP",
+      "PURPLE|GREEN:RIGHT",
+      "GREEN|RED:UP",
+      "TRIGGER:RED:H|YELLOW:LEFT",
+      "TRIGGER:YELLOW:J|GREEN:LEFT",
+      "GREEN|BLUE:DOWN",
+      "TRIGGER:BLUE:M|YELLOW:DOWN",
+      "YELLOW|PINK:LEFT",
+      "PINK|CYAN:DOWN",
+      "TRIGGER:CYAN:N|RED:LEFT",
+      "RED|ORANGE:DOWN",
+      "IN:ORANGE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|GREEN:UP",
+      "C": "TRIGGER:GREEN:D|PURPLE:UP",
+      "D": "PURPLE|GREEN:RIGHT",
+      "E": "GREEN|RED:UP",
+      "F": "TRIGGER:RED:H|YELLOW:LEFT",
+      "G": "TRIGGER:YELLOW:J|GREEN:LEFT",
+      "H": "GREEN|BLUE:DOWN",
+      "I": "TRIGGER:BLUE:M|YELLOW:DOWN",
+      "J": "YELLOW|PINK:LEFT",
+      "K": "PINK|CYAN:DOWN",
+      "L": "TRIGGER:CYAN:N|RED:LEFT",
+      "M": "RED|ORANGE:DOWN",
+      "N": "IN:ORANGE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 127,
+    "name": "Master IV - 2",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        "N",
+        null,
+        null,
+        "A",
+        "B",
+        "C"
+      ],
+      [
+        "M",
+        null,
+        "I",
+        "H",
+        "E",
+        "D"
+      ],
+      [
+        "L",
+        "K",
+        "J",
+        "G",
+        "F",
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|CYAN:RIGHT",
+      "CYAN|YELLOW:DOWN",
+      "YELLOW|RED:LEFT",
+      "RED|PINK:DOWN",
+      "TRIGGER:PINK:G|CYAN:LEFT",
+      "CYAN|PURPLE:UP",
+      "TRIGGER:PURPLE:L|RED:LEFT",
+      "TRIGGER:RED:N|ORANGE:DOWN",
+      "ORANGE|YELLOW:LEFT",
+      "YELLOW|PURPLE:LEFT",
+      "PURPLE|RED:UP",
+      "RED|PINK:UP",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|CYAN:RIGHT",
+      "C": "CYAN|YELLOW:DOWN",
+      "D": "YELLOW|RED:LEFT",
+      "E": "RED|PINK:DOWN",
+      "F": "TRIGGER:PINK:G|CYAN:LEFT",
+      "G": "CYAN|PURPLE:UP",
+      "H": "TRIGGER:PURPLE:L|RED:LEFT",
+      "I": "TRIGGER:RED:N|ORANGE:DOWN",
+      "J": "ORANGE|YELLOW:LEFT",
+      "K": "YELLOW|PURPLE:LEFT",
+      "L": "PURPLE|RED:UP",
+      "M": "RED|PINK:UP",
+      "N": "IN:PINK"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 128,
+    "name": "Master IV - 3",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        null,
+        "F",
+        "E",
+        "D",
+        "C"
+      ],
+      [
+        "N",
+        "G",
+        "H",
+        "A",
+        "B"
+      ],
+      [
+        "M",
+        "J",
+        "I",
+        null,
+        null
+      ],
+      [
+        "L",
+        "K",
+        null,
+        null,
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|PINK:UP",
+      "PINK|YELLOW:LEFT",
+      "YELLOW|PURPLE:LEFT",
+      "PURPLE|YELLOW:LEFT",
+      "YELLOW|ORANGE:DOWN",
+      "ORANGE|PINK:RIGHT",
+      "PINK|RED:DOWN",
+      "RED|ORANGE:LEFT",
+      "ORANGE|PURPLE:DOWN",
+      "PURPLE|CYAN:LEFT",
+      "CYAN|BLUE:UP",
+      "BLUE|ORANGE:UP",
+      "IN:ORANGE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|PINK:UP",
+      "C": "PINK|YELLOW:LEFT",
+      "D": "YELLOW|PURPLE:LEFT",
+      "E": "PURPLE|YELLOW:LEFT",
+      "F": "YELLOW|ORANGE:DOWN",
+      "G": "ORANGE|PINK:RIGHT",
+      "H": "PINK|RED:DOWN",
+      "I": "RED|ORANGE:LEFT",
+      "J": "ORANGE|PURPLE:DOWN",
+      "K": "PURPLE|CYAN:LEFT",
+      "L": "CYAN|BLUE:UP",
+      "M": "BLUE|ORANGE:UP",
+      "N": "IN:ORANGE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 129,
+    "name": "Master IV - 4",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        "M",
+        "N",
+        null,
+        null,
+        null
+      ],
+      [
+        "L",
+        "K",
+        "J",
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        "I",
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        "H",
+        "A",
+        null
+      ],
+      [
+        null,
+        null,
+        "G",
+        "B",
+        "C"
+      ],
+      [
+        null,
+        null,
+        "F",
+        "E",
+        "D"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|PINK:RIGHT",
+      "PINK|RED:DOWN",
+      "RED|CYAN:LEFT",
+      "CYAN|RED:LEFT",
+      "RED|GREEN:UP",
+      "TRIGGER:GREEN:J|YELLOW:UP",
+      "TRIGGER:YELLOW:L|PURPLE:UP",
+      "TRIGGER:PURPLE:K|GREEN:UP",
+      "TRIGGER:GREEN:N|PINK:LEFT",
+      "PINK|CYAN:LEFT",
+      "TRIGGER:CYAN:N|BLUE:UP",
+      "BLUE|CYAN:RIGHT",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|PINK:RIGHT",
+      "C": "PINK|RED:DOWN",
+      "D": "RED|CYAN:LEFT",
+      "E": "CYAN|RED:LEFT",
+      "F": "RED|GREEN:UP",
+      "G": "TRIGGER:GREEN:J|YELLOW:UP",
+      "H": "TRIGGER:YELLOW:L|PURPLE:UP",
+      "I": "TRIGGER:PURPLE:K|GREEN:UP",
+      "J": "TRIGGER:GREEN:N|PINK:LEFT",
+      "K": "PINK|CYAN:LEFT",
+      "L": "TRIGGER:CYAN:N|BLUE:UP",
+      "M": "BLUE|CYAN:RIGHT",
+      "N": "IN:CYAN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 130,
+    "name": "Master IV - 5",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        "G",
+        "F",
+        "E",
+        null
+      ],
+      [
+        "H",
+        null,
+        "D",
+        null
+      ],
+      [
+        "I",
+        null,
+        "C",
+        null
+      ],
+      [
+        "J",
+        "K",
+        "B",
+        "A"
+      ],
+      [
+        "M",
+        "L",
+        null,
+        null
+      ],
+      [
+        "N",
+        null,
+        null,
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:LEFT",
+      "RED|CYAN:UP",
+      "TRIGGER:CYAN:I|PURPLE:UP",
+      "PURPLE|RED:UP",
+      "TRIGGER:RED:I|YELLOW:LEFT",
+      "YELLOW|CYAN:LEFT",
+      "CYAN|YELLOW:DOWN",
+      "YELLOW|PURPLE:DOWN",
+      "PURPLE|GREEN:DOWN",
+      "GREEN|PURPLE:RIGHT",
+      "TRIGGER:PURPLE:M|GREEN:DOWN",
+      "TRIGGER:GREEN:N|ORANGE:LEFT",
+      "ORANGE|RED:DOWN",
+      "IN:RED"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:LEFT",
+      "B": "RED|CYAN:UP",
+      "C": "TRIGGER:CYAN:I|PURPLE:UP",
+      "D": "PURPLE|RED:UP",
+      "E": "TRIGGER:RED:I|YELLOW:LEFT",
+      "F": "YELLOW|CYAN:LEFT",
+      "G": "CYAN|YELLOW:DOWN",
+      "H": "YELLOW|PURPLE:DOWN",
+      "I": "PURPLE|GREEN:DOWN",
+      "J": "GREEN|PURPLE:RIGHT",
+      "K": "TRIGGER:PURPLE:M|GREEN:DOWN",
+      "L": "TRIGGER:GREEN:N|ORANGE:LEFT",
+      "M": "ORANGE|RED:DOWN",
+      "N": "IN:RED"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 131,
+    "name": "Master V - 1",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        [
+          "I",
+          "H",
+          "G",
+          "F"
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          "J",
+          "A",
+          "B",
+          "E"
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          "K",
+          "L",
+          "C",
+          "D"
+        ],
+        [
+          null,
+          "M",
+          "N",
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|BLUE:SHELF_UP",
+      "STAIRS:UP:BLUE|ORANGE:RIGHT",
+      "ORANGE|BLUE:SHELF_DOWN",
+      "STAIRS:DOWN:BLUE|PURPLE:SHELF_DOWN",
+      "STAIRS:DOWN:PURPLE|YELLOW:LEFT",
+      "YELLOW|ORANGE:LEFT",
+      "ORANGE|PINK:LEFT",
+      "PINK|YELLOW:SHELF_UP",
+      "STAIRS:UP:YELLOW|PINK:SHELF_UP",
+      "STAIRS:UP:PINK|ORANGE:RIGHT",
+      "ORANGE|PURPLE:DOWN",
+      "PURPLE|PINK:RIGHT",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|BLUE:SHELF_UP",
+      "C": "STAIRS:UP:BLUE|ORANGE:RIGHT",
+      "D": "ORANGE|BLUE:SHELF_DOWN",
+      "E": "STAIRS:DOWN:BLUE|PURPLE:SHELF_DOWN",
+      "F": "STAIRS:DOWN:PURPLE|YELLOW:LEFT",
+      "G": "YELLOW|ORANGE:LEFT",
+      "H": "ORANGE|PINK:LEFT",
+      "I": "PINK|YELLOW:SHELF_UP",
+      "J": "STAIRS:UP:YELLOW|PINK:SHELF_UP",
+      "K": "STAIRS:UP:PINK|ORANGE:RIGHT",
+      "L": "ORANGE|PURPLE:DOWN",
+      "M": "PURPLE|PINK:RIGHT",
+      "N": "IN:PINK"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 132,
+    "name": "Master V - 2",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "C",
+          "B"
+        ],
+        [
+          null,
+          "E",
+          "D",
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          "N",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          "A"
+        ],
+        [
+          "G",
+          "F",
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          "M",
+          "L",
+          null
+        ],
+        [
+          null,
+          "J",
+          "K",
+          null
+        ],
+        [
+          "H",
+          "I",
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|YELLOW:LEFT",
+      "YELLOW|RED:DOWN",
+      "RED|BLUE:LEFT",
+      "BLUE|PURPLE:SHELF_UP",
+      "STAIRS:UP:PURPLE|ORANGE:LEFT",
+      "ORANGE|PINK:SHELF_UP",
+      "STAIRS:UP:PINK|RED:RIGHT",
+      "RED|YELLOW:UP",
+      "YELLOW|CYAN:RIGHT",
+      "CYAN|YELLOW:UP",
+      "YELLOW|CYAN:LEFT",
+      "CYAN|PINK:SHELF_DOWN",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_DOWN",
+      "B": "STAIRS:DOWN:RED|YELLOW:LEFT",
+      "C": "YELLOW|RED:DOWN",
+      "D": "RED|BLUE:LEFT",
+      "E": "BLUE|PURPLE:SHELF_UP",
+      "F": "STAIRS:UP:PURPLE|ORANGE:LEFT",
+      "G": "ORANGE|PINK:SHELF_UP",
+      "H": "STAIRS:UP:PINK|RED:RIGHT",
+      "I": "RED|YELLOW:UP",
+      "J": "YELLOW|CYAN:RIGHT",
+      "K": "CYAN|YELLOW:UP",
+      "L": "YELLOW|CYAN:LEFT",
+      "M": "CYAN|PINK:SHELF_DOWN",
+      "N": "IN:PINK"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 133,
+    "name": "Master V - 3",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        [
+          "M",
+          "N",
+          null,
+          null
+        ],
+        [
+          null,
+          "E",
+          "D",
+          "C"
+        ]
+      ],
+      [
+        [
+          "L",
+          null,
+          null,
+          "A"
+        ],
+        [
+          "G",
+          "F",
+          null,
+          "B"
+        ]
+      ],
+      [
+        [
+          "K",
+          "J",
+          null,
+          null
+        ],
+        [
+          "H",
+          "I",
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|PINK:SHELF_DOWN",
+      "STAIRS:DOWN:PINK|CYAN:LEFT",
+      "CYAN|RED:LEFT",
+      "RED|PURPLE:SHELF_UP",
+      "STAIRS:UP:PURPLE|BLUE:LEFT",
+      "BLUE|CYAN:SHELF_UP",
+      "STAIRS:UP:CYAN|RED:RIGHT",
+      "RED|YELLOW:UP",
+      "YELLOW|BLUE:LEFT",
+      "BLUE|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|BLUE:SHELF_DOWN",
+      "STAIRS:DOWN:BLUE|GREEN:RIGHT",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|PINK:SHELF_DOWN",
+      "C": "STAIRS:DOWN:PINK|CYAN:LEFT",
+      "D": "CYAN|RED:LEFT",
+      "E": "RED|PURPLE:SHELF_UP",
+      "F": "STAIRS:UP:PURPLE|BLUE:LEFT",
+      "G": "BLUE|CYAN:SHELF_UP",
+      "H": "STAIRS:UP:CYAN|RED:RIGHT",
+      "I": "RED|YELLOW:UP",
+      "J": "YELLOW|BLUE:LEFT",
+      "K": "BLUE|RED:SHELF_DOWN",
+      "L": "STAIRS:DOWN:RED|BLUE:SHELF_DOWN",
+      "M": "STAIRS:DOWN:BLUE|GREEN:RIGHT",
+      "N": "IN:GREEN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 134,
+    "name": "Master V - 4",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        [
+          "I",
+          "H",
+          "E",
+          "D",
+          "C"
+        ],
+        [
+          "J",
+          null,
+          "N",
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          "G",
+          "F",
+          "A",
+          "B"
+        ],
+        [
+          "K",
+          "L",
+          "M",
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|GREEN:SHELF_DOWN",
+      "STAIRS:DOWN:GREEN|CYAN:LEFT",
+      "CYAN|YELLOW:LEFT",
+      "YELLOW|RED:SHELF_UP",
+      "STAIRS:UP:RED|BLUE:LEFT",
+      "BLUE|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|GREEN:LEFT",
+      "GREEN|ORANGE:DOWN",
+      "ORANGE|PINK:SHELF_UP",
+      "STAIRS:UP:PINK|PURPLE:RIGHT",
+      "PURPLE|CYAN:RIGHT",
+      "CYAN|ORANGE:SHELF_DOWN",
+      "IN:ORANGE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|GREEN:SHELF_DOWN",
+      "C": "STAIRS:DOWN:GREEN|CYAN:LEFT",
+      "D": "CYAN|YELLOW:LEFT",
+      "E": "YELLOW|RED:SHELF_UP",
+      "F": "STAIRS:UP:RED|BLUE:LEFT",
+      "G": "BLUE|RED:SHELF_DOWN",
+      "H": "STAIRS:DOWN:RED|GREEN:LEFT",
+      "I": "GREEN|ORANGE:DOWN",
+      "J": "ORANGE|PINK:SHELF_UP",
+      "K": "STAIRS:UP:PINK|PURPLE:RIGHT",
+      "L": "PURPLE|CYAN:RIGHT",
+      "M": "CYAN|ORANGE:SHELF_DOWN",
+      "N": "IN:ORANGE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 135,
+    "name": "Master V - 5",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "D",
+          "C",
+          null
+        ],
+        [
+          null,
+          "E",
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          "N",
+          null
+        ],
+        [
+          null,
+          "L",
+          "M",
+          null
+        ],
+        [
+          "H",
+          null,
+          "B",
+          "A"
+        ],
+        [
+          "G",
+          "F",
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "K",
+          null,
+          null
+        ],
+        [
+          "I",
+          "J",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:LEFT",
+      "RED|ORANGE:SHELF_DOWN",
+      "STAIRS:DOWN:ORANGE|RED:LEFT",
+      "RED|CYAN:DOWN",
+      "CYAN|YELLOW:SHELF_UP",
+      "STAIRS:UP:YELLOW|PINK:LEFT",
+      "PINK|RED:UP",
+      "RED|PURPLE:SHELF_UP",
+      "STAIRS:UP:PURPLE|RED:RIGHT",
+      "RED|ORANGE:UP",
+      "ORANGE|PINK:SHELF_DOWN",
+      "STAIRS:DOWN:PINK|BLUE:RIGHT",
+      "BLUE|CYAN:UP",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:LEFT",
+      "B": "RED|ORANGE:SHELF_DOWN",
+      "C": "STAIRS:DOWN:ORANGE|RED:LEFT",
+      "D": "RED|CYAN:DOWN",
+      "E": "CYAN|YELLOW:SHELF_UP",
+      "F": "STAIRS:UP:YELLOW|PINK:LEFT",
+      "G": "PINK|RED:UP",
+      "H": "RED|PURPLE:SHELF_UP",
+      "I": "STAIRS:UP:PURPLE|RED:RIGHT",
+      "J": "RED|ORANGE:UP",
+      "K": "ORANGE|PINK:SHELF_DOWN",
+      "L": "STAIRS:DOWN:PINK|BLUE:RIGHT",
+      "M": "BLUE|CYAN:UP",
+      "N": "IN:CYAN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 136,
+    "name": "Master VI - 1",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          "O",
+          "P"
+        ]
+      ],
+      [
+        [
+          null,
+          "B",
+          "A",
+          null,
+          null
+        ],
+        [
+          null,
+          "G",
+          "H",
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          "N",
+          "M"
+        ]
+      ],
+      [
+        [
+          "D",
+          "C",
+          null,
+          null,
+          null
+        ],
+        [
+          "E",
+          "F",
+          "I",
+          "J",
+          "K"
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          "L"
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:LEFT",
+      "RED|ORANGE:SHELF_UP",
+      "STAIRS:UP:ORANGE|BLUE:LEFT",
+      "TRIGGER:BLUE:H|ORANGE:DOWN",
+      "ORANGE|PURPLE:RIGHT",
+      "PURPLE|YELLOW:SHELF_DOWN",
+      "STAIRS:DOWN:YELLOW|GREEN:RIGHT",
+      "TRIGGER:GREEN:N|RED:SHELF_UP",
+      "STAIRS:UP:RED|PINK:RIGHT",
+      "PINK|YELLOW:RIGHT",
+      "YELLOW|CYAN:DOWN",
+      "CYAN|ORANGE:SHELF_DOWN",
+      "STAIRS:DOWN:ORANGE|RED:LEFT",
+      "RED|CYAN:SHELF_DOWN",
+      "STAIRS:DOWN:CYAN|GREEN:RIGHT",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:LEFT",
+      "B": "RED|ORANGE:SHELF_UP",
+      "C": "STAIRS:UP:ORANGE|BLUE:LEFT",
+      "D": "TRIGGER:BLUE:H|ORANGE:DOWN",
+      "E": "ORANGE|PURPLE:RIGHT",
+      "F": "PURPLE|YELLOW:SHELF_DOWN",
+      "G": "STAIRS:DOWN:YELLOW|GREEN:RIGHT",
+      "H": "TRIGGER:GREEN:N|RED:SHELF_UP",
+      "I": "STAIRS:UP:RED|PINK:RIGHT",
+      "J": "PINK|YELLOW:RIGHT",
+      "K": "YELLOW|CYAN:DOWN",
+      "L": "CYAN|ORANGE:SHELF_DOWN",
+      "M": "STAIRS:DOWN:ORANGE|RED:LEFT",
+      "N": "RED|CYAN:SHELF_DOWN",
+      "O": "STAIRS:DOWN:CYAN|GREEN:RIGHT",
+      "P": "IN:GREEN"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 137,
+    "name": "Master VI - 2",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "D",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "C",
+          "B",
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "E",
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          null,
+          "A",
+          null,
+          null
+        ]
+      ],
+      [
+        [
+          "I",
+          "J",
+          "K",
+          null,
+          null
+        ],
+        [
+          "H",
+          null,
+          "L",
+          null,
+          "P"
+        ],
+        [
+          "G",
+          "F",
+          "M",
+          "N",
+          "O"
+        ],
+        [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_DOWN",
+      "STAIRS:DOWN:RED|BLUE:LEFT",
+      "TRIGGER:BLUE:D|YELLOW:UP",
+      "YELLOW|RED:SHELF_UP",
+      "STAIRS:UP:RED|CYAN:SHELF_UP",
+      "STAIRS:UP:CYAN|PINK:LEFT",
+      "PINK|BLUE:UP",
+      "TRIGGER:BLUE:P|PINK:UP",
+      "PINK|ORANGE:RIGHT",
+      "TRIGGER:ORANGE:M|CYAN:RIGHT",
+      "CYAN|BLUE:DOWN",
+      "TRIGGER:BLUE:M|RED:DOWN",
+      "TRIGGER:RED:P|PINK:RIGHT",
+      "PINK|YELLOW:RIGHT",
+      "YELLOW|PURPLE:UP",
+      "IN:PURPLE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_DOWN",
+      "B": "STAIRS:DOWN:RED|BLUE:LEFT",
+      "C": "TRIGGER:BLUE:D|YELLOW:UP",
+      "D": "YELLOW|RED:SHELF_UP",
+      "E": "STAIRS:UP:RED|CYAN:SHELF_UP",
+      "F": "STAIRS:UP:CYAN|PINK:LEFT",
+      "G": "PINK|BLUE:UP",
+      "H": "TRIGGER:BLUE:P|PINK:UP",
+      "I": "PINK|ORANGE:RIGHT",
+      "J": "TRIGGER:ORANGE:M|CYAN:RIGHT",
+      "K": "CYAN|BLUE:DOWN",
+      "L": "TRIGGER:BLUE:M|RED:DOWN",
+      "M": "TRIGGER:RED:P|PINK:RIGHT",
+      "N": "PINK|YELLOW:RIGHT",
+      "O": "YELLOW|PURPLE:UP",
+      "P": "IN:PURPLE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 138,
+    "name": "Master VI - 3",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P"
+    ],
+    "layout": [
+      [
+        [
+          "L",
+          "K",
+          "B",
+          "C",
+          "D"
+        ],
+        [
+          "M",
+          "N",
+          "A",
+          "F",
+          "E"
+        ]
+      ],
+      [
+        [
+          null,
+          "J",
+          "I",
+          null,
+          null
+        ],
+        [
+          "P",
+          "O",
+          "H",
+          "G",
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:UP",
+      "RED|CYAN:RIGHT",
+      "CYAN|RED:RIGHT",
+      "RED|ORANGE:DOWN",
+      "ORANGE|RED:LEFT",
+      "RED|PURPLE:SHELF_UP",
+      "STAIRS:UP:PURPLE|BLUE:LEFT",
+      "TRIGGER:BLUE:M|RED:UP",
+      "RED|ORANGE:LEFT",
+      "TRIGGER:ORANGE:O|PINK:SHELF_DOWN",
+      "STAIRS:DOWN:PINK|CYAN:LEFT",
+      "CYAN|RED:DOWN",
+      "TRIGGER:RED:P|PURPLE:RIGHT",
+      "PURPLE|RED:SHELF_UP",
+      "STAIRS:UP:RED|BLUE:LEFT",
+      "IN:BLUE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:UP",
+      "B": "RED|CYAN:RIGHT",
+      "C": "CYAN|RED:RIGHT",
+      "D": "RED|ORANGE:DOWN",
+      "E": "ORANGE|RED:LEFT",
+      "F": "RED|PURPLE:SHELF_UP",
+      "G": "STAIRS:UP:PURPLE|BLUE:LEFT",
+      "H": "TRIGGER:BLUE:M|RED:UP",
+      "I": "RED|ORANGE:LEFT",
+      "J": "TRIGGER:ORANGE:O|PINK:SHELF_DOWN",
+      "K": "STAIRS:DOWN:PINK|CYAN:LEFT",
+      "L": "CYAN|RED:DOWN",
+      "M": "TRIGGER:RED:P|PURPLE:RIGHT",
+      "N": "PURPLE|RED:SHELF_UP",
+      "O": "STAIRS:UP:RED|BLUE:LEFT",
+      "P": "IN:BLUE"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 139,
+    "name": "Master VI - 4",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P"
+    ],
+    "layout": [
+      [
+        [
+          "H",
+          "G",
+          "L",
+          "M"
+        ],
+        [
+          null,
+          "F",
+          "E",
+          "D"
+        ]
+      ],
+      [
+        [
+          "I",
+          "J",
+          "K",
+          "N"
+        ],
+        [
+          null,
+          "A",
+          "B",
+          "C"
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          "P",
+          "O"
+        ],
+        [
+          null,
+          null,
+          null,
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "RED|PINK:RIGHT",
+      "PINK|ORANGE:SHELF_DOWN",
+      "STAIRS:DOWN:ORANGE|RED:LEFT",
+      "RED|BLUE:LEFT",
+      "BLUE|GREEN:UP",
+      "TRIGGER:GREEN:N|PURPLE:LEFT",
+      "PURPLE|GREEN:SHELF_UP",
+      "STAIRS:UP:GREEN|CYAN:RIGHT",
+      "CYAN|ORANGE:RIGHT",
+      "ORANGE|GREEN:SHELF_DOWN",
+      "STAIRS:DOWN:GREEN|CYAN:RIGHT",
+      "CYAN|ORANGE:SHELF_UP",
+      "STAIRS:UP:ORANGE|YELLOW:SHELF_UP",
+      "STAIRS:UP:YELLOW|PINK:LEFT",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "RED|PINK:RIGHT",
+      "C": "PINK|ORANGE:SHELF_DOWN",
+      "D": "STAIRS:DOWN:ORANGE|RED:LEFT",
+      "E": "RED|BLUE:LEFT",
+      "F": "BLUE|GREEN:UP",
+      "G": "TRIGGER:GREEN:N|PURPLE:LEFT",
+      "H": "PURPLE|GREEN:SHELF_UP",
+      "I": "STAIRS:UP:GREEN|CYAN:RIGHT",
+      "J": "CYAN|ORANGE:RIGHT",
+      "K": "ORANGE|GREEN:SHELF_DOWN",
+      "L": "STAIRS:DOWN:GREEN|CYAN:RIGHT",
+      "M": "CYAN|ORANGE:SHELF_UP",
+      "N": "STAIRS:UP:ORANGE|YELLOW:SHELF_UP",
+      "O": "STAIRS:UP:YELLOW|PINK:LEFT",
+      "P": "IN:PINK"
+    },
+    "hint": "Follow the unique path!"
+  },
+  {
+    "number": 140,
+    "name": "Master VI - 5",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P"
+    ],
+    "layout": [
+      [
+        [
+          null,
+          null,
+          null
+        ],
+        [
+          null,
+          "H",
+          "I"
+        ],
+        [
+          "P",
+          "K",
+          "J"
+        ]
+      ],
+      [
+        [
+          null,
+          null,
+          "A"
+        ],
+        [
+          "F",
+          "G",
+          null
+        ],
+        [
+          "O",
+          "L",
+          null
+        ]
+      ],
+      [
+        [
+          null,
+          "C",
+          "B"
+        ],
+        [
+          "E",
+          "D",
+          null
+        ],
+        [
+          "N",
+          "M",
+          null
+        ]
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:SHELF_UP",
+      "STAIRS:UP:RED|ORANGE:LEFT",
+      "TRIGGER:ORANGE:G|YELLOW:DOWN",
+      "TRIGGER:YELLOW:O|GREEN:LEFT",
+      "GREEN|CYAN:SHELF_DOWN",
+      "STAIRS:DOWN:CYAN|PINK:RIGHT",
+      "PINK|PURPLE:SHELF_DOWN",
+      "STAIRS:DOWN:PURPLE|YELLOW:RIGHT",
+      "TRIGGER:YELLOW:J|ORANGE:DOWN",
+      "ORANGE|CYAN:LEFT",
+      "CYAN|RED:SHELF_UP",
+      "STAIRS:UP:RED|YELLOW:SHELF_UP",
+      "STAIRS:UP:YELLOW|ORANGE:LEFT",
+      "TRIGGER:ORANGE:O|CYAN:SHELF_DOWN",
+      "STAIRS:DOWN:CYAN|RED:SHELF_DOWN",
+      "IN:RED"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:SHELF_UP",
+      "B": "STAIRS:UP:RED|ORANGE:LEFT",
+      "C": "TRIGGER:ORANGE:G|YELLOW:DOWN",
+      "D": "TRIGGER:YELLOW:O|GREEN:LEFT",
+      "E": "GREEN|CYAN:SHELF_DOWN",
+      "F": "STAIRS:DOWN:CYAN|PINK:RIGHT",
+      "G": "PINK|PURPLE:SHELF_DOWN",
+      "H": "STAIRS:DOWN:PURPLE|YELLOW:RIGHT",
+      "I": "TRIGGER:YELLOW:J|ORANGE:DOWN",
+      "J": "ORANGE|CYAN:LEFT",
+      "K": "CYAN|RED:SHELF_UP",
+      "L": "STAIRS:UP:RED|YELLOW:SHELF_UP",
+      "M": "STAIRS:UP:YELLOW|ORANGE:LEFT",
+      "N": "TRIGGER:ORANGE:O|CYAN:SHELF_DOWN",
+      "O": "STAIRS:DOWN:CYAN|RED:SHELF_DOWN",
+      "P": "IN:RED"
+    },
+    "hint": "Follow the unique path!"
+  }
+]

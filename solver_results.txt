@@ -1,0 +1,147 @@
+═══════════════════════════════════════════════════
+  CHROMATIC SOLVER — Verifying all levels
+═══════════════════════════════════════════════════
+
+    checkMatch L1: src=NORMAL, conn=LEFT:BLUE, tgt=NORMAL, match=true
+    checkMatch L1: src=NORMAL, conn=RIGHT:RED, tgt=NORMAL, match=true
+L001 "First Link": ✓ UNIQUE | Match: true
+L002 "Three Chain": ✓ UNIQUE | Match: true
+L003 "Corner Turn": ✓ UNIQUE | Match: true
+L004 "Split Signal": ✓ UNIQUE | Match: true
+L005 "Hub": ✓ UNIQUE | Match: true
+L006 "Diagonal": ✓ UNIQUE | Match: true
+L007 "X Marks It": ✓ UNIQUE | Match: true
+L008 "Star Node": ✓ UNIQUE | Match: true
+L009 "Full Grid": ✓ UNIQUE | Match: true
+L010 "Triple Threat": ✓ UNIQUE | Match: true
+L011 "Broadcast": ✓ UNIQUE | Match: true
+L012 "Quad Core": ✓ UNIQUE | Match: true
+L013 "Relay": ✓ UNIQUE | Match: true
+L014 "Crossfire": ✓ UNIQUE | Match: true
+L015 "Pinwheel": ✓ UNIQUE | Match: true
+L016 "Cascade": ✓ UNIQUE | Match: true
+L017 "Trident": ✓ UNIQUE | Match: true
+L018 "Mirror": ✓ UNIQUE | Match: true
+L019 "Diamond": ✓ UNIQUE | Match: true
+L020 "Web": ✓ UNIQUE | Match: true
+L021 "Zigzag": ✓ UNIQUE | Match: true
+L022 "Fortress": ✓ UNIQUE | Match: true
+L023 "Helix": ✓ UNIQUE | Match: true
+L024 "Compass": ✓ UNIQUE | Match: true
+L025 "River": ✓ UNIQUE | Match: true
+L026 "Spiral": ✓ UNIQUE | Match: true
+L027 "Nexus": ✓ UNIQUE | Match: true
+L028 "Galaxy": ✓ UNIQUE | Match: true
+L029 "Labyrinth": ✓ UNIQUE | Match: true
+L030 "Chromatic Grid": ✓ UNIQUE | Match: true
+L031 "Source & Sink": ✓ UNIQUE | Match: true
+L032 "Relay Station": ✓ UNIQUE | Match: true
+L033 "Broadcaster": ✓ UNIQUE | Match: true
+L034 "Funnel": ✓ UNIQUE | Match: true
+L035 "Twin Sinks": ✓ UNIQUE | Match: true
+L036 "Distribution": ✓ UNIQUE | Match: true
+L037 "Pipeline": ✓ UNIQUE | Match: true
+L038 "Crossroads": ✓ UNIQUE | Match: true
+L039 "Leap": ✓ UNIQUE | Match: true
+L040 "Hop Skip": ✓ UNIQUE | Match: true
+L041 "Long Shot": ✓ UNIQUE | Match: true
+L042 "Spectrum": ✓ UNIQUE | Match: true
+L043 "Vault": ✓ UNIQUE | Match: true
+L044 "Sniper": ✓ UNIQUE | Match: true
+L045 "Catapult": ✓ UNIQUE | Match: true
+L046 "Vertical Snipe": ✓ UNIQUE | Match: true
+L047 "Mind the Gap": ✓ UNIQUE | Match: true
+L048 "Canyon": ✓ UNIQUE | Match: true
+L049 "Bridge Builder": ✓ UNIQUE | Match: true
+L050 "Island Hop": ✓ UNIQUE | Match: true
+L051 "Gap Cross": ✓ UNIQUE | Match: true
+L052 "Ravine": ✓ UNIQUE | Match: true
+L053 "Archipelago": ✓ UNIQUE | Match: true
+L054 "Grand Chasm": ✓ UNIQUE | Match: true
+L055 "Network": ✓ UNIQUE | Match: true
+L056 "Jump Hub": ✓ UNIQUE | Match: true
+L057 "Skip Chain": ✓ UNIQUE | Match: true
+L058 "Triple Strike": ✓ UNIQUE | Match: true
+L059 "Leapfrog": ✓ UNIQUE | Match: true
+L060 "Reverse Flow": ✓ UNIQUE | Match: true
+L061 "Pincer": ✓ UNIQUE | Match: true
+L062 "Gap Leap": ✓ UNIQUE | Match: true
+L063 "Grand Pipeline": ✓ UNIQUE | Match: true
+L064 "Star Burst": ✓ UNIQUE | Match: true
+L065 "Highway": ✓ UNIQUE | Match: true
+L066 "Sniper Nest": ✓ UNIQUE | Match: true
+L067 "Grand Gap Cross": ✓ UNIQUE | Match: true
+L068 "Chromatic Nexus": ✓ UNIQUE | Match: true
+L069 "First Pipe": ✓ UNIQUE | Match: true
+L070 "Pipe Relay": ✓ UNIQUE | Match: true
+L071 "Double Transform": ✓ UNIQUE | Match: true
+L072 "Pipe or Normal?": ✓ UNIQUE | Match: true
+L073 "Pipe Bend": ✓ UNIQUE | Match: true
+L074 "Cross Pipe": ✓ UNIQUE | Match: true
+L075 "Pipe Fork": ✓ UNIQUE | Match: true
+L076 "Pipe Vault": ✓ UNIQUE | Match: true
+L077 "L-Pipe Chain": ✓ UNIQUE | Match: true
+L078 "Pipe Star": ✓ UNIQUE | Match: true
+L079 "Logic Gate": ✓ UNIQUE | Match: true
+L080 "Keyhole": ✓ UNIQUE | Match: true
+L081 "Double Lock": ✓ UNIQUE | Match: true
+L082 "Crossed Keys": ✓ UNIQUE | Match: true
+L083 "Interlock": ✓ UNIQUE | Match: true
+L084 "Master Key": ✗ IMPOSSIBLE | Match: false
+    checkMatch L85: src=STAIRS, conn=SHELF_DOWN:RED, tgt=STAIRS, match=true
+    checkMatch L85: src=STAIRS, conn=SHELF_UP:RED, tgt=STAIRS, match=true
+L085 "Elevator": ✓ UNIQUE | Match: true
+L086 "Split Level": ✓ UNIQUE | Match: true
+    checkMatch L87: src=OUTPUT_ONLY, conn=RIGHT:RED, tgt=STAIRS, match=true
+    checkMatch L87: src=STAIRS, conn=SHELF_UP:BLUE, tgt=STAIRS, match=true
+    checkMatch L87: src=NORMAL, conn=LEFT:BLUE, tgt=STAIRS, match=true
+    checkMatch L87: src=STAIRS, conn=RIGHT:GREEN, tgt=NORMAL, match=true
+    checkMatch L87: src=NORMAL, conn=LEFT:BLUE, tgt=OUTPUT_ONLY, match=false
+    REJECT: B arrow LEFT doesn't match neighbor A
+    checkMatch L87: src=STAIRS, conn=RIGHT:GREEN, tgt=STAIRS, match=false
+    REJECT: Cell A points at B but colors don't match
+    checkMatch L87: src=NORMAL, conn=LEFT:BLUE, tgt=STAIRS, match=true
+    checkMatch L87: src=STAIRS, conn=RIGHT:GREEN, tgt=NORMAL, match=true
+L087 "Overpass": ✓ UNIQUE | Match: true
+L088 "Penthouse": ✓ UNIQUE | Match: true
+L089 "Basement": ✓ UNIQUE | Match: true
+L090 "Multiverse": ✓ UNIQUE | Match: true
+L091 "Pipe Cascade": ✓ UNIQUE | Match: true
+L092 "Transform Junction": ✓ UNIQUE | Match: true
+L093 "Sniper Pipes": ✓ UNIQUE | Match: true
+L094 "Pipe Matrix": ✓ UNIQUE | Match: true
+L095 "Gap Over Pipe": ✓ UNIQUE | Match: true
+L096 "Grand Transformer": ✓ UNIQUE | Match: true
+L097 "Pipe Nexus": ✓ UNIQUE | Match: true
+L098 "Chromatic Forge": ✓ UNIQUE | Match: true
+L099 "Ultimate Synthesis": ✓ UNIQUE | Match: true
+L100 "Chromatic Apex": ✓ UNIQUE | Match: true
+L101 "Pipe Flow": ✓ UNIQUE | Match: true
+L102 "Cross Bend": ✓ UNIQUE | Match: true
+L103 "Vertical Flow": ✓ UNIQUE | Match: true
+L104 "Triple Lane": ✓ UNIQUE | Match: true
+L105 "Pipe Junction": ✓ UNIQUE | Match: true
+L106 "Dual Pipe": ✓ UNIQUE | Match: true
+L107 "Gap Bypass": ✓ UNIQUE | Match: true
+L108 "Long Pipeline": ✓ UNIQUE | Match: true
+L109 "Pipe Waterfall": ✓ UNIQUE | Match: true
+L110 "Dual Cross": ✓ UNIQUE | Match: true
+L111 "Signal Hub": ✓ UNIQUE | Match: true
+L112 "Pipe Cascade II": ✓ UNIQUE | Match: true
+L113 "Triple Transform": ✓ UNIQUE | Match: true
+L114 "Grand Nexus": ✓ UNIQUE | Match: true
+L115 "Pipe Fortress": ✓ UNIQUE | Match: true
+L116 "Master Flow": ✓ UNIQUE | Match: true
+L117 "Dual Transform": ✓ UNIQUE | Match: true
+L118 "Mega Gap Grid": ✓ UNIQUE | Match: true
+L119 "Chromatic Master": ✓ UNIQUE | Match: true
+L120 "Chromatic Infinity": ✓ UNIQUE | Match: true
+L121 "Ascension": ✗ IMPOSSIBLE | Match: false
+L122 "Quantum Lock": ✗ IMPOSSIBLE | Match: false
+L123 "Core Memory": ✗ IMPOSSIBLE | Match: false
+L124 "Dimension Rift": ✗ IMPOSSIBLE | Match: false
+L125 "The Zenith": ✗ IMPOSSIBLE | Match: false
+
+═══════════════════════════════════════════════════
+  Results: 119 verified, 6 issues, 125 total
+═══════════════════════════════════════════════════

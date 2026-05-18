@@ -1,0 +1,1385 @@
+[
+  {
+    "number": 81,
+    "name": "Pipe Leap",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT:2",
+      "BLUE|RED:LEFT",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT",
+      "IN:ORANGE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT:2",
+      "B": "BLUE|RED:LEFT",
+      "C": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "D": "GREEN|ORANGE:RIGHT",
+      "E": "IN:ORANGE"
+    },
+    "hint": "Jump over B, then pipe transforms!"
+  },
+  {
+    "number": 82,
+    "name": "Cross Transform",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E"
+    ],
+    "layout": [
+      [
+        null,
+        "A",
+        null
+      ],
+      [
+        "B",
+        "C",
+        "D"
+      ],
+      [
+        null,
+        "E",
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "BLUE|RED:RIGHT",
+      "PIPE:UP:RED>DOWN:GREEN,LEFT:BLUE>RIGHT:PURPLE",
+      "IN:PURPLE",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "BLUE|RED:RIGHT",
+      "C": "PIPE:UP:RED>DOWN:GREEN,LEFT:BLUE>RIGHT:PURPLE",
+      "D": "IN:PURPLE",
+      "E": "IN:GREEN"
+    },
+    "hint": "Cross pipe with 2 channels!"
+  },
+  {
+    "number": 83,
+    "name": "Bend & Jump",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C"
+      ],
+      [
+        "D",
+        "E",
+        "F"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT:2,BLUE:DOWN",
+      "CYAN|RED:LEFT",
+      "IN:RED",
+      "BLUE|GREEN:RIGHT",
+      "PIPE:LEFT:GREEN>DOWN:ORANGE",
+      "IN:ORANGE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT:2,BLUE:DOWN",
+      "B": "CYAN|RED:LEFT",
+      "C": "IN:RED",
+      "D": "BLUE|GREEN:RIGHT",
+      "E": "PIPE:LEFT:GREEN>DOWN:ORANGE",
+      "F": "IN:ORANGE"
+    },
+    "hint": "Jump + bending pipe!"
+  },
+  {
+    "number": 84,
+    "name": "Triple Pipe",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "PIPE:LEFT:RED>RIGHT:BLUE",
+      "BLUE|GREEN:RIGHT",
+      "PIPE:LEFT:GREEN>RIGHT:ORANGE",
+      "ORANGE|PURPLE:RIGHT",
+      "PIPE:LEFT:PURPLE>RIGHT:CYAN",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "PIPE:LEFT:RED>RIGHT:BLUE",
+      "C": "BLUE|GREEN:RIGHT",
+      "D": "PIPE:LEFT:GREEN>RIGHT:ORANGE",
+      "E": "ORANGE|PURPLE:RIGHT",
+      "F": "PIPE:LEFT:PURPLE>RIGHT:CYAN",
+      "G": "IN:CYAN"
+    },
+    "hint": "3 pipes in series!"
+  },
+  {
+    "number": 85,
+    "name": "Diagonal Transform",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C"
+      ],
+      [
+        "D",
+        "E",
+        "F"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN_RIGHT",
+      "RED|GREEN:RIGHT",
+      "BLUE|ORANGE:DOWN",
+      "PIPE:UP:ORANGE>RIGHT:PURPLE",
+      "IN:GREEN,PURPLE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN_RIGHT",
+      "B": "RED|GREEN:RIGHT",
+      "C": "IN:GREEN",
+      "D": "BLUE|ORANGE:DOWN",
+      "E": "PIPE:UP:ORANGE>RIGHT:PURPLE",
+      "F": "IN:PURPLE"
+    },
+    "hint": "Diagonal + pipe!"
+  },
+  {
+    "number": 86,
+    "name": "Pipe Grid",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C"
+      ],
+      [
+        "D",
+        "E",
+        "F"
+      ],
+      [
+        "G",
+        "H",
+        "I"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "IN:GREEN",
+      "BLUE|CYAN:RIGHT",
+      "PIPE:LEFT:CYAN>DOWN:PURPLE",
+      "GREEN|ORANGE:RIGHT",
+      "PURPLE|PINK:RIGHT",
+      "ORANGE|YELLOW:RIGHT",
+      "IN:PINK,YELLOW"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "IN:GREEN",
+      "D": "BLUE|CYAN:RIGHT",
+      "E": "PIPE:LEFT:CYAN>DOWN:PURPLE",
+      "F": "GREEN|ORANGE:RIGHT",
+      "G": "PURPLE|PINK:RIGHT",
+      "H": "ORANGE|YELLOW:RIGHT",
+      "I": "IN:PINK,YELLOW"
+    },
+    "hint": "2 pipes in 3x3 grid!"
+  },
+  {
+    "number": 87,
+    "name": "Snipe & Transform",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:RIGHT:3",
+      "RED|GREEN:RIGHT",
+      "GREEN|ORANGE:RIGHT",
+      "BLUE|CYAN:RIGHT",
+      "CYAN|PINK:RIGHT",
+      "PIPE:LEFT:PINK>RIGHT:PURPLE",
+      "PIPE:LEFT:ORANGE>RIGHT:YELLOW",
+      "IN:PURPLE,YELLOW"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:RIGHT:3",
+      "B": "RED|GREEN:RIGHT",
+      "C": "GREEN|ORANGE:RIGHT",
+      "D": "PIPE:LEFT:ORANGE>RIGHT:YELLOW",
+      "E": "BLUE|CYAN:RIGHT",
+      "F": "CYAN|PINK:RIGHT",
+      "G": "PIPE:LEFT:PINK>RIGHT:PURPLE",
+      "H": "IN:PURPLE,YELLOW"
+    },
+    "hint": "Distance-3 jump + 2 pipes!"
+  },
+  {
+    "number": 88,
+    "name": "Dual Cross",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J"
+    ],
+    "layout": [
+      [
+        null,
+        "A",
+        "B",
+        null
+      ],
+      [
+        null,
+        "C",
+        "D",
+        null
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      [
+        "I",
+        "J",
+        null,
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|BLUE:DOWN",
+      "PIPE:UP:BLUE>DOWN:GREEN",
+      "GREEN|ORANGE:LEFT,CYAN:RIGHT",
+      "IN:CYAN",
+      "ORANGE|PURPLE:DOWN",
+      "PIPE:UP:PURPLE>RIGHT:PINK",
+      "PINK|YELLOW:RIGHT",
+      "IN:YELLOW",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|BLUE:DOWN",
+      "C": "PIPE:UP:BLUE>DOWN:GREEN",
+      "D": "GREEN|ORANGE:LEFT,CYAN:RIGHT",
+      "E": "IN:CYAN",
+      "F": "ORANGE|PURPLE:DOWN",
+      "G": "PIPE:UP:PURPLE>RIGHT:PINK",
+      "H": "PINK|YELLOW:RIGHT",
+      "I": "IN:YELLOW",
+      "J": "IN:GREEN"
+    },
+    "hint": "Vertical tower with 2 pipes!"
+  },
+  {
+    "number": 89,
+    "name": "Pipe Cascade",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      [
+        "I",
+        "J",
+        "K",
+        "L"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT",
+      "IN:ORANGE",
+      "BLUE|CYAN:RIGHT",
+      "PIPE:LEFT:CYAN>RIGHT:PURPLE",
+      "PURPLE|PINK:RIGHT",
+      "IN:PINK",
+      "RED|YELLOW:RIGHT",
+      "YELLOW|GREEN:RIGHT",
+      "GREEN|BLUE:RIGHT",
+      "IN:BLUE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT",
+      "D": "IN:ORANGE",
+      "E": "BLUE|CYAN:RIGHT",
+      "F": "PIPE:LEFT:CYAN>RIGHT:PURPLE",
+      "G": "PURPLE|PINK:RIGHT",
+      "H": "IN:PINK",
+      "I": "RED|YELLOW:RIGHT",
+      "J": "YELLOW|GREEN:RIGHT",
+      "K": "GREEN|BLUE:RIGHT",
+      "L": "IN:BLUE"
+    },
+    "hint": "12 tiles, 2 pipes, 3 lanes!"
+  },
+  {
+    "number": 90,
+    "name": "Transform Matrix",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      [
+        "I",
+        "J",
+        "K",
+        "L"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "IN:ORANGE",
+      "BLUE|CYAN:RIGHT",
+      "PIPE:LEFT:CYAN>DOWN:PINK",
+      "PURPLE|YELLOW:RIGHT",
+      "PINK|GREEN:RIGHT",
+      "YELLOW|RED:RIGHT",
+      "GREEN|BLUE:RIGHT",
+      "BLUE|CYAN:RIGHT",
+      "IN:CYAN,RED"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "D": "IN:ORANGE",
+      "E": "BLUE|CYAN:RIGHT",
+      "F": "PIPE:LEFT:CYAN>DOWN:PINK",
+      "G": "PURPLE|YELLOW:RIGHT",
+      "H": "PINK|GREEN:RIGHT",
+      "I": "YELLOW|RED:RIGHT",
+      "J": "GREEN|BLUE:RIGHT",
+      "K": "BLUE|CYAN:RIGHT",
+      "L": "IN:CYAN,RED"
+    },
+    "hint": "Complex 3x4 matrix with pipes!"
+  },
+  {
+    "number": 91,
+    "name": "Grand Pipeline",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT",
+      "PIPE:LEFT:RED>RIGHT:BLUE",
+      "BLUE|GREEN:RIGHT",
+      "PIPE:LEFT:GREEN>RIGHT:ORANGE",
+      "ORANGE|PURPLE:RIGHT",
+      "PIPE:LEFT:PURPLE>RIGHT:CYAN",
+      "CYAN|PINK:RIGHT",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT",
+      "B": "PIPE:LEFT:RED>RIGHT:BLUE",
+      "C": "BLUE|GREEN:RIGHT",
+      "D": "PIPE:LEFT:GREEN>RIGHT:ORANGE",
+      "E": "ORANGE|PURPLE:RIGHT",
+      "F": "PIPE:LEFT:PURPLE>RIGHT:CYAN",
+      "G": "CYAN|PINK:RIGHT",
+      "H": "IN:PINK"
+    },
+    "hint": "8-tile pipeline with 3 pipes!"
+  },
+  {
+    "number": 92,
+    "name": "Mega Cross",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M"
+    ],
+    "layout": [
+      [
+        null,
+        null,
+        "A",
+        null,
+        null
+      ],
+      [
+        null,
+        "B",
+        "C",
+        "D",
+        null
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      [
+        null,
+        "J",
+        "K",
+        "L",
+        null
+      ],
+      [
+        null,
+        null,
+        "M",
+        null,
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|BLUE:DOWN",
+      "BLUE|GREEN:DOWN",
+      "PIPE:UP:GREEN>LEFT:ORANGE,UP:GREEN>RIGHT:CYAN",
+      "IN:ORANGE",
+      "CYAN|PURPLE:DOWN",
+      "PURPLE|PINK:LEFT,YELLOW:RIGHT",
+      "YELLOW|RED:DOWN",
+      "IN:RED",
+      "PINK|GREEN:DOWN",
+      "GREEN|BLUE:DOWN",
+      "BLUE|CYAN:DOWN",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|BLUE:DOWN",
+      "C": "BLUE|GREEN:DOWN",
+      "D": "PIPE:UP:GREEN>LEFT:ORANGE,UP:GREEN>RIGHT:CYAN",
+      "E": "IN:ORANGE",
+      "F": "CYAN|PURPLE:DOWN",
+      "G": "PURPLE|PINK:LEFT,YELLOW:RIGHT",
+      "H": "YELLOW|RED:DOWN",
+      "I": "IN:RED",
+      "J": "PINK|GREEN:DOWN",
+      "K": "GREEN|BLUE:DOWN",
+      "L": "BLUE|CYAN:DOWN",
+      "M": "IN:CYAN"
+    },
+    "hint": "13 tiles! Cross shape with multi-channel pipe!"
+  },
+  {
+    "number": 93,
+    "name": "Sniper Network",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      [
+        "I",
+        "J",
+        "K",
+        "L"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT:2,BLUE:DOWN",
+      "CYAN|RED:LEFT",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "IN:GREEN",
+      "BLUE|ORANGE:RIGHT,PURPLE:DOWN",
+      "ORANGE|PINK:RIGHT",
+      "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "IN:YELLOW",
+      "PURPLE|GREEN:RIGHT:2",
+      "GREEN|BLUE:RIGHT",
+      "BLUE|CYAN:RIGHT",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT:2,BLUE:DOWN",
+      "B": "CYAN|RED:LEFT",
+      "C": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "D": "IN:GREEN",
+      "E": "BLUE|ORANGE:RIGHT,PURPLE:DOWN",
+      "F": "ORANGE|PINK:RIGHT",
+      "G": "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "H": "IN:YELLOW",
+      "I": "PURPLE|GREEN:RIGHT:2",
+      "J": "GREEN|BLUE:RIGHT",
+      "K": "BLUE|CYAN:RIGHT",
+      "L": "IN:CYAN"
+    },
+    "hint": "2 distance-2 jumps + 2 pipes!"
+  },
+  {
+    "number": 94,
+    "name": "Ultimate Forge",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      [
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      [
+        "K",
+        "L",
+        "M",
+        "N",
+        "O"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT",
+      "PIPE:LEFT:ORANGE>RIGHT:PURPLE",
+      "IN:PURPLE",
+      "BLUE|CYAN:RIGHT,PINK:DOWN",
+      "PIPE:LEFT:CYAN>RIGHT:YELLOW",
+      "YELLOW|RED:RIGHT",
+      "RED|GREEN:RIGHT",
+      "IN:GREEN",
+      "PINK|ORANGE:RIGHT",
+      "ORANGE|BLUE:RIGHT",
+      "PIPE:LEFT:BLUE>RIGHT:CYAN",
+      "CYAN|PURPLE:RIGHT",
+      "IN:PURPLE"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT",
+      "D": "PIPE:LEFT:ORANGE>RIGHT:PURPLE",
+      "E": "IN:PURPLE",
+      "F": "BLUE|CYAN:RIGHT,PINK:DOWN",
+      "G": "PIPE:LEFT:CYAN>RIGHT:YELLOW",
+      "H": "YELLOW|RED:RIGHT",
+      "I": "RED|GREEN:RIGHT",
+      "J": "IN:GREEN",
+      "K": "PINK|ORANGE:RIGHT",
+      "L": "ORANGE|BLUE:RIGHT",
+      "M": "PIPE:LEFT:BLUE>RIGHT:CYAN",
+      "N": "CYAN|PURPLE:RIGHT",
+      "O": "IN:PURPLE"
+    },
+    "hint": "15 tiles! 4 pipes forge colors across 3 lanes!"
+  },
+  {
+    "number": 95,
+    "name": "Chromatic Synthesis",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      [
+        "I",
+        "J",
+        "K",
+        "L"
+      ],
+      [
+        "M",
+        "N",
+        "O",
+        "P"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "IN:ORANGE",
+      "BLUE|CYAN:RIGHT,YELLOW:DOWN",
+      "PIPE:LEFT:CYAN>DOWN:PINK",
+      "RED|GREEN:RIGHT",
+      "IN:GREEN",
+      "YELLOW|ORANGE:RIGHT",
+      "PINK|BLUE:RIGHT",
+      "PIPE:LEFT:BLUE>RIGHT:CYAN",
+      "IN:CYAN",
+      "PURPLE|PINK:RIGHT:2",
+      "PINK|YELLOW:RIGHT",
+      "YELLOW|RED:RIGHT",
+      "IN:RED"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "D": "IN:ORANGE",
+      "E": "BLUE|CYAN:RIGHT,YELLOW:DOWN",
+      "F": "PIPE:LEFT:CYAN>DOWN:PINK",
+      "G": "RED|GREEN:RIGHT",
+      "H": "IN:GREEN",
+      "I": "YELLOW|ORANGE:RIGHT",
+      "J": "PINK|BLUE:RIGHT",
+      "K": "PIPE:LEFT:BLUE>RIGHT:CYAN",
+      "L": "IN:CYAN",
+      "M": "PURPLE|PINK:RIGHT:2",
+      "N": "PINK|YELLOW:RIGHT",
+      "O": "YELLOW|RED:RIGHT",
+      "P": "IN:RED"
+    },
+    "hint": "16 tiles! 3 pipes + distance-2 jump + 4 sinks!"
+  },
+  {
+    "number": 96,
+    "name": "Mega Transform",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      [
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L"
+      ],
+      [
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT",
+      "PIPE:LEFT:ORANGE>RIGHT:PURPLE",
+      "PURPLE|CYAN:RIGHT",
+      "IN:CYAN",
+      "BLUE|PINK:RIGHT,YELLOW:DOWN",
+      "PIPE:LEFT:PINK>RIGHT:RED",
+      "RED|GREEN:RIGHT",
+      "GREEN|PURPLE:RIGHT",
+      "PURPLE|ORANGE:RIGHT",
+      "IN:ORANGE",
+      "YELLOW|CYAN:RIGHT",
+      "CYAN|PINK:RIGHT",
+      "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "YELLOW|BLUE:RIGHT:2",
+      "BLUE|RED:RIGHT",
+      "IN:RED"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT",
+      "D": "PIPE:LEFT:ORANGE>RIGHT:PURPLE",
+      "E": "PURPLE|CYAN:RIGHT",
+      "F": "IN:CYAN",
+      "G": "BLUE|PINK:RIGHT,YELLOW:DOWN",
+      "H": "PIPE:LEFT:PINK>RIGHT:RED",
+      "I": "RED|GREEN:RIGHT",
+      "J": "GREEN|PURPLE:RIGHT",
+      "K": "PURPLE|ORANGE:RIGHT",
+      "L": "IN:ORANGE",
+      "M": "YELLOW|CYAN:RIGHT",
+      "N": "CYAN|PINK:RIGHT",
+      "O": "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "P": "YELLOW|BLUE:RIGHT:2",
+      "Q": "BLUE|RED:RIGHT",
+      "R": "IN:RED"
+    },
+    "hint": "18 tiles! 4 pipes + distance-2 jump + 3 sinks!"
+  },
+  {
+    "number": 97,
+    "name": "Pipe Labyrinth",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      [
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      [
+        "I",
+        "J",
+        "K",
+        "L"
+      ],
+      [
+        "M",
+        "N",
+        "O",
+        "P"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN:2",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT",
+      "IN:ORANGE",
+      "CYAN|BLUE:LEFT",
+      "BLUE|PINK:RIGHT,PURPLE:DOWN",
+      "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "IN:YELLOW",
+      "PURPLE|CYAN:RIGHT:2",
+      "CYAN|GREEN:RIGHT",
+      "PIPE:LEFT:GREEN>RIGHT:BLUE",
+      "IN:BLUE",
+      "RED|PURPLE:RIGHT",
+      "PURPLE|ORANGE:RIGHT",
+      "ORANGE|PINK:RIGHT",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN:2",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT",
+      "D": "IN:ORANGE",
+      "E": "CYAN|BLUE:LEFT",
+      "F": "BLUE|PINK:RIGHT,PURPLE:DOWN",
+      "G": "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "H": "IN:YELLOW",
+      "I": "PURPLE|CYAN:RIGHT:2",
+      "J": "CYAN|GREEN:RIGHT",
+      "K": "PIPE:LEFT:GREEN>RIGHT:BLUE",
+      "L": "IN:BLUE",
+      "M": "RED|PURPLE:RIGHT",
+      "N": "PURPLE|ORANGE:RIGHT",
+      "O": "ORANGE|PINK:RIGHT",
+      "P": "IN:PINK"
+    },
+    "hint": "16 tiles! 2 distance-2 jumps + 3 pipes!"
+  },
+  {
+    "number": 98,
+    "name": "Grand Nexus",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      [
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
+      [
+        "K",
+        "L",
+        "M",
+        "N",
+        "O"
+      ],
+      [
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "PIPE:LEFT:ORANGE>RIGHT:CYAN",
+      "IN:CYAN",
+      "BLUE|PINK:RIGHT,YELLOW:DOWN",
+      "PIPE:LEFT:PINK>DOWN:RED",
+      "RED|GREEN:RIGHT:2",
+      "GREEN|PURPLE:RIGHT",
+      "IN:PURPLE",
+      "YELLOW|ORANGE:RIGHT",
+      "ORANGE|BLUE:RIGHT",
+      "PIPE:LEFT:BLUE>RIGHT:PINK",
+      "PINK|CYAN:RIGHT",
+      "IN:CYAN",
+      "PURPLE|YELLOW:RIGHT:2",
+      "YELLOW|RED:RIGHT",
+      "RED|BLUE:RIGHT",
+      "BLUE|GREEN:RIGHT",
+      "IN:GREEN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "D": "PIPE:LEFT:ORANGE>RIGHT:CYAN",
+      "E": "IN:CYAN",
+      "F": "BLUE|PINK:RIGHT,YELLOW:DOWN",
+      "G": "PIPE:LEFT:PINK>DOWN:RED",
+      "H": "RED|GREEN:RIGHT:2",
+      "I": "GREEN|PURPLE:RIGHT",
+      "J": "IN:PURPLE",
+      "K": "YELLOW|ORANGE:RIGHT",
+      "L": "ORANGE|BLUE:RIGHT",
+      "M": "PIPE:LEFT:BLUE>RIGHT:PINK",
+      "N": "PINK|CYAN:RIGHT",
+      "O": "IN:CYAN",
+      "P": "PURPLE|YELLOW:RIGHT:2",
+      "Q": "YELLOW|RED:RIGHT",
+      "R": "RED|BLUE:RIGHT",
+      "S": "BLUE|GREEN:RIGHT",
+      "T": "IN:GREEN"
+    },
+    "hint": "20 tiles! 4 pipes + 2 distance-2 jumps + 4 sinks!"
+  },
+  {
+    "number": 99,
+    "name": "Ultimate Challenge",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U"
+    ],
+    "layout": [
+      [
+        null,
+        "A",
+        "B",
+        "C",
+        null
+      ],
+      [
+        null,
+        "D",
+        "E",
+        "F",
+        null
+      ],
+      [
+        "G",
+        "H",
+        "I",
+        "J",
+        "K"
+      ],
+      [
+        "L",
+        "M",
+        "N",
+        "O",
+        "P"
+      ],
+      [
+        null,
+        "Q",
+        "R",
+        "S",
+        null
+      ],
+      [
+        null,
+        null,
+        "T",
+        "U",
+        null
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:DOWN",
+      "RED|BLUE:DOWN",
+      "BLUE|GREEN:DOWN",
+      "PIPE:UP:GREEN>LEFT:ORANGE,UP:GREEN>RIGHT:CYAN",
+      "IN:ORANGE",
+      "CYAN|PURPLE:DOWN",
+      "PURPLE|PINK:LEFT,YELLOW:RIGHT,RED:DOWN",
+      "YELLOW|GREEN:DOWN",
+      "IN:GREEN",
+      "PINK|BLUE:DOWN",
+      "BLUE|CYAN:RIGHT:2",
+      "PIPE:LEFT:CYAN>RIGHT:PURPLE",
+      "PURPLE|ORANGE:RIGHT",
+      "IN:ORANGE",
+      "RED|PINK:DOWN",
+      "PINK|YELLOW:DOWN",
+      "YELLOW|BLUE:DOWN",
+      "BLUE|GREEN:DOWN",
+      "PIPE:UP:GREEN>RIGHT:CYAN",
+      "IN:CYAN"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:DOWN",
+      "B": "RED|BLUE:DOWN",
+      "C": "BLUE|GREEN:DOWN",
+      "D": "PIPE:UP:GREEN>LEFT:ORANGE,UP:GREEN>RIGHT:CYAN",
+      "E": "IN:ORANGE",
+      "F": "CYAN|PURPLE:DOWN",
+      "G": "PURPLE|PINK:LEFT,YELLOW:RIGHT,RED:DOWN",
+      "H": "YELLOW|GREEN:DOWN",
+      "I": "IN:GREEN",
+      "J": "PINK|BLUE:DOWN",
+      "K": "BLUE|CYAN:RIGHT:2",
+      "L": "PIPE:LEFT:CYAN>RIGHT:PURPLE",
+      "M": "PURPLE|ORANGE:RIGHT",
+      "N": "IN:ORANGE",
+      "O": "RED|PINK:DOWN",
+      "P": "PINK|YELLOW:DOWN",
+      "Q": "YELLOW|BLUE:DOWN",
+      "R": "BLUE|GREEN:DOWN",
+      "S": "PIPE:UP:GREEN>RIGHT:CYAN",
+      "T": "IN:CYAN",
+      "U": "IN:CYAN"
+    },
+    "hint": "21 tiles! Multi-channel pipe + distance-2 jump + complex routing!"
+  },
+  {
+    "number": 100,
+    "name": "Chromatic Zenith",
+    "cells": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X"
+    ],
+    "layout": [
+      [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      [
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L"
+      ],
+      [
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R"
+      ],
+      [
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X"
+      ]
+    ],
+    "pieces": [
+      "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "PIPE:LEFT:RED>RIGHT:GREEN",
+      "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "PIPE:LEFT:ORANGE>RIGHT:CYAN",
+      "CYAN|PINK:RIGHT",
+      "IN:PINK",
+      "BLUE|YELLOW:RIGHT,GREEN:DOWN",
+      "PIPE:LEFT:YELLOW>DOWN:RED",
+      "RED|PURPLE:RIGHT:2",
+      "PURPLE|ORANGE:RIGHT",
+      "ORANGE|BLUE:RIGHT",
+      "IN:BLUE",
+      "GREEN|CYAN:RIGHT",
+      "CYAN|PINK:RIGHT",
+      "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "YELLOW|GREEN:RIGHT",
+      "GREEN|RED:RIGHT",
+      "IN:RED",
+      "PURPLE|BLUE:RIGHT:2",
+      "BLUE|ORANGE:RIGHT",
+      "ORANGE|CYAN:RIGHT",
+      "PIPE:LEFT:CYAN>RIGHT:PURPLE",
+      "PURPLE|PINK:RIGHT",
+      "IN:PINK"
+    ],
+    "solution": {
+      "A": "OUT:RED|RED:RIGHT,BLUE:DOWN",
+      "B": "PIPE:LEFT:RED>RIGHT:GREEN",
+      "C": "GREEN|ORANGE:RIGHT,PURPLE:DOWN",
+      "D": "PIPE:LEFT:ORANGE>RIGHT:CYAN",
+      "E": "CYAN|PINK:RIGHT",
+      "F": "IN:PINK",
+      "G": "BLUE|YELLOW:RIGHT,GREEN:DOWN",
+      "H": "PIPE:LEFT:YELLOW>DOWN:RED",
+      "I": "RED|PURPLE:RIGHT:2",
+      "J": "PURPLE|ORANGE:RIGHT",
+      "K": "ORANGE|BLUE:RIGHT",
+      "L": "IN:BLUE",
+      "M": "GREEN|CYAN:RIGHT",
+      "N": "CYAN|PINK:RIGHT",
+      "O": "PIPE:LEFT:PINK>RIGHT:YELLOW",
+      "P": "YELLOW|GREEN:RIGHT",
+      "Q": "GREEN|RED:RIGHT",
+      "R": "IN:RED",
+      "S": "PURPLE|BLUE:RIGHT:2",
+      "T": "BLUE|ORANGE:RIGHT",
+      "U": "ORANGE|CYAN:RIGHT",
+      "V": "PIPE:LEFT:CYAN>RIGHT:PURPLE",
+      "W": "PURPLE|PINK:RIGHT",
+      "X": "IN:PINK"
+    },
+    "hint": "24 tiles! The ultimate: 5 pipes + 2 distance-2 jumps + 4 sinks!"
+  }
+]
