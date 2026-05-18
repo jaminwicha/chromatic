@@ -509,7 +509,7 @@ const LEVELS = [
   // === CONDUITS (204-213) ===
   { number: 204, name: "First Conduit", cells: ["A","B","C","D"], layout: [["A",null],[null,"B"],["C","D"]], conduits: [{"from":{"cell":"A","dir":"DOWN"},"to":{"cell":"C","dir":"LEFT"}},{"from":{"cell":"B","dir":"UP"},"to":{"cell":"A","dir":"RIGHT"}}], pieces: ["RED|BLUE:DOWN","PURPLE|RED:UP","BLUE|GREEN:RIGHT","GREEN|PURPLE:UP"], solution: {"A":"RED|BLUE:DOWN","B":"PURPLE|RED:UP","C":"BLUE|GREEN:RIGHT","D":"GREEN|PURPLE:UP"}, hint: "The conduit carries your signal around!" },
   { number: 205, name: "Around the Bend", cells: ["A","B","C","D","E"], layout: [["A","B",null],[null,"C","D"],[null,null,"E"]], conduits: [{"from":{"cell":"E","dir":"LEFT"},"to":{"cell":"A","dir":"LEFT"}}], pieces: ["RED|BLUE:RIGHT","BLUE|GREEN:DOWN","GREEN|PURPLE:RIGHT","PURPLE|ORANGE:DOWN","ORANGE|RED:LEFT"], solution: {"A":"RED|BLUE:RIGHT","B":"BLUE|GREEN:DOWN","C":"GREEN|PURPLE:RIGHT","D":"PURPLE|ORANGE:DOWN","E":"ORANGE|RED:LEFT"}, hint: "The conduit wraps around the staircase!" },
-  { number: 206, name: "Twin Tunnels", cells: ["A","B","C","D","E","F"], layout: [["A","B"],[null,"C"],["D","E","F"]], conduits: [{"from":{"cell":"D","dir":"UP"},"to":{"cell":"A","dir":"LEFT"}},{"from":{"cell":"F","dir":"UP"},"to":{"cell":"B","dir":"RIGHT"}}], pieces: ["RED|BLUE:RIGHT","BLUE|GREEN:DOWN","GREEN|PURPLE:DOWN","PURPLE|ORANGE:LEFT,CYAN:RIGHT","ORANGE|RED:UP","CYAN|BLUE:UP"], solution: {"A":"RED|BLUE:RIGHT","B":"BLUE|GREEN:DOWN","C":"GREEN|PURPLE:DOWN","E":"PURPLE|ORANGE:LEFT,CYAN:RIGHT","D":"ORANGE|RED:UP","F":"CYAN|BLUE:UP"}, hint: "Two conduits wrap signals back to the top!" },
+  { number: 206, name: "Signal Loop", cells: ["A","B","C","D","E"], layout: [["A","B"],[null,"C"],["D","E"]], conduits: [{"from":{"cell":"D","dir":"UP"},"to":{"cell":"A","dir":"LEFT"}}], pieces: ["RED|BLUE:RIGHT","BLUE|GREEN:DOWN","GREEN|PURPLE:DOWN","PURPLE|ORANGE:LEFT","ORANGE|RED:UP"], solution: {"A":"RED|BLUE:RIGHT","B":"BLUE|GREEN:DOWN","C":"GREEN|PURPLE:DOWN","E":"PURPLE|ORANGE:LEFT","D":"ORANGE|RED:UP"}, hint: "The conduit wraps the signal back to the top!" },
   { number: 207, name: "Diagonal Hook", cells: ["A","B","C","D","E"], layout: [[null,"A","B"],["C",null,null],[null,"D","E"]], conduits: [{"from":{"cell":"B","dir":"DOWN"},"to":{"cell":"E","dir":"RIGHT"}},{"from":{"cell":"D","dir":"LEFT"},"to":{"cell":"C","dir":"DOWN"}},{"from":{"cell":"C","dir":"UP"},"to":{"cell":"A","dir":"LEFT"}}], pieces: ["RED|BLUE:RIGHT","BLUE|GREEN:DOWN","GREEN|PURPLE:LEFT","PURPLE|ORANGE:LEFT","ORANGE|RED:UP"], solution: {"A":"RED|BLUE:RIGHT","B":"BLUE|GREEN:DOWN","E":"GREEN|PURPLE:LEFT","D":"PURPLE|ORANGE:LEFT","C":"ORANGE|RED:UP"}, hint: "Conduits route signals around the hook!" },
   { number: 208, name: "Signal Fork", cells: ["A","B","C","D","E","F"], layout: [["A","B",null],[null,"C",null],["F","D","E"]], conduits: [{"from":{"cell":"A","dir":"DOWN"},"to":{"cell":"F","dir":"LEFT"}}], pieces: ["RED|BLUE:RIGHT,GREEN:DOWN","BLUE|PURPLE:DOWN","PURPLE|ORANGE:DOWN","GREEN|ORANGE:RIGHT","ORANGE|CYAN:RIGHT","CYAN|ORANGE:LEFT"], solution: {"A":"RED|BLUE:RIGHT,GREEN:DOWN","B":"BLUE|PURPLE:DOWN","C":"PURPLE|ORANGE:DOWN","F":"GREEN|ORANGE:RIGHT","D":"ORANGE|CYAN:RIGHT","E":"CYAN|ORANGE:LEFT"}, hint: "A multi-output piece feeds the conduit!" },
   { number: 209, name: "Slant Route", cells: ["A","B","C","D","E","F"], layout: [["A",null,"B"],["C","D",null],[null,null,"E"],[null,"F",null]], conduits: [{"from":{"cell":"A","dir":"RIGHT"},"to":{"cell":"B","dir":"LEFT"}}], pieces: ["RED|GREEN:DOWN,BLUE:RIGHT","BLUE|PURPLE:DOWN_LEFT","GREEN|PURPLE:RIGHT","PURPLE|ORANGE:DOWN_RIGHT","ORANGE|CYAN:DOWN_LEFT","CYAN|ORANGE:UP_RIGHT"], solution: {"A":"RED|GREEN:DOWN,BLUE:RIGHT","B":"BLUE|PURPLE:DOWN_LEFT","C":"GREEN|PURPLE:RIGHT","D":"PURPLE|ORANGE:DOWN_RIGHT","E":"ORANGE|CYAN:DOWN_LEFT","F":"CYAN|ORANGE:UP_RIGHT"}, hint: "Diagonals and conduits combine!" },
@@ -517,12 +517,22 @@ const LEVELS = [
   { number: 211, name: "Triple Path", cells: ["A","B","C","D","E","F","G","H"], layout: [[null,"A","B"],[null,null,"C"],["D","E",null],["F",null,"G"],[null,"H",null]], conduits: [{"from":{"cell":"C","dir":"DOWN"},"to":{"cell":"G","dir":"UP"}},{"from":{"cell":"H","dir":"LEFT"},"to":{"cell":"F","dir":"DOWN"}}], pieces: ["RED|BLUE:RIGHT","BLUE|GREEN:DOWN","GREEN|PURPLE:DOWN","PURPLE|ORANGE:DOWN_LEFT","ORANGE|CYAN:LEFT","CYAN|RED:UP","RED|PINK:RIGHT","PINK|GREEN:UP_RIGHT"], solution: {"A":"RED|BLUE:RIGHT","B":"BLUE|GREEN:DOWN","C":"GREEN|PURPLE:DOWN","G":"PURPLE|ORANGE:DOWN_LEFT","H":"ORANGE|CYAN:LEFT","F":"CYAN|RED:UP","D":"RED|PINK:RIGHT","E":"PINK|GREEN:UP_RIGHT"}, hint: "Diagonals and conduits weave through the grid!" },
   { number: 212, name: "Cascade", cells: ["A","B","C","D","E","F","G","H"], layout: [["A","B",null,null],[null,"C","D",null],[null,null,"E","F"],["G",null,null,"H"]], conduits: [{"from":{"cell":"H","dir":"LEFT"},"to":{"cell":"G","dir":"RIGHT"}},{"from":{"cell":"G","dir":"UP"},"to":{"cell":"A","dir":"LEFT"}}], pieces: ["RED|BLUE:RIGHT","BLUE|GREEN:DOWN","GREEN|PURPLE:RIGHT","PURPLE|ORANGE:DOWN","ORANGE|CYAN:RIGHT","CYAN|PINK:DOWN","PINK|RED:LEFT","RED|RED:UP"], solution: {"A":"RED|BLUE:RIGHT","B":"BLUE|GREEN:DOWN","C":"GREEN|PURPLE:RIGHT","D":"PURPLE|ORANGE:DOWN","E":"ORANGE|CYAN:RIGHT","F":"CYAN|PINK:DOWN","H":"PINK|RED:LEFT","G":"RED|RED:UP"}, hint: "The cascade wraps back on itself!" },
   { number: 213, name: "Nexus Loop", cells: ["A","B","C","D","E","F","G","H","I"], layout: [[null,"A",null,null],["B","C","D",null],[null,null,"E","F"],[null,"G",null,null],[null,"H","I",null]], conduits: [{"from":{"cell":"F","dir":"DOWN"},"to":{"cell":"G","dir":"UP"}},{"from":{"cell":"I","dir":"UP"},"to":{"cell":"A","dir":"UP"}}], pieces: ["RED|GREEN:DOWN","YELLOW|GREEN:RIGHT","GREEN|PURPLE:RIGHT,ORANGE:DOWN_RIGHT","PURPLE|ORANGE:DOWN","ORANGE|CYAN:RIGHT","CYAN|BLUE:DOWN","BLUE|PINK:DOWN","PINK|RED:RIGHT","RED|RED:UP"], solution: {"A":"RED|GREEN:DOWN","B":"YELLOW|GREEN:RIGHT","C":"GREEN|PURPLE:RIGHT,ORANGE:DOWN_RIGHT","D":"PURPLE|ORANGE:DOWN","E":"ORANGE|CYAN:RIGHT","F":"CYAN|BLUE:DOWN","G":"BLUE|PINK:DOWN","H":"PINK|RED:RIGHT","I":"RED|RED:UP"}, hint: "The ultimate conduit challenge!" },
-{ number: 214, name: "Neurotoxin", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"], layout: [[[null,null,null,null,null],[null,null,null,null,null],[null,null,"G",null,null],[null,null,null,null,null],[null,null,"H",null,null],[null,null,"I",null,"Q"],[null,null,"J","K","R"],[null,null,null,"L",null]],[["C",null,"D",null,null],[null,null,"E",null,null],["B",null,"F",null,null],["A",null,null,null,null],[null,null,null,null,null],[null,null,null,null,"P"],[null,null,null,null,"O"],[null,null,null,"M","N"]]], pieces: ["OUT:RED|PINK:UP","PINK|BLUE:UP:2","BLUE|RED:RIGHT:2","RED|GREEN:DOWN","GREEN|RED:DOWN","STAIRS:DOWN:RED|BLUE:SHELF_DOWN","BLUE|GREEN:DOWN:2","GREEN|RED:DOWN","RED|BLUE:DOWN","BLUE|ORANGE:RIGHT","PIPE:LEFT:ORANGE>DOWN:RED","STAIRS:UP:RED|BLUE:SHELF_UP","PIPE:SHELF_DOWN:BLUE>RIGHT:GREEN","TRIGGER:GREEN:K|RED:UP","PIPE:DOWN:RED>UP:BLUE","STAIRS:DOWN:BLUE|GREEN:SHELF_DOWN","PIPE:SHELF_UP:GREEN>DOWN:RED","IN:RED"], solution: {"A":"OUT:RED|PINK:UP","B":"PINK|BLUE:UP:2","C":"BLUE|RED:RIGHT:2","D":"RED|GREEN:DOWN","E":"GREEN|RED:DOWN","F":"STAIRS:DOWN:RED|BLUE:SHELF_DOWN","G":"BLUE|GREEN:DOWN:2","H":"GREEN|RED:DOWN","I":"RED|BLUE:DOWN","J":"BLUE|ORANGE:RIGHT","K":"PIPE:LEFT:ORANGE>DOWN:RED","L":"STAIRS:UP:RED|BLUE:SHELF_UP","M":"PIPE:SHELF_DOWN:BLUE>RIGHT:GREEN","N":"TRIGGER:GREEN:K|RED:UP","O":"PIPE:DOWN:RED>UP:BLUE","P":"STAIRS:DOWN:BLUE|GREEN:SHELF_DOWN","Q":"PIPE:SHELF_UP:GREEN>DOWN:RED","R":"IN:RED"}, hint: "Use all pieces correctly!" },
-{ number: 215, name: "Paradox Engine", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"], layout: [[["C",null,null],["D",null,"E"],[null,null,"F"],[null,null,"G"],[null,"I","H"]],[["B","A",null],["R","Q",null],[null,"P",null],[null,"K",null],[null,"J",null]],[[null,null,null],[null,null,null],["N","O",null],["M","L",null],[null,null,null]]], pieces: ["OUT:RED|ORANGE:LEFT","STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","PIPE:SHELF_UP:RED>DOWN:GREEN","GREEN|RED:RIGHT:2","RED|BLUE:DOWN","PIPE:UP:BLUE>DOWN:GREEN","GREEN|RED:DOWN","RED|BLUE:LEFT","STAIRS:UP:BLUE|RED:SHELF_UP","RED|BLUE:UP","STAIRS:UP:BLUE|RED:SHELF_UP","RED|BLUE:LEFT","BLUE|YELLOW:UP","PIPE:DOWN:YELLOW>RIGHT:RED","STAIRS:DOWN:RED|BLUE:SHELF_DOWN","BLUE|GREEN:UP","PIPE:DOWN:GREEN>LEFT:YELLOW","IN:YELLOW"], solution: {"A":"OUT:RED|ORANGE:LEFT","B":"STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","C":"PIPE:SHELF_UP:RED>DOWN:GREEN","D":"GREEN|RED:RIGHT:2","E":"RED|BLUE:DOWN","F":"PIPE:UP:BLUE>DOWN:GREEN","G":"GREEN|RED:DOWN","H":"RED|BLUE:LEFT","I":"STAIRS:UP:BLUE|RED:SHELF_UP","J":"RED|BLUE:UP","K":"STAIRS:UP:BLUE|RED:SHELF_UP","L":"RED|BLUE:LEFT","M":"BLUE|YELLOW:UP","N":"PIPE:DOWN:YELLOW>RIGHT:RED","O":"STAIRS:DOWN:RED|BLUE:SHELF_DOWN","P":"BLUE|GREEN:UP","Q":"PIPE:DOWN:GREEN>LEFT:YELLOW","R":"IN:YELLOW"}, hint: "Use all pieces correctly!" },
-{ number: 216, name: "Quantum Lattice", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"], layout: [[[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,"P","Q",null,"R"],[null,null,null,null,null],[null,null,null,null,"S"]],[[null,null,"D","C",null],["K",null,"E",null,null],["L",null,"F","B",null],[null,null,null,"A",null],["M","N",null,null,null],[null,"O",null,null,null],[null,null,null,null,null],[null,null,null,null,null]],[[null,null,null,null,null],["J",null,null,null,null],["I","H","G",null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null]]], pieces: ["OUT:RED|BLUE:UP","BLUE|GREEN:UP:2","GREEN|YELLOW:LEFT","YELLOW|RED:DOWN","PIPE:UP:RED>DOWN:YELLOW","STAIRS:UP:YELLOW|BLUE:SHELF_UP","BLUE|YELLOW:LEFT","PIPE:RIGHT:YELLOW>LEFT:RED","PIPE:RIGHT:RED>UP:ORANGE","STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","RED|BLUE:DOWN","BLUE|GREEN:DOWN:2","TRIGGER:GREEN:J|RED:RIGHT","TRIGGER:RED:L|CYAN:DOWN","STAIRS:DOWN:CYAN|BLUE:SHELF_DOWN","PIPE:SHELF_UP:BLUE>RIGHT:PURPLE","PURPLE|RED:RIGHT:2","RED|GREEN:DOWN:2","IN:GREEN"], solution: {"A":"OUT:RED|BLUE:UP","B":"BLUE|GREEN:UP:2","C":"GREEN|YELLOW:LEFT","D":"YELLOW|RED:DOWN","E":"PIPE:UP:RED>DOWN:YELLOW","F":"STAIRS:UP:YELLOW|BLUE:SHELF_UP","G":"BLUE|YELLOW:LEFT","H":"PIPE:RIGHT:YELLOW>LEFT:RED","I":"PIPE:RIGHT:RED>UP:ORANGE","J":"STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","K":"RED|BLUE:DOWN","L":"BLUE|GREEN:DOWN:2","M":"TRIGGER:GREEN:J|RED:RIGHT","N":"TRIGGER:RED:L|CYAN:DOWN","O":"STAIRS:DOWN:CYAN|BLUE:SHELF_DOWN","P":"PIPE:SHELF_UP:BLUE>RIGHT:PURPLE","Q":"PURPLE|RED:RIGHT:2","R":"RED|GREEN:DOWN:2","S":"IN:GREEN"}, hint: "Use all pieces correctly!" },
-{ number: 217, name: "Singularity Mesh", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"], layout: [[[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],["R","Q",null,null,null],["S",null,null,null,null]],[["C",null,null,null,null],[null,null,null,null,null],["B",null,null,null,null],["A",null,null,null,null],[null,null,null,null,null],[null,null,"N",null,"M"],[null,"P","O",null,"L"],[null,null,null,null,null]],[["D","E",null,null,null],[null,null,null,null,null],[null,"F",null,null,null],[null,"G",null,null,null],[null,null,null,null,null],[null,"H",null,null,null],[null,"I","J",null,"K"],[null,null,null,null,null]]], pieces: ["OUT:RED|YELLOW:UP","YELLOW|GREEN:UP:2","STAIRS:UP:GREEN|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>RIGHT:YELLOW","YELLOW|RED:DOWN:2","TRIGGER:RED:C|CYAN:DOWN","CYAN|PURPLE:DOWN:2","PURPLE|BLUE:DOWN","BLUE|RED:RIGHT","RED|BLUE:RIGHT:2","STAIRS:DOWN:BLUE|RED:SHELF_DOWN","RED|BLUE:UP","BLUE|CYAN:LEFT:2","TRIGGER:CYAN:J|RED:DOWN","RED|BLUE:LEFT","STAIRS:DOWN:BLUE|RED:SHELF_DOWN","RED|GREEN:LEFT","PIPE:RIGHT:GREEN>DOWN:RED","IN:RED"], solution: {"A":"OUT:RED|YELLOW:UP","B":"YELLOW|GREEN:UP:2","C":"STAIRS:UP:GREEN|RED:SHELF_UP","D":"PIPE:SHELF_DOWN:RED>RIGHT:YELLOW","E":"YELLOW|RED:DOWN:2","F":"TRIGGER:RED:C|CYAN:DOWN","G":"CYAN|PURPLE:DOWN:2","H":"PURPLE|BLUE:DOWN","I":"BLUE|RED:RIGHT","J":"RED|BLUE:RIGHT:2","K":"STAIRS:DOWN:BLUE|RED:SHELF_DOWN","L":"RED|BLUE:UP","M":"BLUE|CYAN:LEFT:2","N":"TRIGGER:CYAN:J|RED:DOWN","O":"RED|BLUE:LEFT","P":"STAIRS:DOWN:BLUE|RED:SHELF_DOWN","Q":"RED|GREEN:LEFT","R":"PIPE:RIGHT:GREEN>DOWN:RED","S":"IN:RED"}, hint: "Use all pieces correctly!" },
-{ number: 218, name: "Neural Cascade", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T"], layout: [[[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,"K",null,null,null,null],[null,"J",null,null,null,null],[null,null,null,null,null,"F"],[null,"I",null,"H",null,"G"]],[["T",null,null,null,null,null],["S",null,"R",null,null,null],[null,null,"Q",null,null,null],["N","O","P","A","B","C"],["M","L",null,null,null,null],[null,null,null,null,null,"D"],[null,null,null,null,null,"E"],[null,null,null,null,null,null]]], pieces: ["OUT:RED|BLUE:RIGHT","PIPE:LEFT:BLUE>RIGHT:GREEN","GREEN|YELLOW:DOWN:2","YELLOW|RED:DOWN","STAIRS:DOWN:RED|BLUE:SHELF_DOWN","BLUE|GREEN:DOWN","GREEN|BLUE:LEFT:2","BLUE|RED:LEFT:2","RED|PURPLE:UP:2","TRIGGER:PURPLE:E|GREEN:UP","STAIRS:UP:GREEN|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>LEFT:YELLOW","PIPE:RIGHT:YELLOW>UP:RED","RED|CYAN:RIGHT","CYAN|BLUE:RIGHT","PIPE:LEFT:BLUE>UP:RED","PIPE:DOWN:RED>UP:CYAN","CYAN|RED:LEFT:2","RED|PURPLE:UP","IN:PURPLE"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"PIPE:LEFT:BLUE>RIGHT:GREEN","C":"GREEN|YELLOW:DOWN:2","D":"YELLOW|RED:DOWN","E":"STAIRS:DOWN:RED|BLUE:SHELF_DOWN","F":"BLUE|GREEN:DOWN","G":"GREEN|BLUE:LEFT:2","H":"BLUE|RED:LEFT:2","I":"RED|PURPLE:UP:2","J":"TRIGGER:PURPLE:E|GREEN:UP","K":"STAIRS:UP:GREEN|RED:SHELF_UP","L":"PIPE:SHELF_DOWN:RED>LEFT:YELLOW","M":"PIPE:RIGHT:YELLOW>UP:RED","N":"RED|CYAN:RIGHT","O":"CYAN|BLUE:RIGHT","P":"PIPE:LEFT:BLUE>UP:RED","Q":"PIPE:DOWN:RED>UP:CYAN","R":"CYAN|RED:LEFT:2","S":"RED|PURPLE:UP","T":"IN:PURPLE"}, hint: "Use all pieces correctly!" },
-{ number: 219, name: "Omega Prism", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T"], layout: [[[null,null,null,"I","J"],[null,null,null,null,"K"],[null,null,null,"H",null],["A","B",null,"C","D"],[null,null,null,null,null]],[[null,"P","O","N","M"],[null,"Q",null,null,"L"],[null,null,null,"G","F"],["S","R",null,null,"E"],["T",null,null,null,null]]], pieces: ["OUT:RED|BLUE:RIGHT","BLUE|RED:RIGHT:2","RED|PURPLE:RIGHT","STAIRS:UP:PURPLE|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>UP:BLUE","BLUE|GREEN:LEFT","STAIRS:DOWN:GREEN|RED:SHELF_DOWN","RED|BLUE:UP:2","PIPE:DOWN:BLUE>RIGHT:PURPLE","PURPLE|BLUE:DOWN","STAIRS:UP:BLUE|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>UP:CYAN","PIPE:DOWN:CYAN>LEFT:BLUE","BLUE|GREEN:LEFT","GREEN|RED:LEFT","RED|BLUE:DOWN","BLUE|RED:DOWN:2","RED|YELLOW:LEFT","YELLOW|RED:DOWN","IN:RED"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"BLUE|RED:RIGHT:2","C":"RED|PURPLE:RIGHT","D":"STAIRS:UP:PURPLE|RED:SHELF_UP","E":"PIPE:SHELF_DOWN:RED>UP:BLUE","F":"BLUE|GREEN:LEFT","G":"STAIRS:DOWN:GREEN|RED:SHELF_DOWN","H":"RED|BLUE:UP:2","I":"PIPE:DOWN:BLUE>RIGHT:PURPLE","J":"PURPLE|BLUE:DOWN","K":"STAIRS:UP:BLUE|RED:SHELF_UP","L":"PIPE:SHELF_DOWN:RED>UP:CYAN","M":"PIPE:DOWN:CYAN>LEFT:BLUE","N":"BLUE|GREEN:LEFT","O":"GREEN|RED:LEFT","P":"RED|BLUE:DOWN","Q":"BLUE|RED:DOWN:2","R":"RED|YELLOW:LEFT","S":"YELLOW|RED:DOWN","T":"IN:RED"}, hint: "Use all pieces correctly!" },
+  { number: 214, name: "Bridge Up", cells: ["A","B","C","D","E"], layout: [[["A",null,"B"]],[["C","D","E"]]], conduits: [{"from":{"cell":"A","dir":"RIGHT"},"to":{"cell":"B","dir":"LEFT"}}], pieces: ["OUT:RED|BLUE:RIGHT","STAIRS:UP:BLUE|GREEN:SHELF_UP","GREEN|PURPLE:LEFT","PURPLE|ORANGE:LEFT","IN:ORANGE"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"STAIRS:UP:BLUE|GREEN:SHELF_UP","E":"GREEN|PURPLE:LEFT","D":"PURPLE|ORANGE:LEFT","C":"IN:ORANGE"}, hint: "The conduit bridges a gap on the same shelf!" },
+  { number: 215, name: "Upper Loop", cells: ["A","B","C","D","E"], layout: [[["A","B"]],[["C","D"],["E",null]]], conduits: [{"from":{"cell":"D","dir":"DOWN"},"to":{"cell":"E","dir":"RIGHT"}}], pieces: ["OUT:RED|BLUE:RIGHT","STAIRS:UP:BLUE|GREEN:SHELF_UP","GREEN|PURPLE:DOWN","PURPLE|ORANGE:UP","IN:ORANGE"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"STAIRS:UP:BLUE|GREEN:SHELF_UP","D":"GREEN|PURPLE:DOWN","E":"PURPLE|ORANGE:UP","C":"IN:ORANGE"}, hint: "The conduit routes around on the upper shelf!" },
+  { number: 216, name: "Split Route", cells: ["A","B","C","D","E"], layout: [[["A",null,"B"]],[["C","D","E"]]], conduits: [{"from":{"cell":"A","dir":"RIGHT"},"to":{"cell":"B","dir":"LEFT"}}], pieces: ["OUT:RED|BLUE:RIGHT","STAIRS:UP:BLUE|GREEN:SHELF_UP","GREEN|PURPLE:LEFT","PURPLE|CYAN:LEFT","IN:CYAN"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"STAIRS:UP:BLUE|GREEN:SHELF_UP","E":"GREEN|PURPLE:LEFT","D":"PURPLE|CYAN:LEFT","C":"IN:CYAN"}, hint: "A conduit bridges the gap, stairs change shelves!" },
+  { number: 217, name: "Spiral Route", cells: ["A","B","C","D","E","F"], layout: [[["A","B","C"]],[["D",null,"E"],["F",null,null]]], conduits: [{"from":{"cell":"E","dir":"LEFT"},"to":{"cell":"D","dir":"RIGHT"}}], pieces: ["OUT:RED|BLUE:RIGHT","BLUE|GREEN:RIGHT","STAIRS:UP:GREEN|PURPLE:SHELF_UP","PURPLE|ORANGE:LEFT","ORANGE|CYAN:DOWN","IN:CYAN"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"BLUE|GREEN:RIGHT","C":"STAIRS:UP:GREEN|PURPLE:SHELF_UP","E":"PURPLE|ORANGE:LEFT","D":"ORANGE|CYAN:DOWN","F":"IN:CYAN"}, hint: "The conduit routes around a gap on the upper shelf!" },
+  { number: 218, name: "Tower Bypass", cells: ["A","B","C","D"], layout: [[["A",null,null]],[["B",null,"C"]],[[null,null,"D"]]], conduits: [{"from":{"cell":"B","dir":"RIGHT"},"to":{"cell":"C","dir":"LEFT"}}], pieces: ["STAIRS:UP:RED|BLUE:SHELF_UP","BLUE|GREEN:RIGHT","STAIRS:UP:GREEN|PURPLE:SHELF_UP","PURPLE|RED:SHELF_DOWN:2"], solution: {"A":"STAIRS:UP:RED|BLUE:SHELF_UP","B":"BLUE|GREEN:RIGHT","C":"STAIRS:UP:GREEN|PURPLE:SHELF_UP","D":"PURPLE|RED:SHELF_DOWN:2"}, hint: "A conduit bridges the gap between stairs!" },
+  { number: 219, name: "Diagonal Relay", cells: ["A","B","C","D","E"], layout: [[["A","B"]],[["C","D"],[null,"E"]]], conduits: [{"from":{"cell":"E","dir":"LEFT"},"to":{"cell":"C","dir":"DOWN"}}], pieces: ["OUT:RED|BLUE:RIGHT","STAIRS:UP:BLUE|GREEN:SHELF_UP","GREEN|PURPLE:DOWN","PURPLE|ORANGE:LEFT","IN:ORANGE"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"STAIRS:UP:BLUE|GREEN:SHELF_UP","D":"GREEN|PURPLE:DOWN","E":"PURPLE|ORANGE:LEFT","C":"IN:ORANGE"}, hint: "The conduit loops back on the same shelf!" },
+  { number: 220, name: "Dual Routes", cells: ["A","B","C","D","E","F","G"], layout: [[["A",null,"B"]],[["C",null,"D"],["E",null,null]],[[null,"F","G"]]], conduits: [{"from":{"cell":"A","dir":"RIGHT"},"to":{"cell":"B","dir":"LEFT"}},{"from":{"cell":"D","dir":"LEFT"},"to":{"cell":"C","dir":"RIGHT"}}], pieces: ["OUT:RED|BLUE:RIGHT","STAIRS:UP:BLUE|GREEN:SHELF_UP","GREEN|PURPLE:LEFT","PURPLE|ORANGE:DOWN","STAIRS:UP:ORANGE|CYAN:SHELF_UP","CYAN|PINK:RIGHT","IN:PINK"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"STAIRS:UP:BLUE|GREEN:SHELF_UP","D":"GREEN|PURPLE:LEFT","C":"PURPLE|ORANGE:DOWN","E":"STAIRS:UP:ORANGE|CYAN:SHELF_UP","F":"CYAN|PINK:RIGHT","G":"IN:PINK"}, hint: "Each shelf has its own conduit!" },
+  { number: 221, name: "High Wire", cells: ["A","B","C","D","E"], layout: [[["A","B"]],[["C",null,"D"],["E",null,null]]], conduits: [{"from":{"cell":"C","dir":"RIGHT"},"to":{"cell":"D","dir":"LEFT"}}], pieces: ["OUT:RED|BLUE:RIGHT","STAIRS:UP:BLUE|GREEN:SHELF_UP","GREEN|PURPLE:RIGHT","PURPLE|ORANGE:DOWN","IN:ORANGE"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"STAIRS:UP:BLUE|GREEN:SHELF_UP","C":"GREEN|PURPLE:RIGHT","D":"PURPLE|ORANGE:DOWN","E":"IN:ORANGE"}, hint: "The conduit spans a gap on the upper shelf!" },
+  { number: 222, name: "Fork & Bridge", cells: ["A","B","C","D","E","F","G"], layout: [[["A","B","C"]],[["D",null,"E"],["F",null,"G"]]], conduits: [{"from":{"cell":"D","dir":"RIGHT"},"to":{"cell":"E","dir":"LEFT"}}], pieces: ["OUT:RED|BLUE:RIGHT","BLUE|GREEN:RIGHT","STAIRS:UP:GREEN|PURPLE:SHELF_UP,ORANGE:DOWN","PURPLE|CYAN:RIGHT","ORANGE|PINK:RIGHT","CYAN|RED:DOWN","IN:RED"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"BLUE|GREEN:RIGHT","C":"STAIRS:UP:GREEN|PURPLE:SHELF_UP,ORANGE:DOWN","D":"PURPLE|CYAN:RIGHT","E":"ORANGE|PINK:RIGHT","F":"CYAN|RED:DOWN","G":"IN:RED"}, hint: "Multi-output meets conduits!" },
+  { number: 223, name: "Nexus Bridge", cells: ["A","B","C","D","E","F","G","H"], layout: [[["A","B","C","D"]],[["E",null,null,"F"],["G",null,null,"H"]]], conduits: [{"from":{"cell":"E","dir":"RIGHT"},"to":{"cell":"F","dir":"LEFT"}},{"from":{"cell":"G","dir":"RIGHT"},"to":{"cell":"H","dir":"LEFT"}}], pieces: ["OUT:RED|BLUE:RIGHT","BLUE|GREEN:RIGHT","GREEN|PURPLE:RIGHT","STAIRS:UP:PURPLE|ORANGE:SHELF_UP","ORANGE|CYAN:RIGHT","CYAN|PINK:DOWN","PINK|RED:RIGHT","IN:RED"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"BLUE|GREEN:RIGHT","C":"GREEN|PURPLE:RIGHT","D":"STAIRS:UP:PURPLE|ORANGE:SHELF_UP","E":"ORANGE|CYAN:RIGHT","F":"CYAN|PINK:DOWN","G":"PINK|RED:RIGHT","H":"IN:RED"}, hint: "The ultimate shelves and conduits challenge!" },
+{ number: 224, name: "Neurotoxin", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"], layout: [[[null,null,null,null,null],[null,null,null,null,null],[null,null,"G",null,null],[null,null,null,null,null],[null,null,"H",null,null],[null,null,"I",null,"Q"],[null,null,"J","K","R"],[null,null,null,"L",null]],[["C",null,"D",null,null],[null,null,"E",null,null],["B",null,"F",null,null],["A",null,null,null,null],[null,null,null,null,null],[null,null,null,null,"P"],[null,null,null,null,"O"],[null,null,null,"M","N"]]], pieces: ["OUT:RED|PINK:UP","PINK|BLUE:UP:2","BLUE|RED:RIGHT:2","RED|GREEN:DOWN","GREEN|RED:DOWN","STAIRS:DOWN:RED|BLUE:SHELF_DOWN","BLUE|GREEN:DOWN:2","GREEN|RED:DOWN","RED|BLUE:DOWN","BLUE|ORANGE:RIGHT","PIPE:LEFT:ORANGE>DOWN:RED","STAIRS:UP:RED|BLUE:SHELF_UP","PIPE:SHELF_DOWN:BLUE>RIGHT:GREEN","TRIGGER:GREEN:K|RED:UP","PIPE:DOWN:RED>UP:BLUE","STAIRS:DOWN:BLUE|GREEN:SHELF_DOWN","PIPE:SHELF_UP:GREEN>DOWN:RED","IN:RED"], solution: {"A":"OUT:RED|PINK:UP","B":"PINK|BLUE:UP:2","C":"BLUE|RED:RIGHT:2","D":"RED|GREEN:DOWN","E":"GREEN|RED:DOWN","F":"STAIRS:DOWN:RED|BLUE:SHELF_DOWN","G":"BLUE|GREEN:DOWN:2","H":"GREEN|RED:DOWN","I":"RED|BLUE:DOWN","J":"BLUE|ORANGE:RIGHT","K":"PIPE:LEFT:ORANGE>DOWN:RED","L":"STAIRS:UP:RED|BLUE:SHELF_UP","M":"PIPE:SHELF_DOWN:BLUE>RIGHT:GREEN","N":"TRIGGER:GREEN:K|RED:UP","O":"PIPE:DOWN:RED>UP:BLUE","P":"STAIRS:DOWN:BLUE|GREEN:SHELF_DOWN","Q":"PIPE:SHELF_UP:GREEN>DOWN:RED","R":"IN:RED"}, hint: "Use all pieces correctly!" },
+{ number: 225, name: "Paradox Engine", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"], layout: [[["C",null,null],["D",null,"E"],[null,null,"F"],[null,null,"G"],[null,"I","H"]],[["B","A",null],["R","Q",null],[null,"P",null],[null,"K",null],[null,"J",null]],[[null,null,null],[null,null,null],["N","O",null],["M","L",null],[null,null,null]]], pieces: ["OUT:RED|ORANGE:LEFT","STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","PIPE:SHELF_UP:RED>DOWN:GREEN","GREEN|RED:RIGHT:2","RED|BLUE:DOWN","PIPE:UP:BLUE>DOWN:GREEN","GREEN|RED:DOWN","RED|BLUE:LEFT","STAIRS:UP:BLUE|RED:SHELF_UP","RED|BLUE:UP","STAIRS:UP:BLUE|RED:SHELF_UP","RED|BLUE:LEFT","BLUE|YELLOW:UP","PIPE:DOWN:YELLOW>RIGHT:RED","STAIRS:DOWN:RED|BLUE:SHELF_DOWN","BLUE|GREEN:UP","PIPE:DOWN:GREEN>LEFT:YELLOW","IN:YELLOW"], solution: {"A":"OUT:RED|ORANGE:LEFT","B":"STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","C":"PIPE:SHELF_UP:RED>DOWN:GREEN","D":"GREEN|RED:RIGHT:2","E":"RED|BLUE:DOWN","F":"PIPE:UP:BLUE>DOWN:GREEN","G":"GREEN|RED:DOWN","H":"RED|BLUE:LEFT","I":"STAIRS:UP:BLUE|RED:SHELF_UP","J":"RED|BLUE:UP","K":"STAIRS:UP:BLUE|RED:SHELF_UP","L":"RED|BLUE:LEFT","M":"BLUE|YELLOW:UP","N":"PIPE:DOWN:YELLOW>RIGHT:RED","O":"STAIRS:DOWN:RED|BLUE:SHELF_DOWN","P":"BLUE|GREEN:UP","Q":"PIPE:DOWN:GREEN>LEFT:YELLOW","R":"IN:YELLOW"}, hint: "Use all pieces correctly!" },
+{ number: 226, name: "Quantum Lattice", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"], layout: [[[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,"P","Q",null,"R"],[null,null,null,null,null],[null,null,null,null,"S"]],[[null,null,"D","C",null],["K",null,"E",null,null],["L",null,"F","B",null],[null,null,null,"A",null],["M","N",null,null,null],[null,"O",null,null,null],[null,null,null,null,null],[null,null,null,null,null]],[[null,null,null,null,null],["J",null,null,null,null],["I","H","G",null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null]]], pieces: ["OUT:RED|BLUE:UP","BLUE|GREEN:UP:2","GREEN|YELLOW:LEFT","YELLOW|RED:DOWN","PIPE:UP:RED>DOWN:YELLOW","STAIRS:UP:YELLOW|BLUE:SHELF_UP","BLUE|YELLOW:LEFT","PIPE:RIGHT:YELLOW>LEFT:RED","PIPE:RIGHT:RED>UP:ORANGE","STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","RED|BLUE:DOWN","BLUE|GREEN:DOWN:2","TRIGGER:GREEN:J|RED:RIGHT","TRIGGER:RED:L|CYAN:DOWN","STAIRS:DOWN:CYAN|BLUE:SHELF_DOWN","PIPE:SHELF_UP:BLUE>RIGHT:PURPLE","PURPLE|RED:RIGHT:2","RED|GREEN:DOWN:2","IN:GREEN"], solution: {"A":"OUT:RED|BLUE:UP","B":"BLUE|GREEN:UP:2","C":"GREEN|YELLOW:LEFT","D":"YELLOW|RED:DOWN","E":"PIPE:UP:RED>DOWN:YELLOW","F":"STAIRS:UP:YELLOW|BLUE:SHELF_UP","G":"BLUE|YELLOW:LEFT","H":"PIPE:RIGHT:YELLOW>LEFT:RED","I":"PIPE:RIGHT:RED>UP:ORANGE","J":"STAIRS:DOWN:ORANGE|RED:SHELF_DOWN","K":"RED|BLUE:DOWN","L":"BLUE|GREEN:DOWN:2","M":"TRIGGER:GREEN:J|RED:RIGHT","N":"TRIGGER:RED:L|CYAN:DOWN","O":"STAIRS:DOWN:CYAN|BLUE:SHELF_DOWN","P":"PIPE:SHELF_UP:BLUE>RIGHT:PURPLE","Q":"PURPLE|RED:RIGHT:2","R":"RED|GREEN:DOWN:2","S":"IN:GREEN"}, hint: "Use all pieces correctly!" },
+{ number: 227, name: "Singularity Mesh", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S"], layout: [[[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],["R","Q",null,null,null],["S",null,null,null,null]],[["C",null,null,null,null],[null,null,null,null,null],["B",null,null,null,null],["A",null,null,null,null],[null,null,null,null,null],[null,null,"N",null,"M"],[null,"P","O",null,"L"],[null,null,null,null,null]],[["D","E",null,null,null],[null,null,null,null,null],[null,"F",null,null,null],[null,"G",null,null,null],[null,null,null,null,null],[null,"H",null,null,null],[null,"I","J",null,"K"],[null,null,null,null,null]]], pieces: ["OUT:RED|YELLOW:UP","YELLOW|GREEN:UP:2","STAIRS:UP:GREEN|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>RIGHT:YELLOW","YELLOW|RED:DOWN:2","TRIGGER:RED:C|CYAN:DOWN","CYAN|PURPLE:DOWN:2","PURPLE|BLUE:DOWN","BLUE|RED:RIGHT","RED|BLUE:RIGHT:2","STAIRS:DOWN:BLUE|RED:SHELF_DOWN","RED|BLUE:UP","BLUE|CYAN:LEFT:2","TRIGGER:CYAN:J|RED:DOWN","RED|BLUE:LEFT","STAIRS:DOWN:BLUE|RED:SHELF_DOWN","RED|GREEN:LEFT","PIPE:RIGHT:GREEN>DOWN:RED","IN:RED"], solution: {"A":"OUT:RED|YELLOW:UP","B":"YELLOW|GREEN:UP:2","C":"STAIRS:UP:GREEN|RED:SHELF_UP","D":"PIPE:SHELF_DOWN:RED>RIGHT:YELLOW","E":"YELLOW|RED:DOWN:2","F":"TRIGGER:RED:C|CYAN:DOWN","G":"CYAN|PURPLE:DOWN:2","H":"PURPLE|BLUE:DOWN","I":"BLUE|RED:RIGHT","J":"RED|BLUE:RIGHT:2","K":"STAIRS:DOWN:BLUE|RED:SHELF_DOWN","L":"RED|BLUE:UP","M":"BLUE|CYAN:LEFT:2","N":"TRIGGER:CYAN:J|RED:DOWN","O":"RED|BLUE:LEFT","P":"STAIRS:DOWN:BLUE|RED:SHELF_DOWN","Q":"RED|GREEN:LEFT","R":"PIPE:RIGHT:GREEN>DOWN:RED","S":"IN:RED"}, hint: "Use all pieces correctly!" },
+{ number: 228, name: "Neural Cascade", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T"], layout: [[[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],[null,"K",null,null,null,null],[null,"J",null,null,null,null],[null,null,null,null,null,"F"],[null,"I",null,"H",null,"G"]],[["T",null,null,null,null,null],["S",null,"R",null,null,null],[null,null,"Q",null,null,null],["N","O","P","A","B","C"],["M","L",null,null,null,null],[null,null,null,null,null,"D"],[null,null,null,null,null,"E"],[null,null,null,null,null,null]]], pieces: ["OUT:RED|BLUE:RIGHT","PIPE:LEFT:BLUE>RIGHT:GREEN","GREEN|YELLOW:DOWN:2","YELLOW|RED:DOWN","STAIRS:DOWN:RED|BLUE:SHELF_DOWN","BLUE|GREEN:DOWN","GREEN|BLUE:LEFT:2","BLUE|RED:LEFT:2","RED|PURPLE:UP:2","TRIGGER:PURPLE:E|GREEN:UP","STAIRS:UP:GREEN|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>LEFT:YELLOW","PIPE:RIGHT:YELLOW>UP:RED","RED|CYAN:RIGHT","CYAN|BLUE:RIGHT","PIPE:LEFT:BLUE>UP:RED","PIPE:DOWN:RED>UP:CYAN","CYAN|RED:LEFT:2","RED|PURPLE:UP","IN:PURPLE"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"PIPE:LEFT:BLUE>RIGHT:GREEN","C":"GREEN|YELLOW:DOWN:2","D":"YELLOW|RED:DOWN","E":"STAIRS:DOWN:RED|BLUE:SHELF_DOWN","F":"BLUE|GREEN:DOWN","G":"GREEN|BLUE:LEFT:2","H":"BLUE|RED:LEFT:2","I":"RED|PURPLE:UP:2","J":"TRIGGER:PURPLE:E|GREEN:UP","K":"STAIRS:UP:GREEN|RED:SHELF_UP","L":"PIPE:SHELF_DOWN:RED>LEFT:YELLOW","M":"PIPE:RIGHT:YELLOW>UP:RED","N":"RED|CYAN:RIGHT","O":"CYAN|BLUE:RIGHT","P":"PIPE:LEFT:BLUE>UP:RED","Q":"PIPE:DOWN:RED>UP:CYAN","R":"CYAN|RED:LEFT:2","S":"RED|PURPLE:UP","T":"IN:PURPLE"}, hint: "Use all pieces correctly!" },
+{ number: 229, name: "Omega Prism", cells: ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T"], layout: [[[null,null,null,"I","J"],[null,null,null,null,"K"],[null,null,null,"H",null],["A","B",null,"C","D"],[null,null,null,null,null]],[[null,"P","O","N","M"],[null,"Q",null,null,"L"],[null,null,null,"G","F"],["S","R",null,null,"E"],["T",null,null,null,null]]], pieces: ["OUT:RED|BLUE:RIGHT","BLUE|RED:RIGHT:2","RED|PURPLE:RIGHT","STAIRS:UP:PURPLE|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>UP:BLUE","BLUE|GREEN:LEFT","STAIRS:DOWN:GREEN|RED:SHELF_DOWN","RED|BLUE:UP:2","PIPE:DOWN:BLUE>RIGHT:PURPLE","PURPLE|BLUE:DOWN","STAIRS:UP:BLUE|RED:SHELF_UP","PIPE:SHELF_DOWN:RED>UP:CYAN","PIPE:DOWN:CYAN>LEFT:BLUE","BLUE|GREEN:LEFT","GREEN|RED:LEFT","RED|BLUE:DOWN","BLUE|RED:DOWN:2","RED|YELLOW:LEFT","YELLOW|RED:DOWN","IN:RED"], solution: {"A":"OUT:RED|BLUE:RIGHT","B":"BLUE|RED:RIGHT:2","C":"RED|PURPLE:RIGHT","D":"STAIRS:UP:PURPLE|RED:SHELF_UP","E":"PIPE:SHELF_DOWN:RED>UP:BLUE","F":"BLUE|GREEN:LEFT","G":"STAIRS:DOWN:GREEN|RED:SHELF_DOWN","H":"RED|BLUE:UP:2","I":"PIPE:DOWN:BLUE>RIGHT:PURPLE","J":"PURPLE|BLUE:DOWN","K":"STAIRS:UP:BLUE|RED:SHELF_UP","L":"PIPE:SHELF_DOWN:RED>UP:CYAN","M":"PIPE:DOWN:CYAN>LEFT:BLUE","N":"BLUE|GREEN:LEFT","O":"GREEN|RED:LEFT","P":"RED|BLUE:DOWN","Q":"BLUE|RED:DOWN:2","R":"RED|YELLOW:LEFT","S":"YELLOW|RED:DOWN","T":"IN:RED"}, hint: "Use all pieces correctly!" },
 ];
 
 // ─── ARROW VISUALS ──────────────────────────────────────────────────────────
@@ -561,7 +571,8 @@ const CHAPTERS = [
   { name: "Calm IV", range: [184, 193], color: "#fca5a5", bg: "radial-gradient(circle at center,#450a0a 0%,#1a0808 60%,#0a0a15 100%)", glow: "rgba(252,165,165,0.12)" },
   { name: "Calm V", range: [194, 203], color: "#fdba74", bg: "radial-gradient(circle at center,#431407 0%,#1a0e05 60%,#0a0a15 100%)", glow: "rgba(253,186,116,0.12)" },
   { name: "Conduits", range: [204, 213], color: "#a78bfa", bg: "radial-gradient(circle at center,#312e81 0%,#0f0d24 60%,#0a0a15 100%)", glow: "rgba(167,139,250,0.15)" },
-  { name: "Insane I", range: [214, 219], color: "#dc2626", bg: "radial-gradient(circle at bottom right,#450a0a 0%,#1a0505 40%,#0a0a0a 100%)", glow: "rgba(220,38,38,0.2)" }
+  { name: "Shelves & Conduits", range: [214, 223], color: "#34d399", bg: "radial-gradient(circle at center,#064e3b 0%,#0a1a10 60%,#0a0a15 100%)", glow: "rgba(52,211,153,0.15)" },
+  { name: "Insane I", range: [224, 229], color: "#dc2626", bg: "radial-gradient(circle at bottom right,#450a0a 0%,#1a0505 40%,#0a0a0a 100%)", glow: "rgba(220,38,38,0.2)" }
 ];
 
 // ─── TILE COMPONENT ─────────────────────────────────────────────────────────
@@ -755,9 +766,39 @@ export default function ChromaticPuzzle() {
   const [completedLevels, setCompletedLevels] = useState(new Set());
   const [currentShelf, setCurrentShelf] = useState(0);
   const containerRef = useRef(null);
+
+  // ─── SAVE DATA MIGRATION ─────────────────────────────────────────────
+  // Bump this when level structure changes (insertions/deletions/reordering)
+  const DATA_VERSION = 3; // v1: 215 levels, v2: 225 levels (conduits chapter inserted at index 209)
   useEffect(() => {
+    const savedVersion = parseInt(localStorage.getItem("chromatic_data_version") || "1");
     const saved = localStorage.getItem("chromatic_completed");
-    if (saved) setCompletedLevels(new Set(JSON.parse(saved)));
+    if (saved) {
+      let indices = new Set(JSON.parse(saved));
+      // Migration v1→v2: 10 conduit levels inserted at index 209 (after L203/Calm V)
+      // All indices >= 209 need to shift +10
+      if (savedVersion < 2) {
+        const migrated = new Set();
+        for (const idx of indices) {
+          if (idx >= 209) migrated.add(idx + 10);
+          else migrated.add(idx);
+        }
+        indices = migrated;
+        localStorage.setItem("chromatic_completed", JSON.stringify([...indices]));
+      }
+      // Migration v2→v3: 10 shelf conduit levels inserted at index 219 (after Conduits)
+      if (savedVersion < 3) {
+        const migrated3 = new Set();
+        for (const idx of indices) {
+          if (idx >= 219) migrated3.add(idx + 10);
+          else migrated3.add(idx);
+        }
+        indices = migrated3;
+        localStorage.setItem("chromatic_completed", JSON.stringify([...indices]));
+      }
+      setCompletedLevels(indices);
+    }
+    localStorage.setItem("chromatic_data_version", String(DATA_VERSION));
   }, []);
   useEffect(() => {
     if (completedLevels.size > 0) {
@@ -820,7 +861,88 @@ export default function ChromaticPuzzle() {
     setSelectedTile(null); setSolved(false); setErrors(new Set()); setShowHint(false); setScreen("game");
     setMoveHistory([]);
     setRedoStack([]);
+    // Show mechanic intro popup for first level of special chapters
+    const lvl = LEVELS[idx];
+    const chapter = CHAPTERS.find(ch => lvl.number >= ch.range[0] && lvl.number <= ch.range[1]);
+    if (chapter && lvl.number === chapter.range[0] && MECHANIC_INTROS[chapter.name]) {
+      setShowMechanicIntro(MECHANIC_INTROS[chapter.name]);
+    }
   }, [playSfx]);
+
+  const [showMechanicIntro, setShowMechanicIntro] = useState(null);
+  const MECHANIC_INTROS = {
+    "Fundamentals": { icon: "🧩", title: "Welcome to Chromatic", color: "#3b82f6",
+      lines: [
+        "Place pieces on the grid so every arrow points at a matching color.",
+        "Each piece has an outer color and inner arrows. An arrow must point at a neighbor whose outer color matches the arrow's color.",
+        "Use all pieces to complete the puzzle!"
+      ]},
+    "Diagonals": { icon: "↗️", title: "New Mechanic: Diagonals", color: "#f0abfc",
+      lines: [
+        "Arrows can now point diagonally — up-left, up-right, down-left, or down-right.",
+        "Diagonal arrows follow the same color-matching rules as cardinal arrows.",
+        "Think in eight directions now!"
+      ]},
+    "Multi-Output": { icon: "🔱", title: "New Mechanic: Multi-Output", color: "#a855f7",
+      lines: [
+        "Some pieces have multiple arrows pointing in different directions.",
+        "Every arrow on a piece must match its target — all of them, not just one!",
+        "Plan carefully to satisfy all connections at once."
+      ]},
+    "Complex Layouts": { icon: "🗺️", title: "Complex Layouts", color: "#22c55e",
+      lines: [
+        "Grids are no longer simple rectangles — expect gaps, L-shapes, and irregular layouts.",
+        "Empty cells block connections. Plan your paths around the holes!"
+      ]},
+    "Sources & Sinks": { icon: "⚡", title: "New Mechanic: Sources & Sinks", color: "#f59e0b",
+      lines: [
+        "Source pieces (OUT) emit signals — they only send, never receive.",
+        "Sink pieces (IN) absorb signals — they only receive, never send.",
+        "Build a path from source to sink!"
+      ]},
+    "Jumper Arrows": { icon: "🏹", title: "New Mechanic: Jumper Arrows", color: "#ef4444",
+      lines: [
+        "Some arrows can jump over cells to reach targets 2 or more spaces away.",
+        "A jumper arrow skips the intermediate cell entirely.",
+        "Look for the ':2' notation — it means the arrow reaches 2 cells away!"
+      ]},
+    "Gaps": { icon: "🕳️", title: "New Mechanic: Gaps", color: "#14b8a6",
+      lines: [
+        "Some cells are permanently empty — you can't place pieces there.",
+        "Arrows can't connect through gaps. Route your signals around them!"
+      ]},
+    "Pipes": { icon: "🔀", title: "New Mechanic: Pipes", color: "#8b5cf6",
+      lines: [
+        "Pipe pieces transform signals — they receive one color and output a different color in a different direction.",
+        "Pipes can be rotated! Try different orientations to find the right fit.",
+        "Think of pipes as color-changing relay stations."
+      ]},
+    "Control Flow": { icon: "🔒", title: "New Mechanic: Triggers", color: "#8b5cf6",
+      lines: [
+        "Trigger pieces lock a specific cell until the trigger is satisfied.",
+        "To satisfy a trigger, point the correct color at it.",
+        "You must place the trigger before you can place pieces on its locked cell!"
+      ]},
+    "Multi-Shelf": { icon: "📚", title: "New Mechanic: Shelves", color: "#10b981",
+      lines: [
+        "The grid now has multiple layers — shelves stacked vertically.",
+        "Stairs pieces connect adjacent shelves, sending signals up or down.",
+        "Use the shelf tabs to switch between layers!"
+      ]},
+    "Shelves & Conduits": { icon: "🏗️", title: "Shelves & Conduits", color: "#34d399",
+      lines: [
+        "Now you'll encounter both shelves and conduits in the same puzzle!",
+        "Conduits route signals around the grid on the same shelf, while stairs move signals between shelves.",
+        "Master both mechanics together to solve these puzzles!"
+      ]},
+    "Conduits": { icon: "🔗", title: "New Mechanic: Conduits", color: "#a78bfa",
+      lines: [
+        "Conduits are glowing paths around the grid that route signals between distant cells.",
+        "When a piece's arrow points off the grid and into a conduit, the signal travels through the conduit and arrives at the other end.",
+        "Look for the purple dashed lines — they show where conduits connect!",
+        "When a conduit is active, you'll see an animated dot flowing through it."
+      ]},
+  };
 
   const markSolved = (newBoard) => {
     setSolved(true);
@@ -1347,74 +1469,91 @@ export default function ChromaticPuzzle() {
     const [paths, setPaths] = useState([]);
     useEffect(() => {
       if (!level.conduits || !containerRef.current) return;
-      const cRect = containerRef.current.getBoundingClientRect();
-      const pad = 14; // container padding
-      const newPaths = [];
-      for (const conduit of level.conduits) {
-        const fromEl = document.getElementById(`cell-${conduit.from.cell}`);
-        const toEl = document.getElementById(`cell-${conduit.to.cell}`);
-        if (!fromEl || !toEl) continue;
-        const fR = fromEl.getBoundingClientRect();
-        const tR = toEl.getBoundingClientRect();
-        const fCx = fR.left - cRect.left + fR.width / 2;
-        const fCy = fR.top - cRect.top + fR.height / 2;
-        const tCx = tR.left - cRect.left + tR.width / 2;
-        const tCy = tR.top - cRect.top + tR.height / 2;
-        const half = fR.width / 2 + 4;
-        // Edge points: where the conduit exits/enters the cell border
-        const dirOff = { UP: [0, -1], DOWN: [0, 1], LEFT: [-1, 0], RIGHT: [1, 0],
-          UP_LEFT: [-0.7, -0.7], UP_RIGHT: [0.7, -0.7], DOWN_LEFT: [-0.7, 0.7], DOWN_RIGHT: [0.7, 0.7] };
-        const fd = dirOff[conduit.from.dir] || [0, 0];
-        const td = dirOff[conduit.to.dir] || [0, 0];
-        const fx = fCx + fd[0] * half, fy = fCy + fd[1] * half;
-        const tx = tCx + td[0] * half, ty = tCy + td[1] * half;
-        // Route outside the grid: push control points outward
-        const outOff = 35;
-        const cpfx = fx + fd[0] * outOff, cpfy = fy + fd[1] * outOff;
-        const cptx = tx + td[0] * outOff, cpty = ty + td[1] * outOff;
-        const pathD = `M${fx},${fy} C${cpfx},${cpfy} ${cptx},${cpty} ${tx},${ty}`;
-        // Check if conduit is active (both tiles placed and arrow matches)
-        let active = false;
-        let activeColor = "#6b7280"; // gray default
-        if (board[conduit.from.cell]) {
-          const fromTile = parseTile(board[conduit.from.cell]);
-          const conn = fromTile.connections.find(c => c.dir === conduit.from.dir);
-          if (conn) {
-            activeColor = COLORS[conn.color]?.glow || "#a78bfa";
-            if (board[conduit.to.cell]) {
-              const toTile = parseTile(board[conduit.to.cell]);
-              if (toTile.type === "NORMAL" && conn.color === toTile.outer) active = true;
-              else if (toTile.type === "INPUT_ONLY" && toTile.acceptColors?.includes(conn.color)) active = true;
-              else if (toTile.type === "TRIGGER" && conn.color === toTile.reqColor) active = true;
-              else if (toTile.type === "STAIRS" && conn.color === toTile.outer) active = true;
+      // Small delay to ensure DOM has rendered shelf positions
+      const timer = setTimeout(() => {
+        const cRect = containerRef.current.getBoundingClientRect();
+        const newPaths = [];
+        for (const conduit of level.conduits) {
+          const fromEl = document.getElementById(`cell-${conduit.from.cell}`);
+          const toEl = document.getElementById(`cell-${conduit.to.cell}`);
+          if (!fromEl || !toEl) continue;
+          const fR = fromEl.getBoundingClientRect();
+          const tR = toEl.getBoundingClientRect();
+          const fCx = fR.left - cRect.left + fR.width / 2;
+          const fCy = fR.top - cRect.top + fR.height / 2;
+          const tCx = tR.left - cRect.left + tR.width / 2;
+          const tCy = tR.top - cRect.top + tR.height / 2;
+          const half = fR.width / 2 + 4;
+          // Edge points
+          const dirOff = { UP: [0, -1], DOWN: [0, 1], LEFT: [-1, 0], RIGHT: [1, 0],
+            UP_LEFT: [-0.7, -0.7], UP_RIGHT: [0.7, -0.7], DOWN_LEFT: [-0.7, 0.7], DOWN_RIGHT: [0.7, 0.7],
+            SHELF_UP: [0, -1], SHELF_DOWN: [0, 1] };
+          const fd = dirOff[conduit.from.dir] || [0, -1];
+          const td = dirOff[conduit.to.dir] || [0, -1];
+          const fx = fCx + fd[0] * half, fy = fCy + fd[1] * half;
+          const tx = tCx + td[0] * half, ty = tCy + td[1] * half;
+          // Dynamic control point offset: scale with distance between endpoints
+          const dist = Math.hypot(tx - fx, ty - fy);
+          const outOff = Math.max(50, dist * 0.5);
+          const cpfx = fx + fd[0] * outOff, cpfy = fy + fd[1] * outOff;
+          const cptx = tx + td[0] * outOff, cpty = ty + td[1] * outOff;
+          const pathD = `M${fx},${fy} C${cpfx},${cpfy} ${cptx},${cpty} ${tx},${ty}`;
+          // Check if conduit is active
+          let active = false;
+          let activeColor = "#6b7280";
+          if (board[conduit.from.cell]) {
+            const fromTile = parseTile(board[conduit.from.cell]);
+            const conn = fromTile.connections.find(c => c.dir === conduit.from.dir);
+            if (conn) {
+              activeColor = COLORS[conn.color]?.glow || "#a78bfa";
+              if (board[conduit.to.cell]) {
+                const toTile = parseTile(board[conduit.to.cell]);
+                if (toTile.type === "NORMAL" && conn.color === toTile.outer) active = true;
+                else if (toTile.type === "INPUT_ONLY" && toTile.acceptColors?.includes(conn.color)) active = true;
+                else if (toTile.type === "TRIGGER" && conn.color === toTile.reqColor) active = true;
+                else if (toTile.type === "STAIRS" && conn.color === toTile.outer) active = true;
+              }
             }
           }
+          newPaths.push({ id: `${conduit.from.cell}-${conduit.to.cell}`, pathD, fx, fy, tx, ty, active, activeColor });
         }
-        newPaths.push({ id: `${conduit.from.cell}-${conduit.to.cell}`, pathD, fx, fy, tx, ty, active, activeColor });
-      }
-      setPaths(newPaths);
-    }, [board, level, containerRef]);
+        setPaths(newPaths);
+      }, 50);
+      return () => clearTimeout(timer);
+    }, [board, level, containerRef, currentShelf]);
     if (paths.length === 0) return null;
     return (
       <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 25, overflow: "visible" }}>
         <defs>
-          <filter id="conduit-glow"><feGaussianBlur stdDeviation="4" /></filter>
+          <filter id="conduit-glow"><feGaussianBlur stdDeviation="5" /></filter>
+          <marker id="conduit-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,1 L6,4 L0,7" fill="none" stroke="rgba(167,139,250,0.6)" strokeWidth="1.5" />
+          </marker>
         </defs>
         {paths.map(p => (
           <g key={p.id}>
             {/* Outer glow */}
-            <path d={p.pathD} fill="none" stroke={p.active ? p.activeColor : "rgba(167,139,250,0.15)"} strokeWidth={p.active ? 10 : 6} filter="url(#conduit-glow)" strokeLinecap="round" />
-            {/* Dashed conduit line */}
-            <path d={p.pathD} fill="none" stroke={p.active ? p.activeColor : "rgba(167,139,250,0.3)"} strokeWidth={2.5} strokeLinecap="round" strokeDasharray={p.active ? "none" : "6 4"} style={{ transition: "stroke 0.3s, stroke-dasharray 0.3s" }} />
-            {/* Entry port dot */}
-            <circle cx={p.fx} cy={p.fy} r={4} fill={p.active ? p.activeColor : "rgba(167,139,250,0.5)"} stroke="rgba(255,255,255,0.3)" strokeWidth={1} />
-            {/* Exit port dot */}
-            <circle cx={p.tx} cy={p.ty} r={4} fill={p.active ? p.activeColor : "rgba(167,139,250,0.5)"} stroke="rgba(255,255,255,0.3)" strokeWidth={1} />
+            <path d={p.pathD} fill="none" stroke={p.active ? p.activeColor : "rgba(167,139,250,0.2)"} strokeWidth={p.active ? 14 : 8} filter="url(#conduit-glow)" strokeLinecap="round" />
+            {/* Main conduit line */}
+            <path d={p.pathD} fill="none" stroke={p.active ? p.activeColor : "rgba(167,139,250,0.45)"} strokeWidth={3} strokeLinecap="round" strokeDasharray={p.active ? "none" : "8 5"} markerEnd="url(#conduit-arrow)" style={{ transition: "stroke 0.3s, stroke-dasharray 0.3s" }} />
+            {/* Entry port — pulsing ring */}
+            <circle cx={p.fx} cy={p.fy} r={6} fill={p.active ? p.activeColor : "rgba(167,139,250,0.6)"} stroke="rgba(255,255,255,0.5)" strokeWidth={1.5}>
+              {!p.active && <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" />}
+            </circle>
+            {/* Exit port — pulsing ring */}
+            <circle cx={p.tx} cy={p.ty} r={6} fill={p.active ? p.activeColor : "rgba(167,139,250,0.6)"} stroke="rgba(255,255,255,0.5)" strokeWidth={1.5}>
+              {!p.active && <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" />}
+            </circle>
             {/* Animated flow dots when active */}
             {p.active && (
-              <circle r={2.5} fill="#fff" opacity={0.8}>
-                <animateMotion dur="1.5s" repeatCount="indefinite" path={p.pathD} />
-              </circle>
+              <>
+                <circle r={3} fill="#fff" opacity={0.9}>
+                  <animateMotion dur="1.2s" repeatCount="indefinite" path={p.pathD} />
+                </circle>
+                <circle r={2} fill="#fff" opacity={0.5}>
+                  <animateMotion dur="1.2s" repeatCount="indefinite" path={p.pathD} begin="0.6s" />
+                </circle>
+              </>
             )}
           </g>
         ))}
@@ -1528,6 +1667,7 @@ export default function ChromaticPuzzle() {
         return (
           <div ref={containerRef} style={{ position: "relative", marginBottom: 10, padding: 10, borderRadius: 14, background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <ConnectionBeams board={board} level={level} containerRef={containerRef} />
+            {level.conduits && <ConduitOverlay level={level} board={board} containerRef={containerRef} />}
             <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
               {l3d.map((_, z) => (
                 <button key={z} onClick={() => setCurrentShelf(z)} style={{ padding: "3px 10px", borderRadius: 8, border: z === currentShelf ? "1px solid #fbbf24" : "1px solid rgba(255,255,255,0.2)", background: z === currentShelf ? "rgba(251,191,36,0.15)" : "rgba(255,255,255,0.05)", color: z === currentShelf ? "#fbbf24" : "white", cursor: "pointer", transition: "all 0.2s", fontSize: 11 }}>
@@ -1595,6 +1735,18 @@ export default function ChromaticPuzzle() {
         </div>
       </div>
       <div style={{ color: "rgba(255,255,255,0.2)", fontSize: 10 }}>{Object.keys(board).length} / {level.cells.length} placed</div>
+      {showMechanicIntro && (
+        <div style={{ position:"fixed",inset:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(0,0,0,0.7)",backdropFilter:"blur(8px)" }}>
+          <div style={{ maxWidth:400,width:"90%",background:"linear-gradient(135deg,#1a1a2e 0%,#16213e 100%)",border:`1px solid ${showMechanicIntro.color}44`,borderRadius:16,padding:"28px 24px",textAlign:"center",boxShadow:`0 0 40px ${showMechanicIntro.color}22` }}>
+            <div style={{ fontSize:48,marginBottom:12 }}>{showMechanicIntro.icon}</div>
+            <div style={{ fontSize:18,fontWeight:700,fontFamily:"'Orbitron',sans-serif",color:showMechanicIntro.color,marginBottom:16,letterSpacing:"0.05em" }}>{showMechanicIntro.title}</div>
+            {showMechanicIntro.lines.map((line, i) => (
+              <p key={i} style={{ fontSize:13,color:"rgba(255,255,255,0.75)",lineHeight:1.6,marginBottom:10,fontFamily:"'JetBrains Mono',monospace" }}>{line}</p>
+            ))}
+            <button onClick={() => setShowMechanicIntro(null)} style={{ marginTop:16,padding:"10px 32px",borderRadius:10,border:`1px solid ${showMechanicIntro.color}66`,background:`${showMechanicIntro.color}22`,color:showMechanicIntro.color,fontSize:14,fontWeight:700,fontFamily:"'Orbitron',sans-serif",cursor:"pointer",letterSpacing:"0.1em" }}>GOT IT!</button>
+          </div>
+        </div>
+      )}
       {solved && <FinishOverlay level={level} hasNext={currentLevel < LEVELS.length - 1} onNext={() => initLevel(currentLevel + 1)} onReplay={() => initLevel(currentLevel)} />}
       {showVictory && <VictoryScreen onBack={() => { setShowVictory(false); setScreen("menu"); }} />}
     </div>
