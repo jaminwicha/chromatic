@@ -197,6 +197,11 @@ function getConduitNeighbor(level, cellName, dir) {
   return null;
 }
 
+function isWallBlocked(level, targetCell, arrivalDir) {
+  if (!level.walls || !level.walls[targetCell]) return false;
+  return level.walls[targetCell].includes(arrivalDir);
+}
+
 function checkMatchConduit(conn, targetTile, arrivalDir) {
   if (!targetTile || targetTile.type === "EMPTY") return false;
   if (targetTile.type === "NORMAL" && conn.color === targetTile.outer) return true;
@@ -303,9 +308,16 @@ function solvePuzzle(level) {
           continue;
         }
         if (board[n.cell]) {
+          // Wall check
+          const arrDir = OPPOSITE[conn.dir];
+          if (arrDir && isWallBlocked(level, n.cell, arrDir)) return false;
           if (!checkMatch(tile, conn, parseTile(board[n.cell]))) {
             return false;
           }
+        } else {
+          // Even if empty, reject if wall blocks this direction
+          const arrDir = OPPOSITE[conn.dir];
+          if (arrDir && isWallBlocked(level, n.cell, arrDir)) return false;
         }
       }
     }
@@ -317,6 +329,9 @@ function solvePuzzle(level) {
       for (const oc of ot.connections) {
         const on = getNeighborAtDist(level.layout, op.z, op.row, op.col, oc.dir, oc.distance || 1);
         if (on && on.cell === cellName) {
+          // Wall check: is this cell blocked from that direction?
+          const arrDir = OPPOSITE[oc.dir];
+          if (arrDir && isWallBlocked(level, cellName, arrDir)) return false;
           if (!checkMatch(ot, oc, tile)) return false;
         }
         // Check conduit routing to this cell
@@ -348,6 +363,8 @@ function solvePuzzle(level) {
           const n = getNeighborAtDist(level.layout, p.z, p.row, p.col, c.dir, c.distance || 1);
           if (n) {
             if (!board[n.cell]) return;
+            const arrDir = OPPOSITE[c.dir];
+            if (arrDir && isWallBlocked(level, n.cell, arrDir)) return;
             if (!checkMatch(t, c, parseTile(board[n.cell]))) return;
           } else {
             // Conduit fallback for final validation
