@@ -202,6 +202,28 @@ function isWallBlocked(level, targetCell, arrivalDir) {
   return level.walls[targetCell].includes(arrivalDir);
 }
 
+function isJumperWallBlocked(level, layout, z, row, col, dir, dist) {
+  if (dist <= 1 || !level.jumperWalls) return false;
+  const l3d = getLayout3D(layout);
+  const d = DIRS[dir];
+  if (!d) {
+    for (let i = 1; i < dist; i++) {
+      const iz = dir === "SHELF_UP" ? z + i : z - i;
+      if (l3d[iz] && l3d[iz][row] && l3d[iz][row][col]) {
+        if (level.jumperWalls[l3d[iz][row][col]]) return true;
+      }
+    }
+    return false;
+  }
+  for (let i = 1; i < dist; i++) {
+    const ir = row + d.dr * i, ic = col + d.dc * i;
+    if (l3d[z] && ir >= 0 && ir < l3d[z].length && ic >= 0 && ic < (l3d[z][ir]?.length || 0) && l3d[z][ir][ic]) {
+      if (level.jumperWalls[l3d[z][ir][ic]]) return true;
+    }
+  }
+  return false;
+}
+
 function checkMatchConduit(conn, targetTile, arrivalDir) {
   if (!targetTile || targetTile.type === "EMPTY") return false;
   if (targetTile.type === "NORMAL" && conn.color === targetTile.outer) return true;
@@ -297,7 +319,12 @@ function solvePuzzle(level) {
     // Check outgoing arrows of the new piece
     if (tile.type !== "INPUT_ONLY" && tile.type !== "TRIGGER") {
       for (const conn of tile.connections) {
-        const n = getNeighborAtDist(level.layout, pos.z, pos.row, pos.col, conn.dir, conn.distance || 1);
+        // Outgoing wall check: block if THIS cell has a wall on the outgoing side
+        if (isWallBlocked(level, cellName, conn.dir)) return false;
+        // Jumper wall check
+        const connDist = conn.distance || 1;
+        if (connDist > 1 && isJumperWallBlocked(level, level.layout, pos.z, pos.row, pos.col, conn.dir, connDist)) return false;
+        const n = getNeighborAtDist(level.layout, pos.z, pos.row, pos.col, conn.dir, connDist);
         if (!n) {
           // Check conduit fallback
           const conduit = getConduitNeighbor(level, cellName, conn.dir);
@@ -360,7 +387,11 @@ function solvePuzzle(level) {
         const t = parseTile(board[cell]);
         const p = findCellPos(level.layout, cell);
         for (const c of t.connections) {
-          const n = getNeighborAtDist(level.layout, p.z, p.row, p.col, c.dir, c.distance || 1);
+          // Outgoing wall check
+          if (isWallBlocked(level, cell, c.dir)) return;
+          const cDist = c.distance || 1;
+          if (cDist > 1 && isJumperWallBlocked(level, level.layout, p.z, p.row, p.col, c.dir, cDist)) return;
+          const n = getNeighborAtDist(level.layout, p.z, p.row, p.col, c.dir, cDist);
           if (n) {
             if (!board[n.cell]) return;
             const arrDir = OPPOSITE[c.dir];
